@@ -94,7 +94,9 @@ public class BoardCreator : MonoBehaviour
                 corridors[i].SetupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
             }
 
-            if (i == rooms.Length * .5f)
+			//Instantiates player in the i-th/2 room created
+			//Cast as int so condition is always reachable
+			if (i == (int) (rooms.Length * .5f))
             {
                 Vector3 playerPos = new Vector3(rooms[i].xPos, rooms[i].yPos, 0);
                 Instantiate(player, playerPos, Quaternion.identity);
