@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class MainMenuCtrl : MonoBehaviour 
@@ -15,12 +16,11 @@ public class MainMenuCtrl : MonoBehaviour
 	void Update () {
 	
 	}
-
-	public void NewGame()
-	{        
-		Application.LoadLevel(1);
-	}
-	public void ConfirmQuit()
+		
+public void LoadScene(string name) {
+	SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
+		    					}
+public void ConfirmQuit()
 	{
         QuitConfirmationCanvas.SetActive(true);
 	}
