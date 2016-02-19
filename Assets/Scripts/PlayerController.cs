@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour {
 
 	public float speed;
 	public float jumpForce;
+    public float jumpSpeed;
+    public bool paused = false;
+    private Vector2 currentVelocity;
 
 	private Rigidbody2D rb2d;
 
@@ -16,13 +19,25 @@ public class PlayerController : MonoBehaviour {
 	
 	// Use FixedUpdate with Rigidbody
 	void FixedUpdate () {
-		//The "jump" mechanic
-		if (Input.GetKey (KeyCode.W)) {
-			rb2d.AddForce ( new Vector2(rb2d.velocity.x, jumpForce), ForceMode2D.Impulse);
-		}
-			
-		float moveHorizontal = Input.GetAxis ("Horizontal");
+        if (!paused)
+        {
+            //The "jump" mechanic
+            if (Input.GetKey(KeyCode.W))
+            {
+                //Making it directly alter vertical velocity so jump is instantaneous as well
+                //as not super powerful.
+                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+                //rb2d.AddForce ( new Vector2(rb2d.velocity.x, jumpForce), ForceMode2D.Impulse);
+            }
 
-		rb2d.velocity = new Vector2 (moveHorizontal * speed, rb2d.velocity.y);
+            float moveHorizontal = Input.GetAxis("Horizontal");
+
+            currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
+            rb2d.velocity = currentVelocity;
+        }
+        else
+        {
+            rb2d.velocity = Vector2.zero;
+        }
 	}
 }
