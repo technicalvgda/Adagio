@@ -76,13 +76,41 @@ public class BoardCreator : MonoBehaviour
         // Setup the first corridor using the first room.
         corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
 
-        for (int i = 1; i < rooms.Length; i++)
+		// Set up the rest of the rooms and corridors
+		for (int i = 1; i < rooms.Length; i++)
         {
-            // Create a room.
-            rooms[i] = new Room();
+			Room roomToBePlaced;
+			bool goodRoomPlacement = false;
 
-            // Setup the room based on the previous corridor.
-            rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1]);
+			while (!goodRoomPlacement) {
+
+				// Create a room to test if it overlaps with any other rooms
+				roomToBePlaced = new Room();
+
+				// Setup the room based on the previous corridor.
+				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridors[i - 1]);
+
+				// Loop over all other rooms created, except for one to be placed
+				for (int j = 0; j < i; j++)
+				{
+					// If room to be placed overlaps with this room...
+					if (doRoomsOverlap (rooms [j], roomToBePlaced))
+					{
+						// No need to check other rooms, so break from for loop and create a different room
+						break;
+					} 
+
+					// If last room has been checked and room to be placed doesn't overlap with it...
+					if (j == (i - 1))
+					{
+						// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+						goodRoomPlacement = true;
+					}
+				}
+			}
+
+			// Room doesn't overlap with any other rooms, so add it to the array of rooms
+			rooms [i] = roomToBePlaced;
 
             // If we haven't reached the end of the corridors array...
             if (i < corridors.Length)
@@ -104,6 +132,14 @@ public class BoardCreator : MonoBehaviour
         }
 
     }
+
+	bool doRoomsOverlap(Room alreadyPlaced, Room toBePlaced) {
+		if((alreadyPlaced.xPos > (toBePlaced.xPos + toBePlaced.roomWidth)) || (toBePlaced.xPos > (alreadyPlaced.xPos + alreadyPlaced.roomWidth)))
+			return false;
+		if (((alreadyPlaced.yPos + alreadyPlaced.roomHeight) < toBePlaced.yPos) || ((toBePlaced.yPos + toBePlaced.roomHeight) < alreadyPlaced.yPos))
+			return false;
+		return true;
+	}
 
 
     void SetTilesValuesForRooms()
