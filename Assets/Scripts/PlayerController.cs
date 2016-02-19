@@ -17,12 +17,12 @@ public class PlayerController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
 	}
 	
-	// Use FixedUpdate with Rigidbody
-	void FixedUpdate () {
+	// Use Update with Rigidbody
+	void Update () {
         if (!paused)
         {
             //The "jump" mechanic
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 //Making it directly alter vertical velocity so jump is instantaneous as well
                 //as not super powerful.

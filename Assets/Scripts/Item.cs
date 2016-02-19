@@ -2,14 +2,14 @@
 using System.Collections;
 
 public class Item : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
+    public float rotateSpeed = 180f;
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        c.transform.GetComponent<ItemCounter>().itemCount++;
+        Debug.Log("Item found");
+        Destroy(this.gameObject);
+    }
 	void Update () {
-	
+        transform.Rotate(new Vector3(0, 0, rotateSpeed * Time.deltaTime));
 	}
 }

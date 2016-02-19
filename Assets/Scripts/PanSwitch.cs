@@ -20,12 +20,15 @@ public class PanSwitch : Switch {
 	void OnCollisionEnter2D(Collision2D c) {
 	    if (panState == state.notpanning)
         {
-            panState = state.pantoward;
-            player = c.transform;
-            camPos = Camera.main.transform.position;
             target = GameObject.Find("Item");
-            player.GetComponent<PlayerController>().paused = true;
-            Camera.main.GetComponent<CameraController>().enabled = false;
+            if (target != null)
+            {
+                panState = state.pantoward;
+                player = c.transform;
+                camPos = Camera.main.transform.position;
+                player.GetComponent<PlayerController>().paused = true;
+                Camera.main.GetComponent<CameraController>().enabled = false;
+            }
         }
 	}
     void Update()
@@ -37,7 +40,7 @@ public class PanSwitch : Switch {
                 camPos = Vector3.SmoothDamp(camPos, new Vector3(target.transform.position.x, target.transform.position.y, camPos.z), ref currentVelocity, panTime);
                 Camera.main.transform.position = camPos;
                 Debug.Log(currentVelocity);
-                if (currentVelocity.x < 0.01f && currentVelocity.y < 0.01f)
+                if (Vector2.Distance(camPos, target.transform.position) < 0.1f)
                 {
                     Invoke("startPanBack", stayTime);
                     panState = state.panwait;
@@ -47,7 +50,7 @@ public class PanSwitch : Switch {
             {
                 camPos = Vector3.SmoothDamp(camPos, new Vector3(player.position.x, player.position.y, camPos.z), ref currentVelocity, panTime);
                 Camera.main.transform.position = camPos;
-                if (currentVelocity.x < 0.01f && currentVelocity.y < 0.01f)
+                if (Vector2.Distance(camPos, player.position) < 0.1f)
                 {
                     Camera.main.GetComponent<CameraController>().enabled = true;
                     panState = state.notpanning;
