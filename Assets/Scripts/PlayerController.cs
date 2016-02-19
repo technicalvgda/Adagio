@@ -6,12 +6,13 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     public float jumpSpeed;
     public bool paused = false;
+    public float blockJumpTimerDuration = 1.0f;
 
     private float blockJumpTimer = 0f;
     private Vector2 currentVelocity;
     private Rigidbody2D rb2d;
 
-    private const float blockJumpTimerDuration = 2.0f;
+    
     // Use this for initialization
     void Start () {
         //Reference so I don't have to type this long thing out repeatedly
@@ -52,4 +53,9 @@ public class PlayerController : MonoBehaviour {
             rb2d.velocity = Vector2.zero;
         }
     }
+    
+    void OnCollisionEnter2D(Collision2D col) {
+		blockJumpTimer = 0f;
+    }
+ 	 
 }
