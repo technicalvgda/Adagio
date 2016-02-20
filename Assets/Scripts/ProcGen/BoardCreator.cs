@@ -56,7 +56,7 @@ public class BoardCreator : MonoBehaviour
             tiles[i] = new TileType[rows];
         }
     }
-
+		
 
     void CreateRoomsAndCorridors()
     {
@@ -76,27 +76,33 @@ public class BoardCreator : MonoBehaviour
         // Setup the first corridor using the first room.
         corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
 
-		// Set up the rest of the rooms and corridors
-		for (int i = 1; i < rooms.Length; i++)
-        {
-			Room roomToBePlaced;
+		// Set up second room. Check for overlap is not necessary
+		rooms[1] = new Room();
+		rooms[1].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[0]);
+
+		// Set up the rest of the rooms and corridors, checking for overlaps
+		for (int i = 2; i < rooms.Length; i++)
+		{
 			bool goodRoomPlacement = false;
 
-			while (!goodRoomPlacement) {
+			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
+			while (!goodRoomPlacement)
+			{
+				// Create test corridor and room
+				Corridor corridorToBePlaced = new Corridor();
+				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
 
-				// Create a room to test if it overlaps with any other rooms
-				roomToBePlaced = new Room();
-
-				// Setup the room based on the previous corridor.
-				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridors[i - 1]);
+				Room roomToBePlaced = new Room ();
+				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
 
 				// Loop over all other rooms created, except for one to be placed
 				for (int j = 0; j < i; j++)
 				{
-					// If room to be placed overlaps with this room...
+					// If room to be placed overlaps with j-th room...
 					if (doRoomsOverlap (rooms [j], roomToBePlaced))
 					{
-						// No need to check other rooms, so break from for loop and create a different room
+						/* No need to check other rooms, so break from
+						 * for loop and setup a new corridor and room */
 						break;
 					} 
 
@@ -107,21 +113,15 @@ public class BoardCreator : MonoBehaviour
 						goodRoomPlacement = true;
 					}
 				}
+
+				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
+				if (goodRoomPlacement)
+				{
+					corridors [i - 1] = corridorToBePlaced;
+					rooms [i] = roomToBePlaced;
+				}
 			}
-
-			// Room doesn't overlap with any other rooms, so add it to the array of rooms
-			rooms [i] = roomToBePlaced;
-
-            // If we haven't reached the end of the corridors array...
-            if (i < corridors.Length)
-            {
-                // ... create a corridor.
-                corridors[i] = new Corridor();
-
-                // Setup the corridor based on the room that was just created.
-                corridors[i].SetupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
-            }
-
+				
 			//Instantiates player in the i-th/2 room created
 			//Cast as int so condition is always reachable
 			if (i == (int) (rooms.Length * .5f))
@@ -130,14 +130,19 @@ public class BoardCreator : MonoBehaviour
                 Instantiate(player, playerPos, Quaternion.identity);
             }
         }
-
     }
 
+
+	// Method takes two rooms as arguments and returns true/false if they overlap/don't overlap
 	bool doRoomsOverlap(Room alreadyPlaced, Room toBePlaced) {
+		// Check if one rectangle is on the left side of the other
 		if((alreadyPlaced.xPos > (toBePlaced.xPos + toBePlaced.roomWidth)) || (toBePlaced.xPos > (alreadyPlaced.xPos + alreadyPlaced.roomWidth)))
 			return false;
+		// Check if one rectangle is above the top edge of the other
 		if (((alreadyPlaced.yPos + alreadyPlaced.roomHeight) < toBePlaced.yPos) || ((toBePlaced.yPos + toBePlaced.roomHeight) < alreadyPlaced.yPos))
 			return false;
+
+		// Both condition weren't met, so rooms must be overlapping
 		return true;
 	}
 
