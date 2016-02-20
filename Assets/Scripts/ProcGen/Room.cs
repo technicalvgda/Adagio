@@ -10,17 +10,30 @@ public class Room
 
 
     // This is used for the first room.  It does not have a Corridor parameter since there are no corridors yet.
-    public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
-    {
-        // Set a random width and height.
-        roomWidth = widthRange.Random;
-        roomHeight = heightRange.Random;
+    //public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
+    //{
+    //    // Set a random width and height.
+    //    roomWidth = widthRange.Random;
+    //    roomHeight = heightRange.Random;
 
         // Set the x and y coordinates so the room is roughly in the middle of the board.
-        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
-        yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
-    }
+    //    xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
+    //    yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f); 
+    //}
 
+
+	//This is the hub room. It will spawn on the left side in the middle.
+	//Once this is generated then procedural generation will continue as normal.
+	public void HubRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
+	{
+		// Set a random width and height.
+		roomWidth = widthRange.Random;
+		roomHeight = heightRange.Random;
+
+		// Set the x and y coordinates so the room is roughly in the middle of the left side of the board.
+		xPos = Mathf.RoundToInt(roomWidth / 2f);
+		yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f); 
+	}
 
     // This is an overload of the SetupRoom function and has a corridor parameter that represents the corridor entering the room.
     public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows, Corridor corridor)
