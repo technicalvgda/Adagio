@@ -7,8 +7,11 @@ using System.Collections;
 public class ButtonResponse : MonoBehaviour {
 	public bool isActive = false;
 	// Use this for initialization
-	void Start () {
-		gameObject.SetActive (false);
+	void Start () 
+	{
+		this.gameObject.SetActive (false);
+
+
 	}
 	
 	// Update is called once per frame
@@ -17,7 +20,11 @@ public class ButtonResponse : MonoBehaviour {
 		
 	}
 
-	public void Activate(){
-		gameObject.SetActive (true);
+	public void Activate()
+	{
+		this.gameObject.SetActive (true);
 	}
+		
+
+
 }

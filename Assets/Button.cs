@@ -10,23 +10,32 @@ public class Button : MonoBehaviour {
 	public ButtonResponse receiver,receiver2,receiver3; //can be set to activate multiple objects at once
 	bool playerContact = false;
 	// Use this for initialization
-	void Start (){
+	void Start ()
+	{
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(playerContact == true && Input.GetKeyDown(KeyCode.E)){
+	void Update () 
+	{
+		if(playerContact == true && Input.GetKeyDown(KeyCode.E))
+		{
 			receiver.Activate ();
 			//Extra stuff to activate if desired
-			receiver2.Activate ();
-			receiver3.Activate ();
-
+			receiver2.Activate();
+			receiver3.Activate();
 		}
+
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.tag == "Player") {
 			playerContact = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col){
+		if (col.tag == "Player") {
+			playerContact = false;
 		}
 	}
 }
