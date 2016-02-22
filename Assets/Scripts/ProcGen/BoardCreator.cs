@@ -58,52 +58,93 @@ public class BoardCreator : MonoBehaviour
     }
 
 
-    void CreateRoomsAndCorridors()
-    {
-        // Create the rooms array with a random size.
-        rooms = new Room[numRooms.Random];
+	void CreateRoomsAndCorridors()
+	{
+		// Create the rooms array with a random size.
+		rooms = new Room[numRooms.Random];
 
-        // There should be one less corridor than there is rooms.
-        corridors = new Corridor[rooms.Length - 1];
+		// There should be one less corridor than there is rooms.
+		corridors = new Corridor[rooms.Length - 1];
 
-        // Create the first room and corridor.
-        rooms[0] = new Room();
-        corridors[0] = new Corridor();
+		// Create the first room and corridor.
+		rooms[0] = new Room();
+		corridors[0] = new Corridor();
 
-        // Setup the first room, there is no previous corridor so we do not use one.
-        rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
+		// Setup the first room, there is no previous corridor so we do not use one.
+		rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
 
-        // Setup the first corridor using the first room.
-        corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
+		// Setup the first corridor using the first room.
+		corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
 
-        for (int i = 1; i < rooms.Length; i++)
-        {
-            // Create a room.
-            rooms[i] = new Room();
+		// Set up second room. Check for overlap is not necessary
+		rooms[1] = new Room();
+		rooms[1].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[0]);
 
-            // Setup the room based on the previous corridor.
-            rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1]);
+		// Set up the rest of the rooms and corridors, checking for overlaps
+		for (int i = 2; i < rooms.Length; i++)
+		{
+			bool goodRoomPlacement = false;
 
-            // If we haven't reached the end of the corridors array...
-            if (i < corridors.Length)
-            {
-                // ... create a corridor.
-                corridors[i] = new Corridor();
+			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
+			while (!goodRoomPlacement)
+			{
+				// Create test corridor and room
+				Corridor corridorToBePlaced = new Corridor();
+				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
 
-                // Setup the corridor based on the room that was just created.
-                corridors[i].SetupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
-            }
+				Room roomToBePlaced = new Room ();
+				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
+
+				// Loop over all other rooms created, except for one to be placed
+				for (int j = 0; j < i; j++)
+				{
+					// If room to be placed overlaps with j-th room...
+					if (doRoomsOverlap (rooms [j], roomToBePlaced))
+					{
+						/* No need to check other rooms, so break from
+						 * for loop and setup a new corridor and room */
+						break;
+					} 
+
+					// If last room has been checked and room to be placed doesn't overlap with it...
+					if (j == (i - 1))
+					{
+						// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+						goodRoomPlacement = true;
+					}
+				}
+
+				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
+				if (goodRoomPlacement)
+				{
+					corridors [i - 1] = corridorToBePlaced;
+					rooms [i] = roomToBePlaced;
+				}
+			}
 
 			//Instantiates player in the i-th/2 room created
 			//Cast as int so condition is always reachable
 			if (i == (int) (rooms.Length * .5f))
-            {
-                Vector3 playerPos = new Vector3(rooms[i].xPos, rooms[i].yPos, 0);
-                Instantiate(player, playerPos, Quaternion.identity);
-            }
-        }
+			{
+				Vector3 playerPos = new Vector3(rooms[i].xPos, rooms[i].yPos, 0);
+				Instantiate(player, playerPos, Quaternion.identity);
+			}
+		}
+	}
 
-    }
+
+	// Method takes two rooms as arguments and returns true/false if they overlap/don't overlap
+	bool doRoomsOverlap(Room alreadyPlaced, Room toBePlaced) {
+		// Check if one rectangle is on the left side of the other
+		if((alreadyPlaced.xPos > (toBePlaced.xPos + toBePlaced.roomWidth)) || (toBePlaced.xPos > (alreadyPlaced.xPos + alreadyPlaced.roomWidth)))
+			return false;
+		// Check if one rectangle is above the top edge of the other
+		if (((alreadyPlaced.yPos + alreadyPlaced.roomHeight) < toBePlaced.yPos) || ((toBePlaced.yPos + toBePlaced.roomHeight) < alreadyPlaced.yPos))
+			return false;
+
+		// Both condition weren't met, so rooms must be overlapping
+		return true;
+	}
 
 
     void SetTilesValuesForRooms()
