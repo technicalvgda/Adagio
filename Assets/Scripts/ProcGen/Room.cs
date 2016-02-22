@@ -17,8 +17,8 @@ public class Room
         roomHeight = heightRange.Random;
 
         // Set the x and y coordinates so the room is roughly in the middle of the board.
-        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
-        yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+        xPos = Mathf.RoundToInt(columns/4);   //instead of being in the middle, the x and y is going to be in the top left corner
+        yPos = Mathf.RoundToInt((rows*3)/4);
     }
 
 
