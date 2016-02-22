@@ -100,7 +100,7 @@ public class BoardCreator : MonoBehaviour
 			//Cast as int so condition is always reachable
 			if (i == (int) (rooms.Length * .5f))
             {
-				//The player's spawn location will always be in the hub.
+				//Player spawns in the hub
                 Vector3 playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
                 Instantiate(player, playerPos, Quaternion.identity);
             }

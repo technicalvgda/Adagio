@@ -30,7 +30,7 @@ public class Room
 		roomWidth = widthRange.Random;
 		roomHeight = heightRange.Random;
 
-		// Set the x and y coordinates so the room is roughly in the middle of the left side of the board.
+
 		xPos = Mathf.RoundToInt(roomWidth / 2f);
 		yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f); 
 	}
