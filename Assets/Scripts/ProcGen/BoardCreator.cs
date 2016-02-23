@@ -71,7 +71,7 @@ public class BoardCreator : MonoBehaviour
         corridors[0] = new Corridor();
 
         // Setup the first room, there is no previous corridor so we do not use one.
-        rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
+        rooms[0].HubRoom(roomWidth, roomHeight, columns, rows);
 
         // Setup the first corridor using the first room.
         corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
@@ -98,7 +98,7 @@ public class BoardCreator : MonoBehaviour
 			//Cast as int so condition is always reachable
 			if (i == (int) (rooms.Length * .5f))
             {
-                Vector3 playerPos = new Vector3(rooms[i].xPos, rooms[i].yPos, 0);
+                Vector3 playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
                 Instantiate(player, playerPos, Quaternion.identity);
             }
         }

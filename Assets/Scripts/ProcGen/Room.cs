@@ -10,15 +10,26 @@ public class Room
 
 
     // This is used for the first room.  It does not have a Corridor parameter since there are no corridors yet.
-    public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
+    //public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
+    //{
+    //    // Set a random width and height.
+    //    roomWidth = widthRange.Random;
+    //    roomHeight = heightRange.Random;
+
+    //    // Set the x and y coordinates so the room is roughly in the middle of the board.
+    //    xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
+    //    yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+    //}
+
+    public void HubRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
     {
         // Set a random width and height.
         roomWidth = widthRange.Random;
         roomHeight = heightRange.Random;
 
         // Set the x and y coordinates so the room is roughly in the middle of the board.
-        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
-        yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+        xPos = Mathf.RoundToInt(roomWidth / 2f);
+        yPos = Mathf.RoundToInt(rows /2f - roomHeight / 2f);
     }
 
 
