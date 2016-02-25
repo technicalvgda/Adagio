@@ -3,12 +3,14 @@ using System.Collections;
 
 public class StateSwitchResponse : MonoBehaviour {
 	SpriteRenderer sr;
-	// Use this for initialization
-	void Start () {
-		// Get a reference to the SpriteRenderer so that we can change the button's color.
-		sr = this.GetComponent<SpriteRenderer>();
-		gameObject.SetActive (true);
-	}
+
+
+    void Awake()
+    {
+        // Get a reference to the SpriteRenderer so that we can change the button's color.
+        sr = this.GetComponent<SpriteRenderer>();
+        gameObject.SetActive(true);
+    }
 	
 	// Update is called once per frame
 	void Update () {
