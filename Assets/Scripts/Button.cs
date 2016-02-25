@@ -29,4 +29,11 @@ public class Button : MonoBehaviour {
 			playerContact = true;
 		}
 	}
+
+	void OnTriggerExit2D(Collider2D col){
+				if (col.tag == "Player") {
+						playerContact = false;
+				}
+			}
+
 }
