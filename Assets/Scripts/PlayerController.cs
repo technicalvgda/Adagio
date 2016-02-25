@@ -47,4 +47,13 @@ public class PlayerController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D col) {
 		blockJumpTimer = 0f;
 	}
+	void OnTriggerEnter2D(Collider2D other) // "collecting basic item" mechanic
+	{
+		int item_counter = 0; // declare item counter to increment
+		if (other.gameObject.CompareTag ("Item")) // when colliding with item
+		{
+			other.gameObject.SetActive (false); // deactives item when collided
+			item_counter = item_counter + 1; // increment item counter
+		}
+	}
 }
