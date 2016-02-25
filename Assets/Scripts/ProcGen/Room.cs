@@ -17,8 +17,11 @@ public class Room
         roomHeight = heightRange.Random;
 
         // Set the x and y coordinates so the room is roughly in the middle of the board.
-        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
-        yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+        //xPos = Mathf.RoundToInt(roomWidth / 2f);
+        //yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+		//The X and Y position of the first room should be in a set position since the hand crafted hub is stationary.
+		xPos = 0;
+		yPos = 50;
     }
 
 
