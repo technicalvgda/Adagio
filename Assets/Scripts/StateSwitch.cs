@@ -13,7 +13,7 @@ public class StateSwitch : MonoBehaviour
 	    {
 		       
 		        stepped = false;
-		       // response.Switch(state = 0);
+		        response.Switch(state = 0);
 		    }
 	
 	    void Update()
