@@ -8,6 +8,7 @@ public class Button : MonoBehaviour {
 	private Rigidbody2D test;
 	GameObject player;
 	public ButtonResponse receiver,receiver2,receiver3; //can be set to activate multiple objects at once
+    public StateSwitch stateswitch1;
 	bool playerContact = false;
 	// Use this for initialization
 	void Start (){
@@ -21,7 +22,9 @@ public class Button : MonoBehaviour {
 			receiver2.Activate ();
 			receiver3.Activate ();
 
-		}
+            stateswitch1.Activate();
+
+        }
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
