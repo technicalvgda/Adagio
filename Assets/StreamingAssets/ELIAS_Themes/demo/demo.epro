@@ -1,0 +1,204 @@
+    <theme channels="2" tempo="128" bars="32" sample_rate="44100" time_signature="4/4" mode="objective" volume="0">
+        <defaults>
+            <fade_out maximum="10000" minimum="500"/>
+            <crossfade maximum="250" minimum="50"/>
+            <fade_in maximum="1000" minimum="50"/>
+            <reverb damping="50" size="60" mix="0"/>
+            <agility value="4" strict="no"/>
+            <pickup beats="0"/>
+            <progression mode="random"/>
+        </defaults>
+        <rendezvous>
+            <agility value="4"/>
+            <fade value="75"/>
+        </rendezvous>
+        <audio_loop_track name="Leg Strings &amp; Low" id="1" volume="0">
+            <fade_in maximum="2000" minimum="1000"/>
+            <crossfade maximum="5000" minimum="1999"/>
+            <fade_out maximum="10000" minimum="1000"/>
+            <reverb mix="33"/>
+            <agility_points>
+                <beat point="9"/>
+                <beat point="13"/>
+                <beat point="17"/>
+                <beat point="21"/>
+                <beat point="29"/>
+                <beat point="33"/>
+                <beat point="37"/>
+                <beat point="41"/>
+                <beat point="45"/>
+                <beat point="49"/>
+                <beat point="53"/>
+                <beat point="57"/>
+                <beat point="61"/>
+                <beat point="65"/>
+                <beat point="69"/>
+                <beat point="73"/>
+                <beat point="77"/>
+                <beat point="81"/>
+                <beat point="85"/>
+                <beat point="89"/>
+                <beat point="93"/>
+                <beat point="97"/>
+                <beat point="101"/>
+                <beat point="105"/>
+                <beat point="109"/>
+                <beat point="113"/>
+                <beat point="117"/>
+                <beat point="121"/>
+                <beat point="125"/>
+            </agility_points>
+            <key name="C" value="0">
+                <trigger filename="audio/Strings 1.ogg" value="1" length="5661626"/>
+                <trigger filename="audio/Strings 2.ogg" value="2" length="5661774"/>
+                <trigger filename="audio/Strings 3.ogg" value="3" length="5540082"/>
+                <trigger filename="Silent" dummy="yes" value="4" length="0"/>
+                <trigger filename="audio/Strings 5.ogg" value="5" length="5661404"/>
+                <trigger filename="audio/Low 8.ogg" value="8" length="5436848"/>
+                <trigger filename="audio/Low Choir 13.ogg" value="13" length="5436848"/>
+                <trigger filename="audio/Low Choir 14.ogg" value="14" length="5393776"/>
+                <trigger filename="audio/Choir18.ogg" value="18" length="5406412"/>
+                <trigger filename="Silent" dummy="yes" value="20" length="0"/>
+                <trigger filename="audio/Choir 22.ogg" value="22" length="5528556"/>
+                <trigger filename="audio/Choir 23.ogg" value="23" length="5481972"/>
+                <trigger filename="audio/Choir 24.ogg" value="24" length="5513518"/>
+            </key>
+        </audio_loop_track>
+        <audio_loop_track name="Brass &amp; Winds" id="2" volume="0">
+            <crossfade maximum="3000" minimum="1000"/>
+            <fade_out maximum="10000" minimum="1000"/>
+            <reverb mix="35"/>
+            <agility value="8"/>
+            <key name="C" value="0">
+                <trigger filename="audio/BrassWinds 1.ogg" value="1" length="4886452"/>
+                <trigger filename="Silent" dummy="yes" value="2" length="0"/>
+                <trigger filename="audio/BrassWinds 3.ogg" value="3" length="5426580"/>
+                <trigger filename="audio/BrassWinds 4.ogg" value="4" length="5541156"/>
+                <trigger filename="audio/BrassWinds 5.ogg" value="5" length="5541156"/>
+                <trigger filename="audio/BrassWinds 6.ogg" value="6" length="5589102"/>
+                <trigger filename="audio/BrassWinds 7.ogg" value="7" length="5589102"/>
+                <trigger filename="audio/Brass 8.ogg" value="8" length="5388958"/>
+                <trigger filename="audio/BrassWinds 5.ogg" value="9" length="5541156"/>
+                <trigger filename="audio/Brass 12.ogg" value="12" length="5532280"/>
+                <trigger filename="audio/BrassWinds 4.ogg" value="14" length="5541156"/>
+                <trigger filename="audio/Brass 16.ogg" value="16" length="4836852"/>
+                <trigger filename="Silent" dummy="yes" value="17" length="0"/>
+                <trigger filename="Silent" dummy="yes" value="20" length="0"/>
+                <trigger filename="Silent" dummy="yes" value="23" length="0"/>
+                <trigger filename="audio/Brass 24.ogg" value="24" length="5651236"/>
+                <trigger filename="audio/Brass 25.ogg" value="25" length="5651236"/>
+            </key>
+        </audio_loop_track>
+        <audio_loop_track name="Soundscape" id="3" volume="0">
+            <fade_in maximum="5000" minimum="1000"/>
+            <crossfade maximum="6000" minimum="1000"/>
+            <fade_out maximum="10000" minimum="1000"/>
+            <reverb mix="26"/>
+            <agility value="8"/>
+            <key name="C" value="0">
+                <trigger filename="audio/Soundscape 1.ogg" value="3" length="5335398"/>
+                <trigger filename="Silent" dummy="yes" value="4" length="0"/>
+                <trigger filename="audio/Soundscape 2.ogg" value="5" length="5756982"/>
+                <trigger filename="Silent" dummy="yes" value="6" length="0"/>
+                <trigger filename="audio/Soundscape 3.ogg" value="7" length="5756704"/>
+                <trigger filename="audio/Soundscape 3.ogg" value="8" length="5756704"/>
+                <trigger filename="audio/Soundscape 9.ogg" value="9" length="5333910"/>
+                <trigger filename="audio/Soundscape 11.ogg" value="11" length="5756704"/>
+                <trigger filename="audio/SSc Git 14.ogg" value="14" length="5788126"/>
+                <trigger filename="audio/Guit 17.ogg" value="17" length="6257706"/>
+                <trigger filename="audio/Guit Breath 18.ogg" value="18" length="6257706"/>
+                <trigger filename="Silent" dummy="yes" value="20" length="0"/>
+                <trigger filename="audio/Soundscape 21.ogg" value="21" length="5331466"/>
+                <trigger filename="audio/Soundscape 22.ogg" value="22" length="5330848"/>
+                <trigger filename="audio/Soundscape 22.ogg" value="23" length="5330848"/>
+                <trigger filename="Silent" dummy="yes" value="24" length="0"/>
+            </key>
+        </audio_loop_track>
+        <audio_loop_track name="StacStr &amp; Plucked" id="4" volume="0">
+            <reverb mix="24"/>
+            <key name="C" value="0">
+                <trigger filename="Silent" dummy="yes" value="1" length="0"/>
+                <trigger filename="audio/Plucked 1.ogg" value="2" length="4452310"/>
+                <trigger filename="Silent" dummy="yes" value="3" length="0"/>
+                <trigger filename="audio/Plucked 2.ogg" value="4" length="5635030"/>
+                <trigger filename="Silent" dummy="yes" value="5" length="0"/>
+                <trigger filename="audio/Plucked 3.ogg" value="6" length="5453016"/>
+                <trigger filename="Silent" dummy="yes" value="7" length="0"/>
+                <trigger filename="audio/Stacc Strings 8.ogg" value="8" length="5410150"/>
+                <trigger filename="audio/Stacc Strings 10.ogg" value="10" length="5462730"/>
+                <trigger filename="audio/Stacc Strings 12.ogg" value="12" length="5472632"/>
+                <trigger filename="audio/Stacc Str 14.ogg" value="14" length="5555692"/>
+                <trigger filename="audio/Strings 17.ogg" value="17" length="5565450"/>
+                <trigger filename="audio/StringsPlucked 19.ogg" value="19" length="5882078"/>
+                <trigger filename="Silent" dummy="yes" value="20" length="0"/>
+                <trigger filename="audio/Guitar 21.ogg" value="21" length="5429630"/>
+                <trigger filename="audio/Guitar 22.ogg" value="22" length="5550760"/>
+                <trigger filename="audio/Guitar 23.ogg" value="23" length="5411962"/>
+                <trigger filename="audio/Guitar 24.ogg" value="24" length="5411850"/>
+                <trigger filename="audio/Str Plucked 25.ogg" value="25" length="5647978"/>
+            </key>
+        </audio_loop_track>
+        <audio_loop_track name="Percussion" id="5" volume="0">
+            <reverb mix="9"/>
+            <key name="C" value="0">
+                <trigger filename="audio/Percussion 5.ogg" value="1" length="5377758"/>
+                <trigger filename="Silent" dummy="yes" value="2" length="0"/>
+                <trigger filename="audio/Percussion 6.ogg" value="6" length="5377758"/>
+                <trigger filename="audio/Percussion 8.ogg" value="8" length="5651444"/>
+                <trigger filename="audio/Percussion 9.ogg" value="9" length="5427648"/>
+                <trigger filename="audio/Percussion 13.ogg" value="13" length="5590090"/>
+                <trigger filename="audio/Perc 14.ogg" value="14" length="5661018"/>
+                <trigger filename="audio/Perc 15.ogg" value="15" length="5662758"/>
+                <trigger filename="audio/Perc 17.ogg" value="17" length="5650774"/>
+                <trigger filename="audio/Perc 18.ogg" value="18" length="5646430"/>
+                <trigger filename="Silent" dummy="yes" value="20" length="0"/>
+                <trigger filename="audio/Perc 21.ogg" value="21" length="5697364"/>
+                <trigger filename="audio/Perc 22.ogg" value="22" length="5647328"/>
+                <trigger filename="audio/Perc 23.ogg" value="23" length="5582402"/>
+                <trigger filename="audio/Perc 24.ogg" value="24" length="5600296"/>
+            </key>
+        </audio_loop_track>
+        <audio_stinger_track name="Respawn" id="6" volume="-2000">
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 1 V1.ogg" value="1" length="661500"/>
+                <stinger filename="audio/Stinger 1 V2.ogg" value="2" length="661500"/>
+                <stinger filename="audio/Stinger 1 V3.ogg" value="3" length="661500"/>
+            </key>
+        </audio_stinger_track>
+        <audio_stinger_track name="Room 1" id="7" volume="-1500">
+            <pickup beats="4"/>
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 2 V1.ogg" value="1" length="651404"/>
+                <stinger filename="audio/Stinger 2 V2.ogg" value="2" length="651404"/>
+                <stinger filename="audio/Stinger 2 V3.ogg" value="3" length="651426"/>
+            </key>
+        </audio_stinger_track>
+        <audio_stinger_track name="Room 2" id="8" volume="-1300">
+            <pickup beats="4"/>
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 3 V1.ogg" value="1" length="826876"/>
+                <stinger filename="audio/Stinger 3 V2.ogg" value="2" length="826876"/>
+                <stinger filename="audio/Stinger 3 V3.ogg" value="3" length="826876"/>
+            </key>
+        </audio_stinger_track>
+        <audio_stinger_track name="Boss" id="9" volume="-1000">
+            <pickup beats="3"/>
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 4 V1.ogg" value="1" length="578812"/>
+                <stinger filename="audio/Stinger 4 V2.ogg" value="2" length="578812"/>
+                <stinger filename="audio/Stinger 4 V3.ogg" value="3" length="413438"/>
+            </key>
+        </audio_stinger_track>
+        <audio_stinger_track name="Game Over " id="10" volume="-700">
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 5 V1.ogg" value="1" length="992250"/>
+                <stinger filename="audio/Stinger 5 V2.ogg" value="2" length="1612408"/>
+                <stinger filename="audio/Stinger 5 V3.ogg" value="3" length="1612408"/>
+            </key>
+        </audio_stinger_track>
+        <audio_stinger_track name="Level Complete" id="11" volume="-300">
+            <key name="C" value="0">
+                <stinger filename="audio/Stinger 6.ogg" value="1" length="1922050"/>
+            </key>
+        </audio_stinger_track>
+    </theme>
