@@ -21,7 +21,7 @@ public class Room
         //yPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
 		//The X and Y position of the first room should be in a set position since the hand crafted hub is stationary.
 		xPos = 0;
-		yPos = 50;
+		yPos = 100;
     }
 
 
@@ -48,7 +48,7 @@ public class Room
 
                 // The x coordinate can be random but the left-most possibility is no further than the width
                 // and the right-most possibility is that the end of the corridor is at the position of the room.
-                xPos = Random.Range(corridor.EndPositionX - roomWidth + 1, corridor.EndPositionX);
+                xPos = Random.Range(corridor.EndPositionX - roomWidth + corridor.corridorWidth + 1, corridor.EndPositionX);
 
                 // This must be clamped to ensure that the room doesn't go off the board.
                 xPos = Mathf.Clamp(xPos, 0, columns - roomWidth);

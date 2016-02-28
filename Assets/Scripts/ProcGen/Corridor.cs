@@ -11,6 +11,7 @@ public class Corridor
     public int startXPos;         // The x coordinate for the start of the corridor.
     public int startYPos;         // The y coordinate for the start of the corridor.
     public int corridorLength;            // How many units long the corridor is.
+    public int corridorWidth = 5;
     public Direction direction;   // Which direction the corridor is heading from it's room.
 
 
@@ -19,8 +20,10 @@ public class Corridor
     {
         get
         {
-            if (direction == Direction.North || direction == Direction.South)
-                return startXPos;
+            if (direction == Direction.North)
+                return startXPos + corridorWidth;
+            if (direction == Direction.South)
+            	return startXPos - corridorWidth;
             if (direction == Direction.East)
                 return startXPos + corridorLength - 1;
             return startXPos - corridorLength + 1;
@@ -32,8 +35,10 @@ public class Corridor
     {
         get
         {
-            if (direction == Direction.East || direction == Direction.West)
-                return startYPos;
+            if (direction == Direction.East)
+                return startYPos + corridorWidth;
+            if (direction == Direction.West)
+            	return startYPos - corridorWidth;
             if (direction == Direction.North)
                 return startYPos + corridorLength - 1;
             return startYPos - corridorLength + 1;
@@ -77,7 +82,7 @@ public class Corridor
             // If the choosen direction is North (up)...
             case Direction.North:
                 // ... the starting position in the x axis can be random but within the width of the room.
-                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth - 1);
+                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth - corridorWidth - 1);
 
                 // The starting position in the y axis must be the top of the room.
                 startYPos = room.yPos + room.roomHeight;
@@ -87,17 +92,17 @@ public class Corridor
                 break;
             case Direction.East:
                 startXPos = room.xPos + room.roomWidth;
-                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight - 1);
+                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight - corridorWidth - 1);
                 maxLength = columns - startXPos - roomWidth.m_Min;
                 break;
             case Direction.South:
-                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth);
+                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth + corridorWidth);
                 startYPos = room.yPos;
                 maxLength = startYPos - roomHeight.m_Min;
                 break;
             case Direction.West:
                 startXPos = room.xPos;
-                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight);
+                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight + corridorWidth);
                 maxLength = startXPos - roomWidth.m_Min;
                 break;
         }
