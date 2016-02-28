@@ -7,14 +7,14 @@ public class ColorToMatchButton : MonoBehaviour
 {
 	public ColorToSwitch colS;
 	bool stepped;
-	int state = 0;
+	int state;
 	public bool match;
-	ColorToMatch colM;
+	public ColorToMatch colM;
 
 	void Start ()
 	{
 		stepped = false;
-		colS.Cswitch(state = 0);
+		colS.Cswitch(state = -1);
 	}
 
 	void Update()
@@ -22,13 +22,15 @@ public class ColorToMatchButton : MonoBehaviour
 		// If the player is colliding with the button and E is pressed, advance the state.
 		// This check should be placed in Update() instead of one of the below functions
 		// since Update() executes more frequently and is less likely to cause missed checks.
-		if (stepped && Input.GetKeyDown(KeyCode.E))
-		{
+		if (stepped && Input.GetKeyDown (KeyCode.E)) {
 			// Cycles the state counter forward and loops
-			colS.Cswitch(state = (state + 1) % 3);
-			if (colM.getIndex () == state) {
+			colS.Cswitch (state = (state + 1) % 3);
+			//Compares colors instead of index to allow more "random" color cycling in the ColorToSwitch.
+			if (colM.getColor() == colS.getColor()) {
 				match = true;
 				Debug.Log ("TRUE");
+			} else {
+				match = false;
 			}
 		}
 	}
