@@ -30,7 +30,7 @@ public class PanButton : MonoBehaviour
 					player = c.transform;
 					camPos = Camera.main.transform.position;
 					player.GetComponent<PlayerController>().enabled = false;
-					Camera.main.GetComponent<CameraController>().enabled = false;
+					Camera.main.GetComponent<CameraController>().follow = false;
 				}
 			}
 		}
@@ -57,7 +57,7 @@ public class PanButton : MonoBehaviour
 				Camera.main.transform.position = camPos;
 				if (Vector2.Distance(camPos, player.position) < 0.1f)
 				{
-					Camera.main.GetComponent<CameraController>().enabled = true;
+					Camera.main.GetComponent<CameraController>().follow = true;
 					panState = state.notpanning;
 				}
 			}

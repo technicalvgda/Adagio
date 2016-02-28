@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(RoomChecker))]
 public class BoardCreator : MonoBehaviour
 {
     // The type of tile that will be laid in a specific position.
@@ -20,6 +21,7 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
+    public RoomChecker rc;
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -31,6 +33,7 @@ public class BoardCreator : MonoBehaviour
     {
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
+        rc = transform.GetComponent<RoomChecker>();
 
         SetupTilesArray();
 
@@ -41,6 +44,7 @@ public class BoardCreator : MonoBehaviour
 
         InstantiateTiles();
         InstantiateOuterWalls();
+
     }
 
 
@@ -68,20 +72,30 @@ public class BoardCreator : MonoBehaviour
 
 		// Create the first room and corridor.
 		rooms[0] = new Room();
-		corridors[0] = new Corridor();
+        corridors[0] = new Corridor();
 
 		// Setup the first room, there is no previous corridor so we do not use one.
 		rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
+        if (rc == null)
+        {
+            Debug.Log("Roomchecker doesnt exist");
+        }
+        if (rooms[0] == null)
+        {
+            Debug.Log("Room[0] doesnt exist");
+        }
+        rc.RoomList.Add(rooms[0]);
 
-		// Setup the first corridor using the first room.
-		corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
+        // Setup the first corridor using the first room.
+        corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
 
 		// Set up second room. Check for overlap is not necessary
 		rooms[1] = new Room();
 		rooms[1].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[0]);
+        rc.RoomList.Add(rooms[1]);
 
-		// Set up the rest of the rooms and corridors, checking for overlaps
-		for (int i = 2; i < rooms.Length; i++)
+        // Set up the rest of the rooms and corridors, checking for overlaps
+        for (int i = 2; i < rooms.Length; i++)
 		{
 			bool goodRoomPlacement = false;
 
@@ -119,7 +133,8 @@ public class BoardCreator : MonoBehaviour
 				{
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
-				}
+                    rc.RoomList.Add(rooms[i]);
+                }
 			}
 
 			//Instantiates player in the i-th/2 room created
