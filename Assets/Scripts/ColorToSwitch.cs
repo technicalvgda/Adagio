@@ -8,7 +8,7 @@ public class ColorToSwitch : MonoBehaviour {
 	Color c1,c2,c3,tempC;
 	Color[] colorArraySwitch = new Color[3];
 	int randStart;
-	void Start () {
+	void Awake () {
 		sr = this.GetComponent<SpriteRenderer>();
         //colorArraySwitch = colSM.getArray ();
 		colorArraySwitch [0] = new Color (colSM.color0.r, colSM.color0.g, colSM.color0.b);
