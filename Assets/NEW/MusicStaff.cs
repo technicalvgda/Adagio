@@ -19,7 +19,7 @@ public class MusicStaff : MonoBehaviour
 
     public void SlideUp()
     {
-        ChangePitch(pitch = (pitch + 1) % 8);
+        ChangePitch(pitch = (pitch + 1) % 9);
     }
 
     public void SlideDown()
