@@ -20,9 +20,7 @@ public class Corridor
     {
         get
         {
-            if (direction == Direction.North)
-				return startXPos + corridorWidth;
-            if (direction == Direction.South)
+            if (direction == Direction.North || direction == Direction.South)
 				return startXPos + corridorWidth;
             if (direction == Direction.East)
                 return startXPos + corridorLength - 1;
@@ -35,9 +33,7 @@ public class Corridor
     {
         get
         {
-            if (direction == Direction.East)
-				return startYPos + corridorWidth;
-            if (direction == Direction.West)
+            if (direction == Direction.East || direction == Direction.West)
 				return startYPos + corridorWidth;
             if (direction == Direction.North)
                 return startYPos + corridorLength - 1;

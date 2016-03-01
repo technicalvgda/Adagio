@@ -171,7 +171,6 @@ public class BoardCreator : MonoBehaviour
         }
     }
 
-    //TODO: Give corridor a set width
     void SetTilesValuesForCorridors()
     {
         // Go through every corridor...
