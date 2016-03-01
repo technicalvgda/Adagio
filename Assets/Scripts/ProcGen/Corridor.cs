@@ -15,15 +15,15 @@ public class Corridor
     public Direction direction;   // Which direction the corridor is heading from it's room.
 
 
-    // Get the end position of the corridor based on it's start position and which direction it's heading.
+    // Get the end position of the corridor based on it's start position and which direction it's heading plus the corridor width if applicable.
     public int EndPositionX
     {
         get
         {
             if (direction == Direction.North)
-                return startXPos + corridorWidth;
+				return startXPos + corridorWidth;
             if (direction == Direction.South)
-            	return startXPos - corridorWidth;
+				return startXPos + corridorWidth;
             if (direction == Direction.East)
                 return startXPos + corridorLength - 1;
             return startXPos - corridorLength + 1;
@@ -36,9 +36,9 @@ public class Corridor
         get
         {
             if (direction == Direction.East)
-                return startYPos + corridorWidth;
+				return startYPos + corridorWidth;
             if (direction == Direction.West)
-            	return startYPos - corridorWidth;
+				return startYPos + corridorWidth;
             if (direction == Direction.North)
                 return startYPos + corridorLength - 1;
             return startYPos - corridorLength + 1;
@@ -96,13 +96,13 @@ public class Corridor
                 maxLength = columns - startXPos - roomWidth.m_Min;
                 break;
             case Direction.South:
-                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth + corridorWidth);
+                startXPos = Random.Range(room.xPos, room.xPos + room.roomWidth - corridorWidth);
                 startYPos = room.yPos;
                 maxLength = startYPos - roomHeight.m_Min;
                 break;
             case Direction.West:
                 startXPos = room.xPos;
-                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight + corridorWidth);
+                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight - corridorWidth);
                 maxLength = startXPos - roomWidth.m_Min;
                 break;
         }

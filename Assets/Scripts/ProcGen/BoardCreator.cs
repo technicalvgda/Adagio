@@ -204,7 +204,7 @@ public class BoardCreator : MonoBehaviour
                         break;
                 }
 
-                //Widens the corridor
+                //Widens the corridor to set width
                 for ( int k = 0; k < currentCorridor.corridorWidth; k++) {
                     switch(currentCorridor.direction)
                     {
@@ -215,10 +215,10 @@ public class BoardCreator : MonoBehaviour
                             yCoord++;
                             break;
                         case Direction.South:
-                            xCoord--;
+                            xCoord++;
                             break;
                         case Direction.West:
-                            yCoord--;
+                            yCoord++;
                             break;
 
                     }
