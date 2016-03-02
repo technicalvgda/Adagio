@@ -45,7 +45,12 @@ public class Corridor
     public void SetupCorridor(Room room, IntRange length, IntRange roomWidth, IntRange roomHeight, int columns, int rows, bool firstCorridor)
     {
         // Set a random direction (a random index from 0 to 3, cast to Direction).
-        direction = (Direction)Random.Range(0, 4);
+        //First corridor cannot head West because it is in the West most room
+	if (firstCorridor) {
+		direction = (Direction)Random.Range (0, 3);
+	} else {
+		direction = (Direction)Random.Range (0, 4);
+	}
 
         // Find the direction opposite to the one entering the room this corridor is leaving from.
         // Cast the previous corridor's direction to an int between 0 and 3 and add 2 (a number between 2 and 5).
