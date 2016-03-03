@@ -36,15 +36,15 @@ public class SliderMove : MonoBehaviour {
                 finish = true;
             }
         }
-        if (finish == true && (pp1.GetComponent<PressurePlate>().collide == false ||
-               pp2.GetComponent<PressurePlate>().collide == false || pp3.GetComponent<PressurePlate>().collide == false))
+        if (finish == true && (pp1.GetComponent<PressurePlateFlute>().collide == false ||
+               pp2.GetComponent<PressurePlateFlute>().collide == false || pp3.GetComponent<PressurePlateFlute>().collide == false))
         {
             transform.position = start;
             fluteSwitch.GetComponent<FluteSwitch>().pressed = false;
             finish = false;
         }
-        if(pp1.GetComponent<PressurePlate>().collide == true &&
-               pp2.GetComponent<PressurePlate>().collide == true && pp3.GetComponent<PressurePlate>().collide == true)
+        if(pp1.GetComponent<PressurePlateFlute>().collide == true &&
+               pp2.GetComponent<PressurePlateFlute>().collide == true && pp3.GetComponent<PressurePlateFlute>().collide == true)
         {
             GameObject.Destroy(door);
         }
