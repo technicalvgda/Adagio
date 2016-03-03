@@ -183,7 +183,6 @@ public class BoardCreator : MonoBehaviour
         }
     }
 
-
     void SetTilesValuesForCorridors()
     {
         // Go through every corridor...
@@ -216,8 +215,28 @@ public class BoardCreator : MonoBehaviour
                         break;
                 }
 
-                // Set the tile at these coordinates to Floor.
-                tiles[xCoord][yCoord] = TileType.Floor;
+                //Widens the corridor to set width
+                for ( int k = 0; k < currentCorridor.corridorWidth; k++) {
+                    switch(currentCorridor.direction)
+                    {
+                        case Direction.North:
+                            xCoord++;
+                            break;
+                        case Direction.East:
+                            yCoord++;
+                            break;
+                        case Direction.South:
+                            xCoord++;
+                            break;
+                        case Direction.West:
+                            yCoord++;
+                            break;
+
+                    }
+                    // Set the tile at these coordinates to Floor.
+                    tiles[xCoord][yCoord] = TileType.Floor;
+                }
+                
             }
         }
     }
