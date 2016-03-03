@@ -20,6 +20,13 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
+    public GameObject puzzleRoom;
+    public IntRange randomPuzzleRoom = new IntRange(2,5);
+
+    public float xCoordinatePuzzleRoom;
+    public float yCoordinatePuzzleRoom;
+
+
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -62,6 +69,7 @@ public class BoardCreator : MonoBehaviour
 	{
 		// Create the rooms array with a random size.
 		rooms = new Room[numRooms.Random];
+        
 
 		// There should be one less corridor than there is rooms.
 		corridors = new Corridor[rooms.Length - 1];
@@ -83,7 +91,9 @@ public class BoardCreator : MonoBehaviour
 		// Set up the rest of the rooms and corridors, checking for overlaps
 		for (int i = 2; i < rooms.Length; i++)
 		{
-			bool goodRoomPlacement = false;
+            
+
+            bool goodRoomPlacement = false;
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
 			while (!goodRoomPlacement)
@@ -121,6 +131,16 @@ public class BoardCreator : MonoBehaviour
 					rooms [i] = roomToBePlaced;
 				}
 			}
+
+
+            if (i == (int)(rooms.Length * .5f))
+            {
+
+                Vector3 puzzleRoomPos = new Vector3(rooms[i].xPos + xCoordinatePuzzleRoom, rooms[i].yPos + yCoordinatePuzzleRoom, 0);
+                Instantiate(puzzleRoom, puzzleRoomPos, Quaternion.identity);
+            }
+                
+            
 
 			//Instantiates player in the i-th/2 room created
 			//Cast as int so condition is always reachable
