@@ -3,19 +3,19 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class MainMenuCtrl : MonoBehaviour 
-{
+{	
+	private PauseGame paused;
 	public GameObject MainMenuCanvas;
 	public GameObject QuitConfirmationCanvas;
 	public GameObject OptionsCanvas;
-
+	public bool isTitleScreen;
     public AudioControl audio;
 
     // Use this for initialization
-    void Start () 
+    void Awake () 
 	{
 		MainMenuCanvas = GameObject.Find("MainMenuCanvas");
-
-
+		paused = GetComponent<PauseGame> ();
         QuitConfirmationCanvas = GameObject.Find("QuitConfirmationCanvas");
         QuitConfirmationCanvas.SetActive(false);
 		OptionsCanvas = GameObject.Find("OptionsCanvas");
@@ -45,7 +45,11 @@ public class MainMenuCtrl : MonoBehaviour
 
     public void LoadScene(string name)
     {
+		if(isTitleScreen){
 	    SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
+		} else {
+			paused.resumeGame ();
+		}
     }
 
     public void ConfirmQuit()
