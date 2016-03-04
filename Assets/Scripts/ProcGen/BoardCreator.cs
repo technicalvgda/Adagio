@@ -9,7 +9,6 @@ public class BoardCreator : MonoBehaviour
         Wall, Floor,
     }
 
-
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
     public int rows = 100;                                    // The number of rows on the board (how tall it will be).
     public IntRange numRooms = new IntRange(15, 20);         // The range of the number of rooms there can be.
@@ -27,6 +26,7 @@ public class BoardCreator : MonoBehaviour
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
+	private Corridor[] aCorridors;							  // All the appending corridors that connects to the main corridor.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
 
 
@@ -68,10 +68,15 @@ public class BoardCreator : MonoBehaviour
 
 		// There should be one less corridor than there is rooms.
 		corridors = new Corridor[rooms.Length - 1];
-
+		
+		// There will be a specified number of appending corridor
+		aCorridors = new Corridor[(rooms.Length - 1) / 2];
+		
 		// Create the first room and corridor.
 		rooms[0] = new Room();
 		corridors[0] = new Corridor();
+		
+		int numAppend = 0;
 
 		// Setup the first room, there is no previous corridor so we do not use one.
 		rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
@@ -87,13 +92,22 @@ public class BoardCreator : MonoBehaviour
 		for (int i = 2; i < rooms.Length; i++)
 		{
 			bool goodRoomPlacement = false;
+			bool appendCorridor = false;
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
 			while (!goodRoomPlacement)
 			{
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
+				Corridor corridorToAppend = new Corridor();
+				if (numAppend < (rooms.Length - 1) / 2)
+				{
+					appendCorridor = true;
+				}
+				
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
+				if (appendCorridor)
+					corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
 
 				Room roomToBePlaced = new Room ();
 				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
@@ -121,6 +135,9 @@ public class BoardCreator : MonoBehaviour
 				if (goodRoomPlacement)
 				{
 					corridors [i - 1] = corridorToBePlaced;
+					if (appendCorridor)
+						aCorridors[numAppend] = corridorToAppend;
+					
 					rooms [i] = roomToBePlaced;
 
 					//Rolls the dice
@@ -189,6 +206,61 @@ public class BoardCreator : MonoBehaviour
         for (int i = 0; i < corridors.Length; i++)
         {
             Corridor currentCorridor = corridors[i];
+
+            // and go through it's length.
+            for (int j = 0; j < currentCorridor.corridorLength; j++)
+            {
+                // Start the coordinates at the start of the corridor.
+                int xCoord = currentCorridor.startXPos;
+                int yCoord = currentCorridor.startYPos;
+
+                // Depending on the direction, add or subtract from the appropriate
+                // coordinate based on how far through the length the loop is.
+                switch (currentCorridor.direction)
+                {
+                    case Direction.North:
+                        yCoord += j;
+                        break;
+                    case Direction.East:
+                        xCoord += j;
+                        break;
+                    case Direction.South:
+                        yCoord -= j;
+                        break;
+                    case Direction.West:
+                        xCoord -= j;
+                        break;
+                }
+
+                //Widens the corridor to set width
+                for ( int k = 0; k < currentCorridor.corridorWidth; k++) {
+                    switch(currentCorridor.direction)
+                    {
+                        case Direction.North:
+                            xCoord++;
+                            break;
+                        case Direction.East:
+                            yCoord++;
+                            break;
+                        case Direction.South:
+                            xCoord++;
+                            break;
+                        case Direction.West:
+                            yCoord++;
+                            break;
+
+                    }
+                    // Set the tile at these coordinates to Floor.
+                    tiles[xCoord][yCoord] = TileType.Floor;
+                }
+                
+            }
+        }
+		
+		// Go through every corridor...
+        for (int i = 0; i < aCorridors.Length; i++)
+        {
+            Corridor currentCorridor = aCorridors[i];
 
             // and go through it's length.
             for (int j = 0; j < currentCorridor.corridorLength; j++)
