@@ -112,11 +112,8 @@ public class Corridor
         corridorLength = Mathf.Clamp(corridorLength, 1, maxLength);
     }
 	
-	public void appendCorridor(Corridor corridor, IntRange length, int xStart, int yStart)
-    {
-		startXPos = xStart;
-		startYPos = yStart;
-		
+	public void appendCorridor(Corridor corridor, IntRange length, int xStart, int yStart, int columns, int rows)
+    {	
         // Set a random direction (a random index from 0 to 3, cast to Direction).
         //First corridor cannot head West because it is in the West most room
 		direction = (Direction)Random.Range (0, 4);
@@ -138,14 +135,38 @@ public class Corridor
             directionInt++;
             directionInt = directionInt % 4;
             direction = (Direction)directionInt;
-
         }
+		
+		int maxLength = length.m_Max;
+		
+		switch (direction)
+        {
+            // If the choosen direction is North (up)...
+            case Direction.North:
+                // ... the starting position in the x axis can be random but within the width of the room.
+                startXPos = xStart - corridorWidth;
+
+                // The maximum length the corridor can be is the height of the board (rows) but from the top of the room (y pos + height).
+                maxLength = rows - startYPos - corridorLength;
+                break;
+            case Direction.East:
+                startXPos = xStart - (corridorWidth / 2) - 1;
+                maxLength = columns - startXPos - corridorLength;
+                break;
+            case Direction.South:
+                startXPos = xStart - corridorWidth;
+                maxLength = columns - startYPos - corridorLength;
+                break;
+            case Direction.West:
+                startXPos = xStart + (corridorWidth / 2) - 2;
+                maxLength = rows - startXPos - corridorLength;
+                break;
+        }
+		
+		startYPos = yStart;
 
         // Set a random length.
         corridorLength = length.Random;
-
-        // Create a cap for how long the length can be (this will be changed based on the direction and position).
-        int maxLength = length.m_Max;
 
         // We clamp the length of the corridor to make sure it doesn't go off the board.
         corridorLength = Mathf.Clamp(corridorLength, 1, maxLength);

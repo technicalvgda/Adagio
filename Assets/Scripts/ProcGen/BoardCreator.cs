@@ -14,7 +14,7 @@ public class BoardCreator : MonoBehaviour
     public IntRange numRooms = new IntRange(15, 20);         // The range of the number of rooms there can be.
     public IntRange roomWidth = new IntRange(3, 10);         // The range of widths rooms can have.
     public IntRange roomHeight = new IntRange(3, 10);        // The range of heights rooms can have.
-    public IntRange corridorLength = new IntRange(6, 10);    // The range of lengths corridors between rooms can have.
+    public IntRange corridorLength = new IntRange(2, 5);    // The range of lengths corridors between rooms can have.
     public GameObject[] floorTiles;                           // An array of floor tile prefabs.
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
@@ -28,6 +28,7 @@ public class BoardCreator : MonoBehaviour
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
 	private Corridor[] aCorridors;							  // All the appending corridors that connects to the main corridor.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+	private int numAppend = 0;
 
 
     private void Start()
@@ -70,13 +71,11 @@ public class BoardCreator : MonoBehaviour
 		corridors = new Corridor[rooms.Length - 1];
 		
 		// There will be a specified number of appending corridor
-		aCorridors = new Corridor[(rooms.Length - 1) / 2];
+		aCorridors = new Corridor[rooms.Length  - 1];
 		
 		// Create the first room and corridor.
 		rooms[0] = new Room();
 		corridors[0] = new Corridor();
-		
-		int numAppend = 0;
 
 		// Setup the first room, there is no previous corridor so we do not use one.
 		rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
@@ -101,7 +100,7 @@ public class BoardCreator : MonoBehaviour
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
 				Corridor corridorToAppend = new Corridor();
-				if (numAppend < (rooms.Length - 1) / 2)
+				if (numAppend < rooms.Length  - 1)
 				{
 					Debug.Log("Appending...");
 					appendCorridor = true;
@@ -113,7 +112,7 @@ public class BoardCreator : MonoBehaviour
 				
 				if (appendCorridor)
 				{
-					corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
+					corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY, columns, rows);
 					roomToBePlaced.SetupRoom(roomWidth, roomHeight, columns, rows, corridorToAppend);
 				}
 				else
@@ -269,7 +268,7 @@ public class BoardCreator : MonoBehaviour
         }
 		
 		// Go through every corridor...
-        for (int i = 0; i < aCorridors.Length; i++)
+        for (int i = 0; i < numAppend; i++)
         {
             Corridor currentCorridor = aCorridors[i];
 
