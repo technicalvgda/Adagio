@@ -92,25 +92,32 @@ public class BoardCreator : MonoBehaviour
 		for (int i = 2; i < rooms.Length; i++)
 		{
 			bool goodRoomPlacement = false;
-			bool appendCorridor = false;
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
 			while (!goodRoomPlacement)
 			{
+				bool appendCorridor = false;
+							
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
 				Corridor corridorToAppend = new Corridor();
 				if (numAppend < (rooms.Length - 1) / 2)
 				{
+					Debug.Log("Appending...");
 					appendCorridor = true;
 				}
 				
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
-				if (appendCorridor)
-					corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
-
+				
 				Room roomToBePlaced = new Room ();
-				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
+				
+				if (appendCorridor)
+				{
+					corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
+					roomToBePlaced.SetupRoom(roomWidth, roomHeight, columns, rows, corridorToAppend);
+				}
+				else
+					roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
 
 				// Loop over all other rooms created, except for one to be placed
 				for (int j = 0; j < i; j++)
@@ -136,7 +143,11 @@ public class BoardCreator : MonoBehaviour
 				{
 					corridors [i - 1] = corridorToBePlaced;
 					if (appendCorridor)
+					{
+						Debug.Log("Saving...");
 						aCorridors[numAppend] = corridorToAppend;
+						numAppend++;
+					}
 					
 					rooms [i] = roomToBePlaced;
 
@@ -265,6 +276,7 @@ public class BoardCreator : MonoBehaviour
             // and go through it's length.
             for (int j = 0; j < currentCorridor.corridorLength; j++)
             {
+				Debug.Log("Corridor...");
                 // Start the coordinates at the start of the corridor.
                 int xCoord = currentCorridor.startXPos;
                 int yCoord = currentCorridor.startYPos;
