@@ -24,8 +24,6 @@ public class BoardCreator : MonoBehaviour
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
 
-    //Variable to prevent freeze up
-    private int tryCounter = 0;
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -92,11 +90,9 @@ public class BoardCreator : MonoBehaviour
 			bool goodRoomPlacement = false;
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
-			while (!goodRoomPlacement && tryCounter < 6)
+			while (!goodRoomPlacement)
 			{
 				// Create test corridor and room
-                tryCounter++;
-
 				Corridor corridorToBePlaced = new Corridor();
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
 
@@ -125,7 +121,6 @@ public class BoardCreator : MonoBehaviour
 				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
 				if (goodRoomPlacement)
 				{
-                    tryCounter = 0;
 
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
