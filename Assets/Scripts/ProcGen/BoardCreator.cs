@@ -20,9 +20,13 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
-	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
-	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
-	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
+	public GameObject PuzzleRoom;							  // The prefab for the puzzle room
+    public GameObject PuzzleCorridor;                         // The prefab for the puzzle room
+	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzle rooms
+	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzle rooms.
+    private float xMidpointOfCorridor;                        //The center x-coordinate of the corridors 
+    private float yMidpointOfCorridorNorth;                   //The center y-coordinate of the corridors that is in the North Direction  
+    private float yMidpointOfCorridorSouth;                   //The center y-coordinate of the corridors that is in the South Direction
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -63,8 +67,11 @@ public class BoardCreator : MonoBehaviour
 
 	void CreateRoomsAndCorridors()
 	{
-		// Create the rooms array with a random size.
-		rooms = new Room[numRooms.Random];
+        
+
+
+        // Create the rooms array with a random size.
+        rooms = new Room[numRooms.Random];
 
 		// There should be one less corridor than there is rooms.
 		corridors = new Corridor[rooms.Length - 1];
@@ -123,14 +130,36 @@ public class BoardCreator : MonoBehaviour
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
 
-					//Rolls the dice
-					roll = Random.Range (0, 100);
+                    xMidpointOfCorridor = (corridorToBePlaced.startXPos) + ((corridorToBePlaced.EndPositionX - corridorToBePlaced.startXPos) / 2);                          // The center x-coordinate of the corridors
+                    yMidpointOfCorridorNorth = (corridorToBePlaced.startYPos) + ((corridorToBePlaced.EndPositionY - corridorToBePlaced.startYPos)/2);                       //The center y-coordinate of the corridors that is in the North Direction
+                    yMidpointOfCorridorSouth = (corridorToBePlaced.startYPos) - ((corridorToBePlaced.startYPos - corridorToBePlaced.EndPositionY) / 2);                     //The center y-coordinate of the corridors that is in the South Direction
+
+                    //Rolls the dice
+                    roll = Random.Range (0, 100);
 					//If the roll is between 0 and the PercentChance value
 					if (roll <= PercentChance)
 					{
 						//Spawn the prefab
-						Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);
-					}
+						Instantiate (PuzzleRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);
+
+
+                        if (corridorToBePlaced.startYPos > corridorToBePlaced.EndPositionY)                 // if the corridor is in the south Direction
+                        {
+                            Instantiate(PuzzleCorridor, new Vector3(xMidpointOfCorridor, yMidpointOfCorridorSouth, 0), Quaternion.identity);
+                        }
+                        if (corridorToBePlaced.startYPos < corridorToBePlaced.EndPositionY || corridorToBePlaced.startYPos == corridorToBePlaced.EndPositionY)   // if the corridor is in the North, West, East direction
+                        {
+                            Instantiate(PuzzleCorridor, new Vector3(xMidpointOfCorridor, yMidpointOfCorridorNorth, 0), Quaternion.identity);
+                        }
+
+
+
+
+
+
+
+                    }
+
 				}
 			}
 
@@ -233,6 +262,7 @@ public class BoardCreator : MonoBehaviour
                             break;
 
                     }
+
                     // Set the tile at these coordinates to Floor.
                     tiles[xCoord][yCoord] = TileType.Floor;
                 }
