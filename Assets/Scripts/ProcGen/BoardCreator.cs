@@ -21,8 +21,10 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
+	public GameObject PuzzleCorridor;						  // The prefab for the corridor puzzle
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
+	public int CorridorPercChance = 50;						  // Variable for the percent chance of the randomly instantiated corridor puzzle room
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -235,13 +237,36 @@ public class BoardCreator : MonoBehaviour
                     }
                     // Set the tile at these coordinates to Floor.
                     tiles[xCoord][yCoord] = TileType.Floor;
+
                 }
                 
             }
-        }
-    }
 
+			//Makes a roll
+			roll = Random.Range (0, 100);
 
+			//If the roll is a success
+			if (roll <= CorridorPercChance)
+			{
+				//Spawn the prefab in the correct position with respect to the direction of the corridor
+				switch(currentCorridor.direction)
+				{
+				case Direction.North:
+					Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos+currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
+					break;
+				case Direction.East:
+					Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
+					break;
+				case Direction.South:
+					Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos-currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
+					break;
+				case Direction.West:
+					Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos-currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
+					break;
+				}
+        	}
+   		}
+	}
     void InstantiateTiles()
     {
         // Go through all the tiles in the jagged array...
