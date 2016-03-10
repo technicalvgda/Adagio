@@ -19,7 +19,7 @@ public class TrapDoorOpenTrigger : MonoBehaviour {
 			receiver.Deactivate ();
 			//Extra stuff to activate if desired
 			receiver2.Deactivate ();
-			//receiver3.Deactivate ();
+			receiver3.Deactivate ();
 			gameObject.SetActive (false);
 
 		}

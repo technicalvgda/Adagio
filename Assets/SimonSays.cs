@@ -63,30 +63,30 @@ public class SimonSays : MonoBehaviour
             bpressed.Add(0);
             sb4.GetComponent<SimonSaysButton>().pressed = false;
         }
-        if (sequence[0] == bpressed[0])
-        {
-            b1 = true;
-        }
-        if (sequence[1] == bpressed[1])
-        {
-            b2 = true;
-            
-        }
-        if (sequence[2] == bpressed[2])
-        {
-            b3 = true;
-         
-        }
-        if (sequence[3] == bpressed[3])
-        {
-            b4 = true;
-         
-        }
-        if (b1 == true && b2 == true && b3 == true && b4 == true)
-        {
-            GameObject.Destroy(door);
-        }
-    }
+	if (bpressed.Count  > 3) 
+		{
+		if (sequence [0] == bpressed [0]) 
+		{
+			b1 = true;
+		}
+		if (sequence [1] == bpressed [1]) 
+		{
+			b2 = true;
+		}
+		if (sequence [2] == bpressed [2]) 
+		{
+			b3 = true;
+		}
+		if (sequence [3] == bpressed [3]) 
+		{
+			b4 = true;
+		}
+		if (b1 == true && b2 == true && b3 == true && b4 == true) 
+		{
+			GameObject.Destroy (door);
+		}
+}
+}
     public IEnumerator CycleColors()
     {
         int counter = 0;
