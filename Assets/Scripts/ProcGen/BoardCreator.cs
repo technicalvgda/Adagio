@@ -21,6 +21,8 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
+	public GameObject PuzzleCorridor;
+	public int CorridorPercChance = 50;
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
 	public int hubOpening = 10;
@@ -240,9 +242,33 @@ public class BoardCreator : MonoBehaviour
                 }
                 
             }
-        }
-    }
+        
+    
+	//Makes a roll
+				roll = Random.Range (0, 100);
 
+				//If the roll is a success
+				if (roll <= CorridorPercChance)
+				{
+						//Spawn the prefab in the correct position with respect to the direction of the corridor
+						switch(currentCorridor.direction)
+						{
+						case Direction.North:
+								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos+currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
+								break;
+						case Direction.East:
+								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
+								break;
+						case Direction.South:
+								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos-currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
+								break;
+						case Direction.West:
+								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos-currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
+								break;
+						}
+		        	}
+	   		}
+	}
 
     void InstantiateTiles()
     {
