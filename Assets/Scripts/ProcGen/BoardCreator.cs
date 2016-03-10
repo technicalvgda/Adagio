@@ -28,6 +28,7 @@ public class BoardCreator : MonoBehaviour
 	public int hubOpening = 10;
 
 
+
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
@@ -124,6 +125,7 @@ public class BoardCreator : MonoBehaviour
 				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
 				if (goodRoomPlacement)
 				{
+
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
 
