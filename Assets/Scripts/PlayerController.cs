@@ -18,6 +18,10 @@ public class PlayerController : MonoBehaviour {
 		//Reference so I don't have to type this long thing out repeatedly
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
+        if(anim == null)
+        {
+            Debug.Log("No Animator Attached to Player");
+        }
 	}
 	
 	void Update () {
@@ -43,7 +47,10 @@ public class PlayerController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis("Horizontal");
         //set the walking animation variable to the axis, 
         //use that to check if moving and in which direction
-        anim.SetFloat("Walking", moveHorizontal);
+        if (anim != null)
+        {
+            anim.SetFloat("Walking", moveHorizontal);
+        }
 
         currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
        

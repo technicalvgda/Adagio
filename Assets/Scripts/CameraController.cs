@@ -25,9 +25,9 @@ public class CameraController : MonoBehaviour
 	    {
 		
 		        if (player == null)
-			       {
+			    {
 			            player = GameObject.Find("Player(Clone)");
-			        }
+			    }
 		        else
 			        {
 			            //Camera's new position is the player's position offsetted
