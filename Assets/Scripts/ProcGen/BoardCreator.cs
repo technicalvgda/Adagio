@@ -23,6 +23,8 @@ public class BoardCreator : MonoBehaviour
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
+	public int hubOpening = 10;
+
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -289,8 +291,13 @@ public class BoardCreator : MonoBehaviour
         // While the value for Y is less than the end value...
         while (currentY <= endingY)
         {
-            // ... instantiate an outer wall tile at the x coordinate and the current y coordinate.
-            InstantiateFromArray(outerWallTiles, xCoord, currentY);
+            // If connected to hub
+			if (xCoord == -1f && (currentY >= (columns / 2) && currentY < (columns / 2 + hubOpening))) {
+				InstantiateFromArray (floorTiles, xCoord, currentY);
+			} else {
+				// ... instantiate an outer wall tile at the x coordinate and the current y coordinate.
+				InstantiateFromArray (outerWallTiles, xCoord, currentY);
+			}
 
             currentY++;
         }
