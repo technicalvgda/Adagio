@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour {
 	private float blockJumpTimer = 0f;
 	private Vector2 currentVelocity;
 	private Rigidbody2D rb2d;
-
+	private DirectionRaycasting2DCollider raycast;
+	public float moveHorizontal;
     private Animator anim;
 
 	// Use this for initialization
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour {
 		//Reference so I don't have to type this long thing out repeatedly
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
+		raycast = GetComponent<DirectionRaycasting2DCollider> ();
         if(anim == null)
         {
             Debug.Log("No Animator Attached to Player");
@@ -43,14 +45,28 @@ public class PlayerController : MonoBehaviour {
 				blockJumpTimer = blockJumpTimerDuration;
 			}
 		}
-
-		float moveHorizontal = Input.GetAxis("Horizontal");
+		//Fixes infinite jump on the ceiling
+		if(raycast.collisionUp)
+		{
+			blockJumpTimer = blockJumpTimerDuration;
+		}
+		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
+		if(raycast.collisionLeft && !raycast.collisionDown){
+			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
+		} else if (raycast.collisionRight && !raycast.collisionDown){
+			moveHorizontal = Input.GetKey(KeyCode.D) ? 0 : Input.GetAxis ("Horizontal");
+		} else {
+			moveHorizontal = Input.GetAxis ("Horizontal");
+		}
         //set the walking animation variable to the axis, 
         //use that to check if moving and in which direction
         if (anim != null)
         {
             anim.SetFloat("Walking", moveHorizontal);
         }
+
+
+
 
         currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
        
