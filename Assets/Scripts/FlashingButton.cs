@@ -7,11 +7,13 @@ public class FlashingButton : MonoBehaviour {
     public GameObject plate;
     public bool complete;
     public bool next;
+	public float timing;
 
     void Start()
     {
         sr = this.GetComponent<SpriteRenderer>();
         complete = false;
+		timing = 0f;
     }
 
 	// Update is called once per frame
