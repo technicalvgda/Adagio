@@ -20,12 +20,15 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
+    public GameObject playerTeleportPlat;
+    public GameObject teleporter;
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
 	public GameObject PuzzleCorridor;
 	public int CorridorPercChance = 50;
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
 	public int hubOpening = 10;
+    
 
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
@@ -144,8 +147,19 @@ public class BoardCreator : MonoBehaviour
 			{
 				Vector3 playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
 				Instantiate(player, playerPos, Quaternion.identity);
-			}
-		}
+
+                Vector3 playerTeleportPlatPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
+                Instantiate(playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
+
+            }
+
+            if (i == (int)(rooms.Length - 1))
+            {
+                Vector3 teleporterPos = new Vector3(rooms[rooms.Length - 1].xPos, rooms[rooms.Length - 1].yPos, 0);
+                Instantiate(teleporter, teleporterPos, Quaternion.identity);
+            }
+
+        }
 	}
 
 
