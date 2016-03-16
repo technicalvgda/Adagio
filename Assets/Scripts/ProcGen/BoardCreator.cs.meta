@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 0e07e45ae6ed27e4ea45288d862e596d
-timeCreated: 1455386253
+timeCreated: 1458098311
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
+  - PuzzelRoom: {instanceID: 0}
+  - PuzzleCorridor: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

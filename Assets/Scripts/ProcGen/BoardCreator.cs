@@ -24,6 +24,7 @@ public class BoardCreator : MonoBehaviour
     public GameObject playerTeleportPlat;
     public GameObject teleporter;
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
+
 	public GameObject PuzzleCorridor;
 	public int CorridorPercChance = 50;
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
@@ -38,6 +39,10 @@ public class BoardCreator : MonoBehaviour
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+
+    public GameObject[] RandomPrefabs;                          //An array o
+
+    public int element = 0;
 
 
     private void Start()
@@ -167,8 +172,11 @@ public class BoardCreator : MonoBehaviour
 					//If the roll is between 0 and the PercentChance value
 					if (roll <= PercentChance)
 					{
-						//Spawn the prefab
-						Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);
+                        element = Random.Range(0, 7); //Only used 8 elements to test, this can change later
+
+                        //Spawn the prefab
+                        //NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
+                        Instantiate (RandomPrefabs[element], new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth / 2, roomToBePlaced.yPos+roomToBePlaced.roomHeight / 2, 0), Quaternion.identity);
 					}
 				}
 			}
