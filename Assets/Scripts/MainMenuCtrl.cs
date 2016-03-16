@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -7,6 +8,8 @@ public class MainMenuCtrl : MonoBehaviour
 	public GameObject MainMenuCanvas;
 	public GameObject QuitConfirmationCanvas;
 	public GameObject OptionsCanvas;
+
+    public Slider BrightnessSlider;
 
     public AudioControl audio;
 
@@ -46,6 +49,13 @@ public class MainMenuCtrl : MonoBehaviour
     public void LoadScene(string name)
     {
 	    SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
+    }
+
+    public void UpdateBrightness()
+    {
+        // Set the ambient light to the slider's value
+        float gamma = BrightnessSlider.value;
+        RenderSettings.ambientLight = new Color(gamma, gamma, gamma, 1);
     }
 
     public void ConfirmQuit()
