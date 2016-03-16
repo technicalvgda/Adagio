@@ -4,35 +4,35 @@ using System.Collections;
 public class Teleporter : MonoBehaviour {
 
     public GameObject playerTeleportPlat;
-    private PlayerController player;
-
+    private GameObject player;
     public bool isInTeleporter;
 
 	// Use this for initialization
 	void Start () {
-        player = FindObjectOfType<PlayerController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+			if(isInTeleporter && Input.GetKeyDown(KeyCode.E)){
+				Teleport(player);
+			}
 
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnTriggerEnter2D(Collider2D col)
     {
-
-            Teleport();
             isInTeleporter = true;
+            player = col.gameObject;
         
     }
 
-    void Teleport()
+    void OnTriggerExit2D(Collider2D col){
+    		isInTeleporter = false;
+    }
+
+    void Teleport(GameObject player)
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            player.transform.position = playerTeleportPlat.transform.position;
-            Debug.Log("Teleport");
-        }
+        	player.transform.position = playerTeleportPlat.transform.position;
+        	Debug.Log("Teleport");
     }
 }
