@@ -16,6 +16,7 @@ public class BoardCreator : MonoBehaviour
     public IntRange roomWidth = new IntRange(3, 10);         // The range of widths rooms can have.
     public IntRange roomHeight = new IntRange(3, 10);        // The range of heights rooms can have.
     public IntRange corridorLength = new IntRange(6, 10);    // The range of lengths corridors between rooms can have.
+
     public GameObject[] floorTiles;                           // An array of floor tile prefabs.
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
@@ -26,6 +27,10 @@ public class BoardCreator : MonoBehaviour
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
 	public int hubOpening = 10;
+
+
+	public int DeadEndChance = 50;								//Variable for the percent chance that a dead-end corridor will be created
+	private Corridor[] deadEndCorridorsArray;					//The array that holds the dead end corridors
 
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
@@ -45,6 +50,7 @@ public class BoardCreator : MonoBehaviour
 
         SetTilesValuesForRooms();
         SetTilesValuesForCorridors();
+		SetTilesValuesForDeadEndCorridors ();
 
         InstantiateTiles();
         InstantiateOuterWalls();
@@ -73,6 +79,9 @@ public class BoardCreator : MonoBehaviour
 		// There should be one less corridor than there is rooms.
 		corridors = new Corridor[rooms.Length - 1];
 
+		//Make dead end corridor array
+		deadEndCorridorsArray = new Corridor[corridors.Length];
+
 		// Create the first room and corridor.
 		rooms[0] = new Room();
 		corridors[0] = new Corridor();
@@ -91,6 +100,7 @@ public class BoardCreator : MonoBehaviour
 		for (int i = 2; i < rooms.Length; i++)
 		{
 			bool goodRoomPlacement = false;
+			bool makeDeadEndCorridor = false;
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
 			while (!goodRoomPlacement)
@@ -98,6 +108,15 @@ public class BoardCreator : MonoBehaviour
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
+
+				Corridor deadEndCorridor = new Corridor ();
+
+				roll = Random.Range (0, 100);
+				if (roll <= DeadEndChance) 
+				{
+					makeDeadEndCorridor = true;
+					deadEndCorridor.SetupDeadEndCorridor(corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns,rows,corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
+				}
 
 				Room roomToBePlaced = new Room ();
 				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
@@ -126,6 +145,8 @@ public class BoardCreator : MonoBehaviour
 				{
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
+					if(makeDeadEndCorridor)
+						deadEndCorridorsArray[i-1] = deadEndCorridor;
 
 					//Rolls the dice
 					roll = Random.Range (0, 100);
@@ -253,13 +274,13 @@ public class BoardCreator : MonoBehaviour
 						//Spawn the prefab in the correct position with respect to the direction of the corridor
 						switch(currentCorridor.direction)
 						{
-						case Direction.North:
+						case Direction.North:								
 								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos+currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
 								break;
-						case Direction.East:
+						case Direction.East:								
 								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
 								break;
-						case Direction.South:
+						case Direction.South:								
 								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos-currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
 								break;
 						case Direction.West:
@@ -270,6 +291,72 @@ public class BoardCreator : MonoBehaviour
 	   		}
 	}
 
+
+	void SetTilesValuesForDeadEndCorridors()
+	{
+		// Go through every corridor...
+		for (int i = 0; i < deadEndCorridorsArray.Length; i++) 
+		{
+			Corridor currentCorridor = deadEndCorridorsArray[i];
+
+			//check if it is null - used in case not all non-dead 
+			//corridors will have dead end corridors spawning from them
+			//since it is based off percent chance but the array needs to be
+			//the same size as the non-dead corridors array to accomodate
+			//every non-dead corridor having a dead end corridor
+			if (currentCorridor != null) 
+			{				
+				// and go through it's length.
+				for (int j = 0; j < currentCorridor.corridorLength; j++) 
+				{
+					// Start the coordinates at the start of the corridor.
+					int xCoord = currentCorridor.startXPos;
+					int yCoord = currentCorridor.startYPos;
+
+					// Depending on the direction, add or subtract from the appropriate
+					// coordinate based on how far through the length the loop is.
+					switch (currentCorridor.direction) 
+					{
+					case Direction.North:
+						yCoord += j;
+						break;
+					case Direction.East:
+						xCoord += j;
+						break;
+					case Direction.South:
+						yCoord -= j;
+						break;
+					case Direction.West:
+						xCoord -= j;
+						break;
+					}
+
+					//Widens the corridor to set width
+					for (int k = 0; k < currentCorridor.corridorWidth; k++) 
+					{
+						switch (currentCorridor.direction) 
+						{
+						case Direction.North:
+							xCoord++;
+							break;
+						case Direction.East:
+							yCoord++;
+							break;
+						case Direction.South:
+							xCoord++;
+							break;
+						case Direction.West:
+							yCoord++;
+							break;
+
+						}
+						// Set the tile at these coordinates to Floor.
+						tiles [xCoord] [yCoord] = TileType.Floor;
+					}
+				}
+			}
+		}
+	}
     void InstantiateTiles()
     {
         // Go through all the tiles in the jagged array...
