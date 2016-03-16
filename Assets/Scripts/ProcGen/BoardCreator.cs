@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class BoardCreator : MonoBehaviour
@@ -27,6 +28,8 @@ public class BoardCreator : MonoBehaviour
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
 	public int hubOpening = 10;
 
+	public bool reloadLevelNeeded = false;					 //Boolean for whether the level needs to reload
+	public int triedCounter = 0;							 //Variable to hold how many tries a corridor/room would have before triggering the reload
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
@@ -36,6 +39,9 @@ public class BoardCreator : MonoBehaviour
 
     private void Start()
     {
+		//Set to false when starting the generation
+		reloadLevelNeeded = false;
+
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
 
@@ -43,11 +49,18 @@ public class BoardCreator : MonoBehaviour
 
         CreateRoomsAndCorridors();
 
-        SetTilesValuesForRooms();
-        SetTilesValuesForCorridors();
+		//Even after reloading the level these functions will still execute.
+		//If statement needed to prevent time wasted generating the map when
+		//the level is going to reload
+		if (reloadLevelNeeded == false)
+		{
+			
+			SetTilesValuesForRooms ();
+			SetTilesValuesForCorridors ();
 
-        InstantiateTiles();
-        InstantiateOuterWalls();
+			InstantiateTiles ();
+			InstantiateOuterWalls ();
+		}
     }
 
 
@@ -69,6 +82,9 @@ public class BoardCreator : MonoBehaviour
 	{
 		// Create the rooms array with a random size.
 		rooms = new Room[numRooms.Random];
+
+		//Non IntRange representation of how many rooms there are
+		int numbRooms = rooms.Length;
 
 		// There should be one less corridor than there is rooms.
 		corridors = new Corridor[rooms.Length - 1];
@@ -92,19 +108,28 @@ public class BoardCreator : MonoBehaviour
 		{
 			bool goodRoomPlacement = false;
 
+			//If generation has tried different corridor/room placements exceeding the number of rooms there are
+			if (triedCounter >= numbRooms)
+			{
+				//Then reload the level
+				reloadLevelNeeded = true;
+				SceneManager.LoadScene (2);
+				break;
+			}
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
 			while (!goodRoomPlacement)
 			{
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
-
+				triedCounter++;
 				Room roomToBePlaced = new Room ();
 				roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
 
 				// Loop over all other rooms created, except for one to be placed
 				for (int j = 0; j < i; j++)
 				{
+					
 					// If room to be placed overlaps with j-th room...
 					if (doRoomsOverlap (rooms [j], roomToBePlaced))
 					{
@@ -121,9 +146,16 @@ public class BoardCreator : MonoBehaviour
 					}
 				}
 
+				//Break out of loop if genertion has tried generating corridors/rooms more than the number of rooms
+				if (triedCounter >= numbRooms)
+					break;
+				
 				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
 				if (goodRoomPlacement)
 				{
+					//If room is good, then reset the tried counter
+					triedCounter = 0;
+
 					corridors [i - 1] = corridorToBePlaced;
 					rooms [i] = roomToBePlaced;
 
@@ -170,104 +202,117 @@ public class BoardCreator : MonoBehaviour
         {
             Room currentRoom = rooms[i];
 
-            // ... and for each room go through it's width.
-            for (int j = 0; j < currentRoom.roomWidth; j++)
-            {
-                int xCoord = currentRoom.xPos + j;
+			//If a room in the rooms array is null, this means generation did not succeed
+			//Reloading the level is necessary, else continue with generation
+			if (currentRoom == null) 
+			{
+				SceneManager.LoadScene (2);
+				break;
+			} 
+			else 
+			{
+				// ... and for each room go through it's width.
+				for (int j = 0; j < currentRoom.roomWidth; j++) {
+					int xCoord = currentRoom.xPos + j;
 
-                // For each horizontal tile, go up vertically through the room's height.
-                for (int k = 0; k < currentRoom.roomHeight; k++)
-                {
-                    int yCoord = currentRoom.yPos + k;
+					// For each horizontal tile, go up vertically through the room's height.
+					for (int k = 0; k < currentRoom.roomHeight; k++) {
+						int yCoord = currentRoom.yPos + k;
 
-                    // The coordinates in the jagged array are based on the room's position and it's width and height.
-                    tiles[xCoord][yCoord] = TileType.Floor;
-                }
-            }
+						// The coordinates in the jagged array are based on the room's position and it's width and height.
+						tiles [xCoord] [yCoord] = TileType.Floor;
+					}
+				}
+			}
         }
     }
 
     void SetTilesValuesForCorridors()
     {
         // Go through every corridor...
-        for (int i = 0; i < corridors.Length; i++)
-        {
-            Corridor currentCorridor = corridors[i];
+		for (int i = 0; i < corridors.Length; i++) 
+		{
+			Corridor currentCorridor = corridors[i];
 
-            // and go through it's length.
-            for (int j = 0; j < currentCorridor.corridorLength; j++)
-            {
-                // Start the coordinates at the start of the corridor.
-                int xCoord = currentCorridor.startXPos;
-                int yCoord = currentCorridor.startYPos;
+			//If a room in the rooms array is null, this means generation did not succeed
+			//Reloading the level is necessary, else continue with generation
+			if (currentCorridor == null)
+			{				
+				SceneManager.LoadScene (2);
+				break;
+			} 
+			else 
+			{
+				// and go through it's length.
+				for (int j = 0; j < currentCorridor.corridorLength; j++) {
+					// Start the coordinates at the start of the corridor.
+					int xCoord = currentCorridor.startXPos;
+					int yCoord = currentCorridor.startYPos;
 
-                // Depending on the direction, add or subtract from the appropriate
-                // coordinate based on how far through the length the loop is.
-                switch (currentCorridor.direction)
-                {
-                    case Direction.North:
-                        yCoord += j;
-                        break;
-                    case Direction.East:
-                        xCoord += j;
-                        break;
-                    case Direction.South:
-                        yCoord -= j;
-                        break;
-                    case Direction.West:
-                        xCoord -= j;
-                        break;
-                }
+					// Depending on the direction, add or subtract from the appropriate
+					// coordinate based on how far through the length the loop is.
+					switch (currentCorridor.direction) {
+					case Direction.North:
+						yCoord += j;
+						break;
+					case Direction.East:
+						xCoord += j;
+						break;
+					case Direction.South:
+						yCoord -= j;
+						break;
+					case Direction.West:
+						xCoord -= j;
+						break;
+					}
 
-                //Widens the corridor to set width
-                for ( int k = 0; k < currentCorridor.corridorWidth; k++) {
-                    switch(currentCorridor.direction)
-                    {
-                        case Direction.North:
-                            xCoord++;
-                            break;
-                        case Direction.East:
-                            yCoord++;
-                            break;
-                        case Direction.South:
-                            xCoord++;
-                            break;
-                        case Direction.West:
-                            yCoord++;
-                            break;
+					//Widens the corridor to set width
+					for (int k = 0; k < currentCorridor.corridorWidth; k++) {
+						switch (currentCorridor.direction) {
+						case Direction.North:
+							xCoord++;
+							break;
+						case Direction.East:
+							yCoord++;
+							break;
+						case Direction.South:
+							xCoord++;
+							break;
+						case Direction.West:
+							yCoord++;
+							break;
 
-                    }
-                    // Set the tile at these coordinates to Floor.
-                    tiles[xCoord][yCoord] = TileType.Floor;
-                }
+						}
+						// Set the tile at these coordinates to Floor.
+						tiles [xCoord] [yCoord] = TileType.Floor;
+					}
                 
-            }
+				}
         
     
-	//Makes a roll
+				//Makes a roll
 				roll = Random.Range (0, 100);
 
 				//If the roll is a success
-				if (roll <= CorridorPercChance)
-				{
-						//Spawn the prefab in the correct position with respect to the direction of the corridor
-						switch(currentCorridor.direction)
-						{
-						case Direction.North:
-								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos+currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
-								break;
-						case Direction.East:
-								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
-								break;
-						case Direction.South:
-								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos+currentCorridor.corridorWidth/2.0f, currentCorridor.startYPos-currentCorridor.corridorLength/2.0f, 0), Quaternion.identity);
-								break;
-						case Direction.West:
-								Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos-currentCorridor.corridorLength/2.0f, currentCorridor.startYPos+currentCorridor.corridorWidth/2.0f, 0), Quaternion.identity);
-								break;
-						}
-		        	}
-	   		}
+				if (roll <= CorridorPercChance) {
+					//Spawn the prefab in the correct position with respect to the direction of the corridor
+					switch (currentCorridor.direction) {
+					case Direction.North:
+						Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						break;
+					case Direction.East:
+						Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength / 2.0f, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						break;
+					case Direction.South:
+						Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						break;
+					case Direction.West:
+						Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength / 2.0f, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						break;
+					}
+				}
+			}
+		}
 	}
 
     void InstantiateTiles()
@@ -348,6 +393,7 @@ public class BoardCreator : MonoBehaviour
 
     void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord)
     {
+		
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
 
