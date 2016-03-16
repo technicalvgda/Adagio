@@ -101,14 +101,76 @@ public class Corridor
                 startYPos = room.yPos;
                 maxLength = startYPos - roomHeight.m_Min;
                 break;
-            case Direction.West:
-                startXPos = room.xPos;
-                startYPos = Random.Range(room.yPos, room.yPos + room.roomHeight - corridorWidth);
-                maxLength = startXPos - roomWidth.m_Min;
+		case Direction.West:
+			startXPos = room.xPos;
+			startYPos = Random.Range (room.yPos, room.yPos + room.roomHeight - corridorWidth);
+			maxLength = startXPos - roomWidth.m_Min;
+
                 break;
         }
 
         // We clamp the length of the corridor to make sure it doesn't go off the board.
         corridorLength = Mathf.Clamp(corridorLength, 1, maxLength);
     }
+
+	public void SetupDeadEndCorridor(Corridor corridor, IntRange length, IntRange roomWidth, IntRange roomHeight, int columns, int rows, int xStart, int yStart)
+	{
+		startXPos = xStart;
+		startYPos = yStart;
+
+		// Set a random length.
+		corridorLength = length.Random;
+		// Create a cap for how long the length can be (this will be changed based on the direction and position).
+		int maxLength = length.m_Max;
+
+		//Determine which way the dead end corridors goes with respect to the original corridor
+		switch(corridor.direction)
+		{
+		//If non-dead end corridor is generated going north
+		case Direction.North:
+			//set dead end corridor to go east
+			direction = Direction.East;
+			break;
+		case Direction.East:
+			direction = Direction.South;
+			break;
+		case Direction.South:
+			direction = Direction.West;
+			break;
+		case Direction.West:
+			direction = Direction.North;
+			break;
+		}
+
+		//Set the values for the dead end corridors to go in their respective directions.
+
+		switch (direction)
+		{
+		//If dead end corridor is going in the North Direction
+		case Direction.North:
+			//Then set the values
+			startXPos = Random.Range(corridor.startXPos-6, corridor.startXPos-corridor.corridorLength+6);
+			startYPos = corridor.startYPos + corridor.corridorWidth; 
+			maxLength = rows - startYPos - roomHeight.m_Min;
+			break;
+		case Direction.East:
+			startXPos = corridor.startXPos + corridor.corridorWidth;
+			startYPos = Random.Range(corridor.startYPos+8, corridor.startYPos+ corridor.corridorWidth-8);
+			maxLength = columns - startXPos - roomWidth.m_Min;
+			break;
+		case Direction.South:
+			startXPos = Random.Range (corridor.startXPos+8, corridor.startXPos + corridor.corridorLength-8);
+			startYPos = corridor.startYPos;
+			maxLength = startYPos - roomHeight.m_Min;
+			break;
+		case Direction.West:
+			startXPos = corridor.startXPos;
+			startYPos = Random.Range (corridor.startYPos-corridor.corridorLength+8, corridor.startYPos-8);
+			maxLength = startXPos - roomWidth.m_Min;
+			break;
+		}
+
+		// We clamp the length of the corridor to make sure it doesn't go off the board.
+		corridorLength = Mathf.Clamp(corridorLength, 1, maxLength);
+	}
 }
