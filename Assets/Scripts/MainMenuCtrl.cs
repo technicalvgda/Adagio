@@ -51,6 +51,9 @@ public class MainMenuCtrl : MonoBehaviour
 	    SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
     }
 
+    // Change the brightness by changing the ambient light
+    // The ambient light can physically be found in Window -> Lighting -> Ambient Color
+    // Only sprites with Material set to Default-Diffuse are affected by ambient color (see Preview object)
     public void UpdateBrightness()
     {
         // Set the ambient light to the slider's value
