@@ -64,6 +64,7 @@ public class BoardCreator : MonoBehaviour
 			
 			SetTilesValuesForRooms ();
 			SetTilesValuesForCorridors ();
+			SetTilesValuesForAppendedCorridors ();
 			SetTilesValuesForDeadEndCorridors ();
 
 			InstantiateTiles ();
@@ -135,35 +136,36 @@ public class BoardCreator : MonoBehaviour
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor();
 				Corridor corridorToAppend = new Corridor();
-								
-							if (numAppend < rooms.Length  - 1)
-									appendCorridor = true;
+				if (numAppend < rooms.Length  - 1)
+					appendCorridor = true;
 				
 				corridorToBePlaced.SetupCorridor (rooms [i-1], corridorLength, roomWidth, roomHeight, columns, rows, false);
 
 				Corridor deadEndCorridor = new Corridor ();
+				roll = Random.Range (0, 100);
+				if (roll <= DeadEndChance) 
+				{
+					makeDeadEndCorridor = true;
+					deadEndCorridor.SetupDeadEndCorridor(corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns,rows,corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
+				}
 
-								roll = Random.Range (0, 100);
-								if (roll <= DeadEndChance) 
-									{
-										makeDeadEndCorridor = true;
-										deadEndCorridor.SetupDeadEndCorridor(corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns,rows,corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
-									}
 				triedCounter++;
+
 				Room roomToBePlaced = new Room ();
-							if (appendCorridor)
-								{
-									corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY, columns, rows);
-								roomToBePlaced.SetupRoom(roomWidth, roomHeight, columns, rows, corridorToAppend);
-								}
-							else
-									roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
+
+				if (appendCorridor)
+				{
+					//corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY, columns, rows);
+					corridorToAppend.SetUpAppendedCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
+					roomToBePlaced.SetupRoom(roomWidth, roomHeight, columns, rows, corridorToAppend);
+				}
+				else
+					roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
 			
 
 				// Loop over all other rooms created, except for one to be placed
 				for (int j = 0; j < i; j++)
 				{
-					
 					// If room to be placed overlaps with j-th room...
 					if (doRoomsOverlap (rooms [j], roomToBePlaced))
 					{
@@ -191,11 +193,11 @@ public class BoardCreator : MonoBehaviour
 					triedCounter = 0;
 
 					corridors [i - 1] = corridorToBePlaced;
-									if (appendCorridor)
-										{
-											aCorridors[numAppend] = corridorToAppend;
-											numAppend++;
-										}
+					if (appendCorridor)
+					{
+						aCorridors[numAppend] = corridorToAppend;
+						numAppend++;
+					}
 					rooms [i] = roomToBePlaced;
 					if(makeDeadEndCorridor)
 							deadEndCorridorsArray[i-1] = deadEndCorridor;
@@ -227,7 +229,6 @@ public class BoardCreator : MonoBehaviour
                 Vector3 teleporterPos = new Vector3(rooms[rooms.Length - 1].xPos, rooms[rooms.Length - 1].yPos, 0);
                 Instantiate(teleporter, teleporterPos, Quaternion.identity);
             }
-
         }
 	}
 
@@ -263,11 +264,13 @@ public class BoardCreator : MonoBehaviour
 			else 
 			{
 				// ... and for each room go through it's width.
-				for (int j = 0; j < currentRoom.roomWidth; j++) {
+				for (int j = 0; j < currentRoom.roomWidth; j++) 
+				{
 					int xCoord = currentRoom.xPos + j;
 
 					// For each horizontal tile, go up vertically through the room's height.
-					for (int k = 0; k < currentRoom.roomHeight; k++) {
+					for (int k = 0; k < currentRoom.roomHeight; k++) 
+					{
 						int yCoord = currentRoom.yPos + k;
 
 						// The coordinates in the jagged array are based on the room's position and it's width and height.
@@ -281,24 +284,30 @@ public class BoardCreator : MonoBehaviour
     void SetTilesValuesForCorridors()
 	{
 		// Go through every corridor...
-		for (int i = 0; i < corridors.Length; i++) {
+		for (int i = 0; i < corridors.Length; i++) 
+		{
 			Corridor currentCorridor = corridors [i];
 
 			//If a room in the rooms array is null, this means generation did not succeed
 			//Reloading the level is necessary, else continue with generation
-			if (currentCorridor == null) {				
+			if (currentCorridor == null) 
+			{				
 				SceneManager.LoadScene (2);
 				break;
-			} else {
+			} 
+			else 
+			{
 				// and go through it's length.
-				for (int j = 0; j < currentCorridor.corridorLength; j++) {
+				for (int j = 0; j < currentCorridor.corridorLength; j++) 
+				{
 					// Start the coordinates at the start of the corridor.
 					int xCoord = currentCorridor.startXPos;
 					int yCoord = currentCorridor.startYPos;
 
 					// Depending on the direction, add or subtract from the appropriate
 					// coordinate based on how far through the length the loop is.
-					switch (currentCorridor.direction) {
+					switch (currentCorridor.direction) 
+					{
 					case Direction.North:
 						yCoord += j;
 						break;
@@ -314,8 +323,10 @@ public class BoardCreator : MonoBehaviour
 					}
 
 					//Widens the corridor to set width
-					for (int k = 0; k < currentCorridor.corridorWidth; k++) {
-						switch (currentCorridor.direction) {
+					for (int k = 0; k < currentCorridor.corridorWidth; k++) 
+					{
+						switch (currentCorridor.direction) 
+						{
 						case Direction.North:
 							xCoord++;
 							break;
@@ -341,9 +352,11 @@ public class BoardCreator : MonoBehaviour
 				roll = Random.Range (0, 100);
 
 				//If the roll is a success
-				if (roll <= CorridorPercChance) {
+				if (roll <= CorridorPercChance) 
+				{
 					//Spawn the prefab in the correct position with respect to the direction of the corridor
-					switch (currentCorridor.direction) {
+					switch (currentCorridor.direction) 
+					{
 					case Direction.North:
 						Instantiate (PuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
 						break;
@@ -361,69 +374,73 @@ public class BoardCreator : MonoBehaviour
 					
 			}
 		}
-				
-				// Go through every corridor...
-		        for (int i = 0; i < numAppend; i++)
-			        {
-			            Corridor currentCorridor = aCorridors[i];
 
-			            // and go through it's length.
-			            for (int j = 0; j < currentCorridor.corridorLength; j++)
-				            {
-				                // Start the coordinates at the start of the corridor.
-			                int xCoord = currentCorridor.startXPos;
-				               int yCoord = currentCorridor.startYPos;
-
-				                // Depending on the direction, add or subtract from the appropriate
-				                // coordinate based on how far through the length the loop is.
-			                switch (currentCorridor.direction)
-				               {
-			                   case Direction.North:
-					                        yCoord += j;
-					                        break;
-				                    case Direction.East:
-					                        xCoord += j;
-					                       break;
-				                    case Direction.South:
-					                       yCoord -= j;
-					                        break;
-				                    case Direction.West:
-					                        xCoord -= j;
-					                        break;
-				                }
-
-				                //Widens the corridor to set width
-				                for ( int k = 0; k < currentCorridor.corridorWidth; k++) {
-					                   switch(currentCorridor.direction)
-					                    {
-					                        case Direction.North:
-						                            xCoord++;
-						                            break;
-					                        case Direction.East:
-						                            yCoord++;
-						                            break;
-					                        case Direction.South:
-						                            xCoord++;
-						                            break;
-					                        case Direction.West:
-						                            yCoord++;
-						                            break;
-
-					                    }
-					                    // Set the tile at these coordinates to Floor.
-					                    tiles[xCoord][yCoord] = TileType.Floor;
-					                }
-				                
-				            }
-			        }
 	}
-	
+
+
+	void SetTilesValuesForAppendedCorridors()
+	{
+		// Go through every corridor...
+		for (int i = 0; i < numAppend; i++)
+		{
+			Corridor currentCorridor = aCorridors[i];
+			// and go through it's length.
+			for (int j = 0; j < currentCorridor.corridorLength; j++)
+			{
+				// Start the coordinates at the start of the corridor.
+				int xCoord = currentCorridor.startXPos;
+				int yCoord = currentCorridor.startYPos;
+
+				// Depending on the direction, add or subtract from the appropriate
+				// coordinate based on how far through the length the loop is.
+				switch (currentCorridor.direction)
+				{
+				case Direction.North:
+					yCoord += j;
+					break;
+				case Direction.East:
+					xCoord += j;
+					break;
+				case Direction.South:
+					yCoord -= j;
+					break;
+				case Direction.West:
+					xCoord -= j;
+					break;
+				}
+				//Widens the corridor to set width
+				for ( int k = 0; k < currentCorridor.corridorWidth; k++) 
+				{
+					switch(currentCorridor.direction)
+					{
+					case Direction.North:
+						xCoord++;
+						break;
+					case Direction.East:
+						yCoord++;
+						break;
+					case Direction.South:
+						xCoord++;
+						break;
+					case Direction.West:
+						yCoord++;
+						break;
+					}
+					// Set the tile at these coordinates to Floor.
+					Debug.Log("APP X: " + xCoord);
+					Debug.Log ("APP Y: " + yCoord);
+					tiles[xCoord][yCoord] = TileType.Floor;
+				}
+			}
+		}
+	}
 	
 
 	void SetTilesValuesForDeadEndCorridors()
 	{
 		// Go through every corridor...
-		for (int i = 0; i < deadEndCorridorsArray.Length; i++) {
+		for (int i = 0; i < deadEndCorridorsArray.Length; i++) 
+		{
 			Corridor currentCorridor = deadEndCorridorsArray [i];
 
 			//check if it is null - used in case not all non-dead 
@@ -431,45 +448,50 @@ public class BoardCreator : MonoBehaviour
 			//since it is based off percent chance but the array needs to be
 			//the same size as the non-dead corridors array to accomodate
 			//every non-dead corridor having a dead end corridor
-			if (currentCorridor != null) {				
+			if (currentCorridor != null) 
+			{				
 				// and go through it's length.
-				for (int j = 0; j < currentCorridor.corridorLength; j++) {
+				for (int j = 0; j < currentCorridor.corridorLength; j++) 
+				{
 					// Start the coordinates at the start of the corridor.
 					int xCoord = currentCorridor.startXPos;
 					int yCoord = currentCorridor.startYPos;
 
 					// Depending on the direction, add or subtract from the appropriate
 					// coordinate based on how far through the length the loop is.
-					switch (currentCorridor.direction) {
-					case Direction.North:
-						yCoord += j;
-						break;
-					case Direction.East:
-						xCoord += j;
-						break;
-					case Direction.South:
-						yCoord -= j;
-						break;
-					case Direction.West:
-						xCoord -= j;
-						break;
+					switch (currentCorridor.direction) 
+					{
+						case Direction.North:
+							yCoord += j;
+							break;
+						case Direction.East:
+							xCoord += j;
+							break;
+						case Direction.South:
+							yCoord -= j;
+							break;
+						case Direction.West:
+							xCoord -= j;
+							break;
 					}
 
 					//Widens the corridor to set width
-					for (int k = 0; k < currentCorridor.corridorWidth; k++) {
-						switch (currentCorridor.direction) {
-						case Direction.North:
-							xCoord++;
-							break;
-						case Direction.East:
-							yCoord++;
-							break;
-						case Direction.South:
-							xCoord++;
-							break;
-						case Direction.West:
-							yCoord++;
-							break;
+					for (int k = 0; k < currentCorridor.corridorWidth; k++) 
+					{
+						switch (currentCorridor.direction) 
+						{
+							case Direction.North:
+								xCoord++;
+								break;
+							case Direction.East:
+								yCoord++;
+								break;
+							case Direction.South:
+								xCoord++;
+								break;
+							case Direction.West:
+								yCoord++;
+								break;
 
 						}
 						// Set the tile at these coordinates to Floor.
