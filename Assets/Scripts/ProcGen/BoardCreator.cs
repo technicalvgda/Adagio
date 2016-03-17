@@ -435,8 +435,8 @@ public class BoardCreator : MonoBehaviour
 						break;
 					}
 					// Set the tile at these coordinates to Floor.
-					Debug.Log("APP X: " + xCoord);
-					Debug.Log ("APP Y: " + yCoord);
+					//Debug.Log("APP X: " + xCoord);
+					//Debug.Log ("APP Y: " + yCoord);
 					tiles[xCoord][yCoord] = TileType.Floor;
 				}
 			}
