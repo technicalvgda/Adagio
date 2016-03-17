@@ -42,6 +42,9 @@ public class BoardCreator : MonoBehaviour
 	private Corridor[] aCorridors;							  // All the appending corridors that connects to the main corridor.
 
 	private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+	public GameObject[] RandomPrefabs;                          //An array o
+
+	public int element = 0;
 	private int numAppend = 0;
 
     private void Start()
@@ -205,8 +208,12 @@ public class BoardCreator : MonoBehaviour
 					if (roll <= PercentChance)
 					{
 						//Spawn the prefab
-						Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);
-					}
+				                        element = Random.Range(0, 7); //Only used 8 elements to test, this can change later
+				
+				                        //Spawn the prefab
+				                        //NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
+					//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
+						Instantiate (RandomPrefabs[element], new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth / 2, roomToBePlaced.yPos+roomToBePlaced.roomHeight / 2, 0), Quaternion.identity);
 				}
 			}
 
@@ -229,6 +236,7 @@ public class BoardCreator : MonoBehaviour
             }
 
         }
+	}
 	}
 
 
