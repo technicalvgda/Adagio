@@ -7,6 +7,7 @@ public class Pause : MonoBehaviour
     public GameObject objFade;
     public GameObject objText;
     public GameObject objButtons;
+    public GameObject OptionsCanvas;
     Image imgFade;
     bool busy;
     bool paused;
@@ -14,7 +15,9 @@ public class Pause : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        OptionsCanvas = GameObject.Find("OptionsCanvas");
         imgFade = objFade.GetComponent<Image>();
+        OptionsCanvas.SetActive(false);
         objText.SetActive(false);
         objButtons.SetActive(false);
     }
@@ -49,6 +52,7 @@ public class Pause : MonoBehaviour
         imgFade.color = new Color(0, 0, 0, 0.4f);
 
         // Show the PAUSED text and the buttons
+       
         objText.SetActive(true);
         objButtons.SetActive(true);
 
@@ -87,7 +91,22 @@ public class Pause : MonoBehaviour
             StartCoroutine(_TransitionOut());
         }
     }
-    
+    //Opens up OptionsCanvas, disables the pause menu while the options menu is up
+    public void Settings()
+    {
+        if (!busy)
+        {
+            OptionsCanvas.SetActive(true);
+            busy = true;
+        }
+    }
+    //Mapped to exit button for options menu
+    public void closeSettings()
+    {
+        OptionsCanvas.SetActive(false);
+        busy = false;
+    }
+
     public void Quit()
     {
         Application.Quit();
