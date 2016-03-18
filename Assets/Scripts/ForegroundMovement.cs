@@ -5,6 +5,7 @@ public class ForegroundMovement : MonoBehaviour {
 
     float maxX = 200f;
     float minX = 0f;
+    float foregroundHeight = 100f;
     public GameObject player;
 
 	// Use this for initialization
@@ -18,15 +19,15 @@ public class ForegroundMovement : MonoBehaviour {
     {
 	    if(player == null)
         {
-            player = GameObject.Find("Player");
+            player = GameObject.Find("Player(Clone)");
         }
         else
         {
             if(player.transform.position.x > 0 && player.transform.position.x <200)
             {
-                float playerValue = Mathf.Lerp(0, 1, player.transform.position.x);
+                float playerValue = player.transform.position.x/200;
 
-                transform.position = Vector2.Lerp(new Vector2(minX, -100), new Vector2(maxX, -100), playerValue);
+                transform.position = Vector2.Lerp(new Vector2(minX, foregroundHeight), new Vector2(maxX, foregroundHeight), playerValue);
             }
             
         }
