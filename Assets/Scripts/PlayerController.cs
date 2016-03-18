@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour {
 	public float moveHorizontal;
     private Animator anim;
 
+	public bool downButton;
+
 	// Use this for initialization
 	void Start () {
 		//Reference so I don't have to type this long thing out repeatedly
@@ -27,6 +29,11 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+		if(Input.GetKeyDown(KeyCode.S)) {
+			downButton = true;
+		} else {
+			downButton = false;
+		}
 		//The jump mechanic
 		if (blockJumpTimer > 0) 
 		{
