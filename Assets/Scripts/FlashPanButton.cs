@@ -12,7 +12,7 @@ public class FlashPanButton : MonoBehaviour
 	}
 	public float panTime = 0.75f;
 	public float stayTime = 2f;
-	public bool puzzleOver = false;
+	public bool puzzleOver;
 	public GameObject target;
 	state panState = state.notpanning;
 	Transform player;
@@ -25,6 +25,7 @@ public class FlashPanButton : MonoBehaviour
 			{
 				if (target != null)
 				{
+				puzzleOver = false;
 					panState = state.pantoward;
 					player = c.transform;
 					camPos = Camera.main.transform.position;
@@ -48,6 +49,7 @@ public class FlashPanButton : MonoBehaviour
 			} 
 			if (panState == state.panwait) 
 			{
+				
 				if (puzzleOver)
 					Invoke ("startPanBack", stayTime);
 			}

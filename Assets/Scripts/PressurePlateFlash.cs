@@ -4,26 +4,20 @@ using System.Collections;
 public class PressurePlateFlash : MonoBehaviour {
     public bool stepped;
     public bool released;
-	float elapsedtime;
-	//FlashingButton fb;
+	public float elapsedTime;
 
     void Start()
     {
-		elapsedtime = 0f;
+		elapsedTime = 0f;
         stepped = false;
         released = false;
     }
 	void Update()
 	{
-		elapsedtime = Input.GetKeyDown (KeyCode.E) ? 0 : elapsedtime;
+		elapsedTime = Input.GetKeyDown (KeyCode.E) ? 0 : elapsedTime;
 		if (stepped == true && Input.GetKey (KeyCode.E)) {
-			elapsedtime += Time.deltaTime;
-			//fb.Flash ();
-			Debug.Log (elapsedtime);
-		}
-
-		if (elapsedtime > 0.9f && elapsedtime < 1.1f && stepped == true && Input.GetKeyUp (KeyCode.E)) {
-			Debug.Log ("Correct");
+			elapsedTime += Time.deltaTime;
+			Debug.Log (elapsedTime);
 		}
 	}
 
