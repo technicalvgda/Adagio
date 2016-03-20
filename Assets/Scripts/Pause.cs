@@ -13,17 +13,16 @@ public class Pause : MonoBehaviour
     bool paused;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-        OptionsCanvas = GameObject.Find("OptionsCanvas");
         imgFade = objFade.GetComponent<Image>();
-        OptionsCanvas.SetActive(false);
         objText.SetActive(false);
         objButtons.SetActive(false);
+        OptionsCanvas.SetActive(false);
     }
-	
+
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         if (!busy && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P)))
         {
@@ -52,10 +51,9 @@ public class Pause : MonoBehaviour
         imgFade.color = new Color(0, 0, 0, 0.4f);
 
         // Show the PAUSED text and the buttons
-       
         objText.SetActive(true);
         objButtons.SetActive(true);
-
+        OptionsCanvas.SetActive(false);
         // Allow input again
         busy = false;
     }
@@ -91,24 +89,25 @@ public class Pause : MonoBehaviour
             StartCoroutine(_TransitionOut());
         }
     }
-    //Opens up OptionsCanvas, disables the pause menu while the options menu is up
-    public void Settings()
+    public void Option()
     {
         if (!busy)
         {
-            OptionsCanvas.SetActive(true);
             busy = true;
+            objText.SetActive(false);
+            objButtons.SetActive(false);
+            OptionsCanvas.SetActive(true);
         }
     }
-    //Mapped to exit button for options menu
-    public void closeSettings()
-    {
-        OptionsCanvas.SetActive(false);
-        busy = false;
-    }
-
     public void Quit()
     {
         Application.Quit();
     }
+
+    //method goes into option canvas to head back to pause menu
+    public void Back()
+    {
+        StartCoroutine(_TransitionIn());
+    }
+
 }
