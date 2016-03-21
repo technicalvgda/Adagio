@@ -16,9 +16,10 @@ public class FluteCover : MonoBehaviour {
 		// since Update() executes more frequently and is less likely to cause missed checks.
 		if (stepped && Input.GetKeyDown(KeyCode.E))
 		{
-			// Cycles the state counter forward and loops
-			Debug.Log("Pressed!");
-			pressed = !pressed;
+            // Cycles the state counter forward and loops
+            Debug.Log("Pressed!");
+            pressed = !pressed;
+
 		}
 	}
 
