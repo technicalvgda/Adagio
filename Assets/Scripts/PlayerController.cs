@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour {
 	public float jumpSpeed;
 	public float blockJumpTimerDuration = 1.0f;
 
+	private Rect leftside = new Rect(0, 0, Screen.width * 0.3f, Screen.height);
+	private Rect rightside = new Rect(Screen.width * 0.7f, 0, Screen.width * 0.3f, Screen.height);
+
 	private float blockJumpTimer = 0f;
 	private Vector2 currentVelocity;
 	private Rigidbody2D rb2d;
@@ -27,6 +30,8 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+
+	#if UNITY_EDITOR
 		//The jump mechanic
 		if (blockJumpTimer > 0) 
 		{
@@ -58,6 +63,21 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
+
+	#else	
+		if (Input.touchCount > 0) {
+			if (leftside.Contains (Input.GetTouch(0).position)) {
+				moveHorizontal = -1;
+			}
+			else if (rightside.Contains (Input.GetTouch(0).position)) {
+				moveHorizontal = 1;
+			}
+		}
+		else {
+			moveHorizontal = 0;
+		}
+	#endif
+
         //set the walking animation variable to the axis, 
         //use that to check if moving and in which direction
         if (anim != null)
