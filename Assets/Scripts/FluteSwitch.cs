@@ -6,7 +6,7 @@ using System.Collections;
 public class FluteSwitch : MonoBehaviour
 {
     public bool stepped;
-    int state = 0;
+    //int state = 0;
     public bool pressed;
 
 
