@@ -46,6 +46,9 @@ public class BoardCreator : MonoBehaviour
 	public int element = 0;
 	private int numAppend = 0;
 
+	public int CodexPercChance = 50;
+	public GameObject[] codexArray;							//The array that will hold the codexes to be spawned
+
     private void Start()
     {
 		//Set to false when starting the generation
@@ -722,7 +725,32 @@ public class BoardCreator : MonoBehaviour
 							tiles [xCoord] [yCoord] = TileType.Floor;
 					}
 				}
+				//Makes a roll
+				roll = Random.Range (0, 100);
+
+				//If the roll is a success
+				if (roll <= CodexPercChance) 
+				{
+					//Spawn the prefab in the correct position with respect to the direction of the corridor
+					element = Random.Range(0, codexArray.Length-1);
+					switch (currentCorridor.direction) 
+					{
+					case Direction.North:
+						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength-2, 0), Quaternion.identity);
+						break;
+					case Direction.East:
+						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength-2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						break;
+					case Direction.South:
+						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength+2, 0), Quaternion.identity);
+						break;
+					case Direction.West:
+						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength+2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						break;
+					}
+				}
 			}
+
 		}
 	}
     void InstantiateTiles()

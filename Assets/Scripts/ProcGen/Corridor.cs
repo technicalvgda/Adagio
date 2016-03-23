@@ -226,22 +226,22 @@ public class Corridor
 				//Then set the values
 				startXPos = Random.Range(corridor.startXPos-6, corridor.startXPos-corridor.corridorLength+6);
 				startYPos = corridor.startYPos + corridor.corridorWidth; 
-				maxLength = rows - startYPos - roomHeight.m_Min;
+				maxLength = rows - startYPos;
 				break;
 			case Direction.East:
 				startXPos = corridor.startXPos + corridor.corridorWidth;
 				startYPos = Random.Range(corridor.startYPos+8, corridor.startYPos+ corridor.corridorWidth-8);
-				maxLength = columns - startXPos - roomWidth.m_Min;
+				maxLength = columns - startXPos;
 				break;
 			case Direction.South:
 				startXPos = Random.Range (corridor.startXPos+8, corridor.startXPos + corridor.corridorLength-8);
 				startYPos = corridor.startYPos;
-				maxLength = startYPos - roomHeight.m_Min;
+				maxLength = startYPos;
 				break;
 			case Direction.West:
 				startXPos = corridor.startXPos;
 				startYPos = Random.Range (corridor.startYPos-corridor.corridorLength+8, corridor.startYPos-8);
-				maxLength = startXPos - roomWidth.m_Min;
+				maxLength = startXPos;
 				break;
 		}
 		// We clamp the length of the corridor to make sure it doesn't go off the board.
