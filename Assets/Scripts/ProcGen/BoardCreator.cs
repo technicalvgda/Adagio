@@ -36,6 +36,7 @@ public class BoardCreator : MonoBehaviour
 	public bool reloadLevelNeeded = false;					 //Boolean for whether the level needs to reload
 	public int triedCounter = 0;							 //Variable to hold how many tries a corridor/room would have before triggering the reload
 
+
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
@@ -47,8 +48,15 @@ public class BoardCreator : MonoBehaviour
 	public int element = 0;
 	private int numAppend = 0;
 
+	private Vector3 playerPos;								//The position of the player
+	private GameObject[][] ActiveTiles;						//The array that holds the instantiated wall tiles of the board
+	public int ActiveTileLength = 20;						//The range of which tiles will be active from the players perspective in the X direction
+	public int ActiveTileHeight = 20;						//The range of which tiles will be active from the players perspective in the Y direction
+	private float timer = 0;								//The timer that keeps track of how long it has been since the most recent board refresh
+	public float TileInactiveTimer = 5;						//Set amount of seconds before tiles that are outside of the players visible range will be turned inactive
+
     private void Start()
-    {
+	{
 		//Set to false when starting the generation
 		reloadLevelNeeded = false;
 
@@ -56,6 +64,8 @@ public class BoardCreator : MonoBehaviour
         boardHolder = new GameObject("BoardHolder");
 
         SetupTilesArray();
+		//Create the array that holds the instantiated tile objects
+		SetupActiveTilesArray();
 
         CreateRoomsAndCorridors();
 
@@ -63,8 +73,7 @@ public class BoardCreator : MonoBehaviour
 		//If statement needed to prevent time wasted generating the map when
 		//the level is going to reload
 		if (reloadLevelNeeded == false)
-		{
-			
+		{			
 			SetTilesValuesForRooms ();
 			SetTilesValuesForCorridors ();
 			SetTilesValuesForAppendedCorridors ();
@@ -72,9 +81,74 @@ public class BoardCreator : MonoBehaviour
 
 			InstantiateTiles ();
 			InstantiateOuterWalls ();
+
+			SetTilesUnactive(ActiveTiles);
 		}
+
     }
 
+	void Update()
+	{	
+		timer += Time.deltaTime;
+		//Get the players position
+		playerPos = GameObject.FindWithTag ("Player").GetComponent<Transform> ().position;
+		//Activates the tiles that are within the player's viewable range
+		for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+		{
+			for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
+			{
+				if (i >= -1 && i <= 200 && j >= -1 && j <= 200)
+				{
+					if (ActiveTiles [i+1] [j+1] != null) 
+					{
+						ActiveTiles [i + 1] [j + 1].SetActive (true);
+					}
+				}
+			}
+		}
+		//If the timer reaches the determined amount of time
+		if (timer > TileInactiveTimer) 
+		{
+			//Reset the timer and set blocks outside of player area inactive
+			for (int i = -1; i < columns; i++) 
+			{
+				for (int j = -1; j < rows; j++) 
+				{
+					if ((i <= (int)playerPos.x - ActiveTileLength) || (i >= (int)playerPos.x + ActiveTileLength) || (j <= (int)playerPos.y - ActiveTileHeight) || (j >= (int)playerPos.y + ActiveTileHeight))
+						if(ActiveTiles [i + 1] [j + 1] != null)
+							if (ActiveTiles [i + 1] [j + 1].activeSelf == true)
+								ActiveTiles [i + 1] [j + 1].SetActive (false);
+				}
+			}
+			timer = 0;
+		}
+	}
+
+	//Sets the tiles unactive
+	void SetTilesUnactive(GameObject[][] o)
+	{
+		for (int i = 0; i < o.Length; i++) {
+			for (int j = 0; j < o [i].Length; j++) 
+			{
+				if(o[i][j] != null)
+					o [i] [j].SetActive (false);
+			}
+		}
+	}
+
+	//Allocates memory for the 2D array that holds the instantiated object tiles
+	void SetupActiveTilesArray()
+	{
+		// Set the tiles jagged array to the correct width.
+		ActiveTiles = new GameObject[columns+2][];
+
+		// Go through all the tile arrays...
+		for (int i = 0; i < ActiveTiles.Length; i++)
+		{
+			// ... and set each tile array is the correct height.
+			ActiveTiles[i] = new GameObject[rows+2];
+		}
+	}
 
     void SetupTilesArray()
     {
@@ -223,7 +297,7 @@ public class BoardCreator : MonoBehaviour
 			//Cast as int so condition is always reachable
 			if (i == (int) (rooms.Length * .5f))
 			{
-				Vector3 playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
+				playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
 				Instantiate(player, playerPos, Quaternion.identity);
 
                 Vector3 playerTeleportPlatPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
@@ -597,5 +671,9 @@ public class BoardCreator : MonoBehaviour
 
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
+		if (tileInstance.tag == "WallTile") 
+		{
+			ActiveTiles [(int)xCoord+1] [(int)yCoord+1] = tileInstance;
+		}
     }
 }
