@@ -55,6 +55,9 @@ public class BoardCreator : MonoBehaviour
 	public int CodexPercChance = 50;
 	public GameObject[] codexArray;							//The array that will hold the codexes to be spawned
 
+	private bool boardTilesAreActive;
+	private bool activateOnce;
+
     private void Start()
     {
 		//Set to false when starting the generation
@@ -82,11 +85,34 @@ public class BoardCreator : MonoBehaviour
 			InstantiateTiles ();
 			InstantiateOuterWalls ();
 
-			SetTilesUnactive(ActiveTiles);
+			//SetTilesUnactive(ActiveTiles);
 		}
     }
 	void Update()
 	{	
+		if (Input.GetKeyDown (KeyCode.LeftControl)) 
+		{
+			boardTilesAreActive = !boardTilesAreActive;
+		}
+
+		if (boardTilesAreActive == true) 
+		{
+			if (activateOnce == true) {
+				SetTilesActive (ActiveTiles);
+				activateOnce = false;
+			}
+		} 
+		else if(boardTilesAreActive == false)
+		{
+			if (activateOnce == false) 
+			{
+				SetTilesUnactive (ActiveTiles);
+				activateOnce = true;
+			}
+		}
+
+		if(!boardTilesAreActive)
+		{
 			timer += Time.deltaTime;
 			//Get the players position
 			playerPos = GameObject.FindWithTag ("Player").GetComponent<Transform> ().position;
@@ -121,7 +147,7 @@ public class BoardCreator : MonoBehaviour
 					timer = 0;
 				}
 		}
-
+	}
 	//Sets the tiles unactive
 	void SetTilesUnactive(GameObject[][] o)
 	{
@@ -133,6 +159,17 @@ public class BoardCreator : MonoBehaviour
 						}
 				}
 		}
+
+	void SetTilesActive(GameObject[][] o)
+	{
+		for (int i = 0; i < o.Length; i++) {
+			for (int j = 0; j < o [i].Length; j++) 
+			{
+				if(o[i][j] != null)
+					o [i] [j].SetActive (true);
+			}
+		}
+	}
 
 	//Allocates memory for the 2D array that holds the instantiated object tiles
 	void SetupActiveTilesArray()
@@ -914,8 +951,10 @@ public class BoardCreator : MonoBehaviour
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
 		if (tileInstance.tag == "WallTile") 
-				{
-					ActiveTiles [(int)xCoord+1] [(int)yCoord+1] = tileInstance;
-				}
+		{
+			ActiveTiles [(int)xCoord+1] [(int)yCoord+1] = tileInstance;
+			//Set the tile boject to inactive
+			tileInstance.SetActive (false);
+		}
     }
 }
