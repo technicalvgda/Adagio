@@ -14,8 +14,14 @@ public class PlayerController : MonoBehaviour {
 	public float moveHorizontal;
     private Animator anim;
 
-	// Use this for initialization
-	void Start () {
+
+
+    public float minSwipeDistY;
+    private Vector2 startPos;
+
+
+    // Use this for initialization
+    void Start () {
 		//Reference so I don't have to type this long thing out repeatedly
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
@@ -44,9 +50,44 @@ public class PlayerController : MonoBehaviour {
 			else {
 				blockJumpTimer = blockJumpTimerDuration;
 			}
+
 		}
-		//Fixes infinite jump on the ceiling
-		if(raycast.collisionUp)
+
+        //swipe up to move up
+        //to dowuble jump, finger has to go past the minimum distance and swip again.
+
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.touches[0];
+
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    startPos = touch.position;
+
+                    break;
+
+                case TouchPhase.Ended:
+                    float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
+
+                    if (swipeDistVertical > minSwipeDistY)
+                    {
+                        float swipeValue = Mathf.Sign(touch.position.y - startPos.y);
+
+                        if (swipeValue > 0)
+                        {
+                            if (rb2d.velocity.y <= 0)
+                            {
+                                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+                            }
+                        }
+                    }
+                    break;
+
+            }
+        }
+        //Fixes infinite jump on the ceiling
+        if (raycast.collisionUp)
 		{
 			blockJumpTimer = blockJumpTimerDuration;
 		}
