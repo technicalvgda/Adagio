@@ -7,13 +7,16 @@ public class PlayerController : MonoBehaviour {
 	public float jumpSpeed;
 	public float blockJumpTimerDuration = 1.0f;
 
+	private Rect leftside = new Rect(0, 0, Screen.width * 0.3f, Screen.height);
+	private Rect rightside = new Rect(Screen.width * 0.7f, 0, Screen.width * 0.3f, Screen.height);
 	private float blockJumpTimer = 0f;
 	private Vector2 currentVelocity;
 	private Rigidbody2D rb2d;
 	private DirectionRaycasting2DCollider raycast;
 	public float moveHorizontal;
     private Animator anim;
-
+	public float minSwipeDistY;
+    private Vector2 startPos;
 	public bool downButton;
 
 	// Use this for initialization
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			downButton = false;
 		}
+		#if UNITY_EDITOR
 		//The jump mechanic
 		if (blockJumpTimer > 0) 
 		{
@@ -65,7 +69,58 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
-        //set the walking animation variable to the axis, 
+
+		#else	
+				if (Input.touchCount > 0) {
+					if (leftside.Contains (Input.GetTouch(0).position)) {
+						moveHorizontal = -1;
+					}
+					else if (rightside.Contains (Input.GetTouch(0).position)) {
+						moveHorizontal = 1;
+					}
+				}
+				else {
+					moveHorizontal = 0;
+				}
+
+		        //swipe up to move up
+		        //to dowuble jump, finger has to go past the minimum distance and swip again.
+
+		        if (Input.touchCount > 0)
+		        {
+		            Touch touch = Input.touches[0];
+
+		            switch (touch.phase)
+		            {
+		                case TouchPhase.Began:
+		                    startPos = touch.position;
+
+		                    break;
+
+		                case TouchPhase.Ended:
+		                    float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
+
+		                    if (swipeDistVertical > minSwipeDistY)
+		                   {
+		                        float swipeValue = Mathf.Sign(touch.position.y - startPos.y);
+
+		                       if (swipeValue > 0)
+		                        {
+		                            if (rb2d.velocity.y <= 0)
+		                            {
+		                                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+		                            }
+		                        }
+		                    }
+		                    break;
+
+		            }
+		        }
+
+			#endif
+
+
+		//set the walking animation variable to the axis, 
         //use that to check if moving and in which direction
         if (anim != null)
         {
