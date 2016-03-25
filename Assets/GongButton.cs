@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GongButton : MonoBehaviour {
 
-    public GameObject button;
+    //public GameObject button;
 
     public bool pressed = false;
     public bool collide = false;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class FluteController : MonoBehaviour {
@@ -36,7 +37,8 @@ public class FluteController : MonoBehaviour {
 		}
 		solutionColor = solutionColor/3;
 		sr.color = solutionColor;
-	}
+       
+    }
 
 	void Update () {
         //if the flute is active, our progress array does not contain the currently pressed button, and our array is not maxed out
@@ -44,22 +46,28 @@ public class FluteController : MonoBehaviour {
         //if our array is maxed out, then ignores this add
         //if we press a button for a fltue in the array, we remove it from the progress array, allowing us to add a new flute
         index++;
-        if (index > 5){
+        if (index > 5)
+        {
             index = 0;
         }
-        if (fluteArray[index].state == true && !wipSolution.Contains(fluteArray[index]) && wipSolution.Count < 3){
+        if (fluteArray[index].state == true && !wipSolution.Contains(fluteArray[index]) && wipSolution.Count < 3)
+        {
             wipSolution.Add(fluteArray[index]);
             Debug.Log("Added to progress");
         }
-        if (index <= wipSolution.Count && wipSolution[index].state == false){
+        if (index <= wipSolution.Count && wipSolution[index].state == false)
+        {
             wipSolution.RemoveAt(index);
             Debug.Log("removed from progress");
             index--;
         }
         //all of the correct flutes have been pressed
-        if (solution[0].state == true && solution[1].state == true && solution[2].state == true){
-            Debug.Log("Flute solved");	
-		}
-	}
+        if (solution[0].state == true && solution[1].state == true && solution[2].state == true)
+        {
+            Debug.Log("Flute solved");
+        }
+
+    }
+    
 
 }
