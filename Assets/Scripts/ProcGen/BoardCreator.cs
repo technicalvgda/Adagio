@@ -120,8 +120,7 @@ public class BoardCreator : MonoBehaviour
                 player = GameObject.Find("Player");
             }
 			playerPos = player.GetComponent<Transform> ().position;
-            Debug.Log(playerPos);
-            Debug.Log(player);
+           
             //Activates the tiles that are within the player's viewable range
             for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
 				{

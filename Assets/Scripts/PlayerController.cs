@@ -120,14 +120,20 @@ public class PlayerController : MonoBehaviour {
 			#endif
 
 
-		//set the walking animation variable to the axis, 
+
+        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
+       
+		rb2d.velocity = currentVelocity;
+
+
+        //set the walking animation variable to the axis, 
         //use that to check if moving and in which direction
         if (anim != null)
         {
             anim.SetFloat("Walking", moveHorizontal);
-            if(moveHorizontal == 0.0)
+            if (currentVelocity == new Vector2(0,0))
             {
-                anim.SetBool("Idle",true);
+                anim.SetBool("Idle", true);
             }
             else
             {
@@ -136,15 +142,10 @@ public class PlayerController : MonoBehaviour {
         }
 
 
+    }
 
-
-        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
-       
-		rb2d.velocity = currentVelocity;
-	}
-
-	//Jump restriction removed if player touches anything
-	void OnCollisionEnter2D(Collision2D col) {
+    //Jump restriction removed if player touches anything
+    void OnCollisionEnter2D(Collision2D col) {
 		blockJumpTimer = 0f;
 	}
 }
