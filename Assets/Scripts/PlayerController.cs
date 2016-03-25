@@ -147,5 +147,6 @@ public class PlayerController : MonoBehaviour {
     //Jump restriction removed if player touches anything
     void OnCollisionEnter2D(Collision2D col) {
 		blockJumpTimer = 0f;
-	}
+        
+    }
 }
