@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
 		
 		        if (player == null)
 			    {
-			            player = GameObject.Find("Player(Clone)");
+			            player = GameObject.Find("Player");
 			    }
 		        else
 			        {

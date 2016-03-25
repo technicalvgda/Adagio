@@ -125,6 +125,14 @@ public class PlayerController : MonoBehaviour {
         if (anim != null)
         {
             anim.SetFloat("Walking", moveHorizontal);
+            if(moveHorizontal == 0.0)
+            {
+                anim.SetBool("Idle",true);
+            }
+            else
+            {
+                anim.SetBool("Idle", false);
+            }
         }
 
 

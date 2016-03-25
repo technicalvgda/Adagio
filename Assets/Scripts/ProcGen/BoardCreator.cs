@@ -110,14 +110,20 @@ public class BoardCreator : MonoBehaviour
 				activateOnce = true;
 			}
 		}
-
+      
 		if(!boardTilesAreActive)
 		{
 			timer += Time.deltaTime;
 			//Get the players position
-			playerPos = GameObject.FindWithTag ("Player").GetComponent<Transform> ().position;
-			//Activates the tiles that are within the player's viewable range
-			for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+            if(player == null)
+            {
+                player = GameObject.Find("Player");
+            }
+			playerPos = player.GetComponent<Transform> ().position;
+            Debug.Log(playerPos);
+            Debug.Log(player);
+            //Activates the tiles that are within the player's viewable range
+            for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
 				{
 					for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
 						{
@@ -446,8 +452,10 @@ public class BoardCreator : MonoBehaviour
 				}
 			}
 		}
+        /*
 		playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
 		Instantiate (player, playerPos, Quaternion.identity);
+        */
 	}
 
 	// Method takes two rooms as arguments and returns true/false if they overlap/don't overlap
