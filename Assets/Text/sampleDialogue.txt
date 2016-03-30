@@ -1,0 +1,5 @@
+Zimri: Hello.
+NPC: Good morning.
+Zimri: Good bye.
+NPC: Wish you well.
+Have a nice day!
