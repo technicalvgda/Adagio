@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SimonSaysButton : MonoBehaviour
-{
+public class BowlsButton : MonoBehaviour {
+
     public GameObject button;
 
     public bool pressed = false;
@@ -11,7 +11,7 @@ public class SimonSaysButton : MonoBehaviour
     //GameObject pressureplate1 = GameObject.FindGameObjectWithTag("pressureplate1");
     void Start()
     {
-       
+
 
     }
     void Update()
@@ -27,15 +27,15 @@ public class SimonSaysButton : MonoBehaviour
 
         }
     }
-   
+
     void OnTriggerEnter2D(Collider2D col)
     {
-        
+
         Debug.Log("Enter");
-        
+
         collide = true;
         Debug.Log(collide);
-        
+
 
     }
     void OnTriggerExit2D(Collider2D col)
@@ -45,5 +45,4 @@ public class SimonSaysButton : MonoBehaviour
         Debug.Log("Exit");
         count = 0;
     }
-    
 }
