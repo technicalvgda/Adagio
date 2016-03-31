@@ -45,6 +45,7 @@ public class BoardCreator : MonoBehaviour
 
 	public int element = 0;
 	private int numAppend = 0;
+	private int corridorBuffer = 5;
 
 	private Vector3 playerPos;								//The position of the player
 	private GameObject[][] ActiveTiles;						//The array that holds the instantiated wall tiles of the board
@@ -312,39 +313,59 @@ public class BoardCreator : MonoBehaviour
 				//Go through and make sure that no corridors overlap any corridors in the regular corridors array
 				for (int j = 0; j < i; j++) {
 					if (corridors [j] != null) {
-						if (doCorridorsOverlapCorridor (corridors [j], corridorToBePlaced) &&
-						    doCorridorsOverlapCorridor (corridors [j], corridorToAppend) &&
+						if (doCorridorsOverlapCorridor (corridors [j], corridorToBePlaced) ||
+						    doCorridorsOverlapCorridor (corridors [j], corridorToAppend) ||
 						    doCorridorsOverlapCorridor (corridors [j], deadEndCorridor)) 
 						{
 							Debug.Log ("CORRIDORS *** OVERLAPS");
 							break;
 						}
 					}
+					
+					//Check to see if corridor violates any buffer zones
+					if (corridors [j] != null){
+						if (doCorridorsOverlapBuffer(corridors[j], corridorToBePlaced) ||
+							doCorridorsOverlapBuffer(corridors[j], corridorToAppend) ||
+							doCorridorsOverlapBuffer(corridors[j], deadEndCorridor))
+						{
+							Debug.Log ("CORRIDORS *** VIOLATES BUFFER ");
+							break;
+						}
+					}
 
 
-					// If last room has been checked and no corridor is overlapping
+					// If last room has been checked and no corridor is overlapping and not violating a buffer zones
 					if (j == (i - 1)) {
 						// exit the loop
 						goodCorridorPlacement = true;
 					}
 				}
-				//If there was any corridor overlapping the regular corridors array then exit the loop and start over
+				//If there was any corridor overlapping the regular corridors array or violating a buffer zone, then exit the loop and start over
 				if (goodCorridorPlacement == false)
 					break;
 				
 				for (int j = 0; j < i; j++) {
 					if (deadEndCorridorsArray [j] != null) {
-						if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToBePlaced) &&
-						    doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToAppend) &&
+						if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToBePlaced) ||
+						    doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToAppend) ||
 						    doCorridorsOverlapCorridor (deadEndCorridorsArray [j], deadEndCorridor)) {
 							Debug.Log ("DEADEND *** OVERLAPS");
 							break;
 						}
 					}
+					
+					if (deadEndCorridorsArray [j] != null){
+						if (doCorridorsOverlapBuffer(deadEndCorridorsArray [j], corridorToBePlaced) ||
+							doCorridorsOverlapBuffer(deadEndCorridorsArray [j], corridorToAppend) ||
+							doCorridorsOverlapBuffer(deadEndCorridorsArray [j], deadEndCorridor))
+							{
+								Debug.Log ("DEADEND *** VIOLATES BUFFER");
+								break;
+							}
+					}
 
 					if (j == (i - 1)) 
 					{
-						
 						goodDeadEndCorridorPlacement = true;
 					}
 				}
@@ -358,14 +379,25 @@ public class BoardCreator : MonoBehaviour
 					{
 						if (aCorridors [j] != null) 
 						{
-							if (doCorridorsOverlapCorridor (aCorridors [j], corridorToBePlaced) &&
-							   doCorridorsOverlapCorridor (aCorridors [j], corridorToAppend) &&
+							if (doCorridorsOverlapCorridor (aCorridors [j], corridorToBePlaced) ||
+							   doCorridorsOverlapCorridor (aCorridors [j], corridorToAppend) ||
 							   doCorridorsOverlapCorridor (aCorridors [j], deadEndCorridor))
 							{
 								Debug.Log ("APP *** OVERLAPS");
 								break;
 							}
 						}
+					
+						if (aCorridors [j] != null){
+							if (doCorridorsOverlapBuffer(aCorridors[j], corridorToBePlaced) ||
+								doCorridorsOverlapBuffer(aCorridors[j], corridorToAppend) ||
+								doCorridorsOverlapBuffer(aCorridors[j], deadEndCorridor))
+								{
+									Debug.Log ("APP *** VIOLATES BUFFER");
+									break;
+								}
+						}
+					
 					}
 
 					if (j == (i - 1))
@@ -380,8 +412,8 @@ public class BoardCreator : MonoBehaviour
 
 				for (int j = 0; j < i; j++) 
 				{
-					if (doCorridorsOverlapRooms (rooms [j], corridorToBePlaced) &&
-						doCorridorsOverlapRooms (rooms [j], corridorToAppend) &&
+					if (doCorridorsOverlapRooms (rooms [j], corridorToBePlaced) ||
+						doCorridorsOverlapRooms (rooms [j], corridorToAppend) ||
 						doCorridorsOverlapRooms (rooms [j], deadEndCorridor))
 					{
 						break;
@@ -590,6 +622,17 @@ public class BoardCreator : MonoBehaviour
 		return doesOverlap;
 	}
 
+	// Returns true if the buffer zone has been violated
+	bool doCorridorsOverlapBuffer(Corridor alreadyPlaced, Corridor toBePlaced)
+	{
+			if (toBePlaced.startXPos > alreadyPlaced.startXPos - corridorBuffer && toBePlaced.EndPositionX < alreadyPlaced.EndPositionX + corridorBuffer)
+			{
+				if (toBePlaced.startYPos > alreadyPlaced.startYPos - corridorBuffer && toBePlaced.EndPositionY < alreadyPlaced.EndPositionY + corridorBuffer)
+					return true;
+			}
+			
+		return false;
+	}
 
 
     void SetTilesValuesForRooms()
