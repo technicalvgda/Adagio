@@ -58,10 +58,15 @@ public class BoardCreator : MonoBehaviour
 	private bool boardTilesAreActive;
 	private bool activateOnce;
 
+    public GameObject LoadingScreenCanvas;
+
     private void Start()
     {
-		//Set to false when starting the generation
-		reloadLevelNeeded = false;
+
+        LoadingScreenCanvas.SetActive(true);
+
+        //Set to false when starting the generation
+        reloadLevelNeeded = false;
 
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
@@ -88,8 +93,15 @@ public class BoardCreator : MonoBehaviour
 			//SetTilesUnactive(ActiveTiles);
 		}
     }
-	void Update()
+	void FixedUpdate()
 	{	
+
+        if (LoadingScreenCanvas.activeSelf == true)
+        {
+            LoadingScreenCanvas.SetActive(false);
+        }
+
+
 		if (Input.GetKeyDown (KeyCode.LeftControl)) 
 		{
 			boardTilesAreActive = !boardTilesAreActive;
