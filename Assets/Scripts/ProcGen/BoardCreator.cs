@@ -62,7 +62,6 @@ public class BoardCreator : MonoBehaviour
 
     private void Start()
     {
-
         LoadingScreenCanvas.SetActive(true);
 
         //Set to false when starting the generation
@@ -91,16 +90,17 @@ public class BoardCreator : MonoBehaviour
 			InstantiateOuterWalls ();
 
 			//SetTilesUnactive(ActiveTiles);
+
 		}
     }
 	void FixedUpdate()
 	{	
 
-        if (LoadingScreenCanvas.activeSelf == true)
-        {
-            LoadingScreenCanvas.SetActive(false);
-        }
-
+        
+		if (LoadingScreenCanvas.activeSelf == true)
+		{
+			LoadingScreenCanvas.SetActive(false);
+		}
 
 		if (Input.GetKeyDown (KeyCode.LeftControl)) 
 		{
@@ -261,7 +261,7 @@ public class BoardCreator : MonoBehaviour
 			if (triedCounter >= numbRooms) {
 				//Then reload the level
 				reloadLevelNeeded = true;
-				SceneManager.LoadScene (2);
+				SceneManager.LoadScene (3);
 				break;
 			}
 
@@ -281,7 +281,7 @@ public class BoardCreator : MonoBehaviour
 				if (rooms [i - 1] == null) 
 				{
 					reloadLevelNeeded = true;
-					SceneManager.LoadScene (2);
+					SceneManager.LoadScene (3);
 					break;
 				}
 
@@ -712,7 +712,7 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentRoom == null) 
 			{
-				SceneManager.LoadScene (2);
+				SceneManager.LoadScene (3);
 				break;
 			} 
 			else 
@@ -746,7 +746,7 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentCorridor == null) 
 			{				
-				SceneManager.LoadScene (2);
+				SceneManager.LoadScene (3);
 				break;
 			} 
 			else 
