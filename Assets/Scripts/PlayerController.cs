@@ -19,15 +19,21 @@ public class PlayerController : MonoBehaviour {
     private Vector2 startPos;
 	public bool downButton;
 
+    //stores the specific block the player touches at an instance in time
+    private GameObject currentBlock;
+
+
 	// Use this for initialization
 	void Start () {
 		//Reference so I don't have to type this long thing out repeatedly
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
 		raycast = GetComponent<DirectionRaycasting2DCollider> ();
+		
+
         if(anim == null)
         {
-            Debug.Log("No Animator Attached to Player");
+            Debug.Log("No Animator Attached to Player");	
         }
 	}
 	
@@ -147,6 +153,36 @@ public class PlayerController : MonoBehaviour {
     //Jump restriction removed if player touches anything
     void OnCollisionEnter2D(Collision2D col) {
 		blockJumpTimer = 0f;
-        
     }
-}
+
+    //when the player triggers a collider for a gameObject
+    void OnTriggerEnter2D (Collider2D col) {
+    	currentBlock = col.gameObject;
+    	PlayBlockMusic(currentBlock);
+    }
+
+    //when the player exits the collider for a gameObject
+    void OnTriggerExit2D (Collider2D col) {
+    	currentBlock = col.gameObject;
+    	StopBlockMusic(currentBlock);
+    }
+
+    //plays specified audio clip from the audio source component attached to thisObject
+    void PlayBlockMusic (GameObject thisObject) {
+        if (thisObject.tag == "MusicBox" && thisObject.name == "MusicBlock")
+        {
+        	if (!thisObject.GetComponent<AudioSource>().isPlaying) {
+        		thisObject.GetComponent<AudioSource>().PlayOneShot(thisObject.GetComponent<AudioSource>().clip, 1.0f);
+        	}
+        }
+    }
+
+    //stops specified audio clip from the audio source component attached to thisObject
+    void StopBlockMusic (GameObject thisObject) {
+    	if (thisObject.tag == "MusicBox" && thisObject.name == "MusicBlock") {
+    		if (thisObject.GetComponent<AudioSource>().isPlaying) {
+    			thisObject.GetComponent<AudioSource>().Stop();
+    		}
+    	}
+    }
+ }
