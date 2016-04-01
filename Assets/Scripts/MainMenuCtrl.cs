@@ -24,6 +24,7 @@ public class MainMenuCtrl : MonoBehaviour
 		OptionsCanvas = GameObject.Find("OptionsCanvas");
 		OptionsCanvas.SetActive(false);
 
+
         audio.LoopMusic(true);
         audio.PlayMusic(0);
     }
@@ -48,7 +49,9 @@ public class MainMenuCtrl : MonoBehaviour
 
     public void LoadScene(string name)
     {
-	    SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
+        SceneManager.LoadSceneAsync(name);
+        MainMenuCanvas.SetActive(false);
+        SceneManager.LoadScene(name); //Application.LoadLevel() is obsolete
     }
 
     // Change the brightness by changing the ambient light
@@ -63,7 +66,7 @@ public class MainMenuCtrl : MonoBehaviour
 
     public void ConfirmQuit()
 	{
-        QuitConfirmationCanvas.SetActive(true);
+        QuitConfirmationCanvas.SetActive (true);
 		MainMenuCanvas.SetActive (false);
 	}
 
