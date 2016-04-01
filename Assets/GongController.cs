@@ -7,7 +7,7 @@ public class GongController : MonoBehaviour {
 
     SpriteRenderer sr, ss;
     public GameObject SimonSaysSwitch;
-    public GameObject sb1, sb2, sb3, sb4;
+    public GameObject sb1, sb2, sb3, sb4, sb5, sb6, sb7, sb8, sb9;
     List<int> sequence = new List<int>();
     List<int> bpressed = new List<int>();
     public GameObject door;
