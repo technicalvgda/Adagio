@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			downButton = false;
 		}
-        #if UNITY_STANDALONE
+        #if UNITY_STANDALONE || UNITY_EDITOR
         //The jump mechanic
         if (blockJumpTimer > 0) 
 		{
