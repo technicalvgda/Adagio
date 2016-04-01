@@ -43,9 +43,9 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			downButton = false;
 		}
-		#if UNITY_EDITOR
-		//The jump mechanic
-		if (blockJumpTimer > 0) 
+        #if UNITY_STANDALONE
+        //The jump mechanic
+        if (blockJumpTimer > 0) 
 		{
 			blockJumpTimer -= Time.deltaTime;
 		}   
