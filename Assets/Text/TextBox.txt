@@ -1,6 +1,6 @@
 
-This is a Text Press E to continue
-Press E again to make this disappear
-Are you even trying, Press E again
-Ok one more time
-Ok ok last one this should be the last time
+Textbox: This is a Text Press E to continue
+Textbox: Press E again to make this disappear
+Textbox: Are you even trying, Press E again
+Textbox: Ok one more time
+Textbox: Ok ok last one this should be the last time

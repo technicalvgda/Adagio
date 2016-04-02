@@ -33,8 +33,7 @@ public class SimonSays : MonoBehaviour
         {
             bpressed.Clear();
             sequence.Clear();
-            SimonSaysSwitch.GetComponent<SimonSaysSwitch>().pressed = false; 
-            StartCoroutine(CycleColors());
+            SimonSaysSwitch.GetComponent<SimonSaysSwitch>().pressed = false;    
 
         }
         if (sb1.GetComponent<SimonSaysButton>().pressed == true && sb2.GetComponent<SimonSaysButton>().pressed == false &&
@@ -87,52 +86,5 @@ public class SimonSays : MonoBehaviour
 		}
 }
 }
-    public IEnumerator CycleColors()
-    {
-        int counter = 0;
-        bool cycleDone = false;
-        while (cycleDone == false)
-        {
-            switch (state)
-            {
-                case 0:
-                    sr.color = new Color(1, 0.3f, 0.3f);
-                    sequence.Add(state);
-                    counter++;
-                    break;
-                case 1:
-                    sr.color = new Color(0.3f, 1, 0.3f);
-                    sequence.Add(state);
-                    counter++;
-                    break;
-                case 2:
-                    sr.color = new Color(0, 0, 1);
-                    sequence.Add(state);
-                    counter++;
-                    break;
-                case 3:
-                    sr.color = new Color(0, 0, 0);
-                    sequence.Add(state);
-                    counter++;
-                    break;
-                default:
-                    break;
-            }
-            rnd = (int)UnityEngine.Random.Range(0, 3);
-            state = (state + rnd) % 4;
-            if (counter == 4)
-            {
-                cycleDone = true;
-                
-            }
-           
-            yield return new WaitForSeconds(1);
-            sr.color = new Color(1, 1, 1);
-            yield return new WaitForSeconds(0.5f);
-            Debug.Log(sequence.ToString());
-        }
-    }
-   
-    
-
+ 
 }
