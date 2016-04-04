@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.S)) {
+		if(Input.GetKeyDown(KeyCode.S) ) {
 			downButton = true;
 		} else {
 			downButton = false;
@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
 
-		#else	
-				if (Input.touchCount > 0) {
+
+#else
+        if (Input.touchCount > 0) {
 					if (leftside.Contains (Input.GetTouch(0).position)) {
 						moveHorizontal = -1;
 					}
@@ -117,6 +118,16 @@ public class PlayerController : MonoBehaviour {
 		                                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 		                            }
 		                        }
+                                else if(swipeValue < 0)
+                                {
+                                        downButton = true;
+                                }
+                                    else
+                                       {
+                                              downButton = false;
+                                        }
+                                
+
 		                    }
 		                    break;
 
