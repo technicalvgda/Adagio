@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
     private Vector2 startPos;
 	public bool downButton;
 
+	private float swipeValue;
     //stores the specific block the player touches at an instance in time
     private GameObject currentBlock;
 
@@ -44,7 +45,16 @@ public class PlayerController : MonoBehaviour {
 			downButton = false;
 		}
         #if UNITY_STANDALONE || UNITY_EDITOR
-        //The jump mechanic
+		if(Input.GetKeyDown(KeyCode.S) ) 
+				{
+				downButton = true;
+				} 
+			else 
+				{
+				downButton = false;
+		}
+
+		//The jump mechanic
         if (blockJumpTimer > 0) 
 		{
 			blockJumpTimer -= Time.deltaTime;
@@ -77,12 +87,22 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		#else	
+
+				if(swipeValue < 0)
+				{
+					downButton = true;
+					swipeValue = 0;
+				}
+					else
+					{
+					downButton = false;
+					}
 				if (Input.touchCount > 0) {
 					if (leftside.Contains (Input.GetTouch(0).position)) {
-						moveHorizontal = -1;
+					moveHorizontal = (raycast.collisionLeft && !raycast.collisionDown) ? 0 : -1;
 					}
 					else if (rightside.Contains (Input.GetTouch(0).position)) {
-						moveHorizontal = 1;
+					moveHorizontal = (raycast.collisionRight && !raycast.collisionDown) ? 0 : 1;
 					}
 				}
 				else {
@@ -92,37 +112,43 @@ public class PlayerController : MonoBehaviour {
 		        //swipe up to move up
 		        //to dowuble jump, finger has to go past the minimum distance and swip again.
 
-		        if (Input.touchCount > 0)
-		        {
-		            Touch touch = Input.touches[0];
-
-		            switch (touch.phase)
-		            {
-		                case TouchPhase.Began:
-		                    startPos = touch.position;
-
-		                    break;
-
-		                case TouchPhase.Ended:
-		                    float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
-
-		                    if (swipeDistVertical > minSwipeDistY)
-		                   {
-		                        float swipeValue = Mathf.Sign(touch.position.y - startPos.y);
-
-		                       if (swipeValue > 0)
-		                        {
-		                            if (rb2d.velocity.y <= 0)
-		                            {
-		                                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
-		                            }
-		                        }
-		                    }
-		                    break;
-
-		            }
-		        }
-
+		if(raycast.collisionUp)
+				{
+					blockJumpTimer = blockJumpTimerDuration;
+				}
+				if (blockJumpTimer > 0) 
+				{
+					blockJumpTimer -= Time.deltaTime;
+				}
+				else if (Input.touchCount > 0)
+				{
+					Touch touch = Input.touches[0];
+					switch (touch.phase)
+					{
+					case TouchPhase.Began:
+						startPos = touch.position;
+						break;
+					case TouchPhase.Ended:
+						float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
+						if (swipeDistVertical > minSwipeDistY)
+						{
+							swipeValue = Mathf.Sign(touch.position.y - startPos.y);
+							if (swipeValue > 0)
+						{
+								if (rb2d.velocity.y <= 0)
+								{
+									rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+								}
+								//If player tries to jump before apex, they cannot jump for a set time
+								else 
+								{
+									blockJumpTimer = blockJumpTimerDuration;
+								} 
+							}
+						}
+						break;
+					}
+				}
 			#endif
 
 
