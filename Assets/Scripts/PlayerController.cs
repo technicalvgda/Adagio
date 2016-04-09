@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour {
     //stores the specific block the player touches at an instance in time
     private GameObject currentBlock;
 
+	//particles on jump
+	private ParticleEmitter emitter;
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +33,7 @@ public class PlayerController : MonoBehaviour {
         anim = GetComponent<Animator>();
 		raycast = GetComponent<DirectionRaycasting2DCollider> ();
 		
-
+		emitter = GetComponent<ParticleEmitter>();
         if(anim == null)
         {
             Debug.Log("No Animator Attached to Player");	
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
 			else {
