@@ -3,46 +3,46 @@ using System.Collections;
 
 public class BowlsButton : MonoBehaviour {
 
-    public GameObject button;
+        public GameObject button;
 
-    public bool pressed = false;
-    public bool collide = false;
-    int count = 0;
-    //GameObject pressureplate1 = GameObject.FindGameObjectWithTag("pressureplate1");
-    void Start()
-    {
-
-
-    }
-    void Update()
-    {
-        if (collide)
+        public bool pressed = false;
+        public bool collide = false;
+        int count = 0;
+        //GameObject pressureplate1 = GameObject.FindGameObjectWithTag("pressureplate1");
+        void Start()
         {
-            if (count == 0)
-            {
-                pressed = true;
-                Debug.Log("ON");
-                count++;
-            }
+
 
         }
-    }
+        void Update()
+        {
+            if (collide)
+            {
+                if (count == 0)
+                {
+                    pressed = true;
+                    Debug.Log("ON");
+                    count++;
+                }
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
+            }
+        }
 
-        Debug.Log("Enter");
+        void OnTriggerEnter2D(Collider2D col)
+        {
 
-        collide = true;
-        Debug.Log(collide);
+            Debug.Log("Enter");
+
+            collide = true;
+            Debug.Log(collide);
 
 
-    }
-    void OnTriggerExit2D(Collider2D col)
-    {
-        collide = false;
-        pressed = false;
-        Debug.Log("Exit");
-        count = 0;
-    }
+        }
+        void OnTriggerExit2D(Collider2D col)
+        {
+            collide = false;
+            pressed = false;
+            Debug.Log("Exit");
+            count = 0;
+        }
 }
