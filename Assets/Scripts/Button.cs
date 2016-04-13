@@ -15,12 +15,8 @@ public class Button : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(playerContact == true && Input.GetKeyDown(KeyCode.E)){
-			receiver.Activate ();
-			//Extra stuff to activate if desired
-			receiver2.Activate ();
-			receiver3.Activate ();
-
+		if(Input.GetKeyDown(KeyCode.E)){
+			Activate ();
 		}
 	}
 
@@ -36,4 +32,21 @@ public class Button : MonoBehaviour {
 				}
 			}
 
+	//Subscribe Activate method to the OnTap Event when object becomes active
+	void OnEnable(){
+		PlayerController.OnTap += Activate;
+	}
+	//Unsubscrite Activate method from the OnTap event when object becomes deactive
+	void OnDisable(){
+		PlayerController.OnTap -= Activate;
+	}
+
+	void Activate(){
+		if(playerContact == true){
+			receiver.Activate ();
+			//Extra stuff to activate if desired
+			receiver2.Activate ();
+			receiver3.Activate ();
+		}
+	}
 }
