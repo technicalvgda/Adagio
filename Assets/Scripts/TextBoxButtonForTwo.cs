@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using System.Text;
+using System.IO;
+
 /// <summary>
 /// HOW TO USE THIS CODE
 /// 
@@ -25,7 +28,8 @@ public class TextBoxButtonForTwo : MonoBehaviour
     public GameObject textBox;
     public GameObject TextButton;
     public string speaker1, speaker2;
-    public Text theText;
+    public Text theTextPlayer;
+    public Text theTextNPC;
     string[] filespeaker1;
     string[] filespeaker2;
     public TextAsset textFile;
@@ -45,6 +49,8 @@ public class TextBoxButtonForTwo : MonoBehaviour
 
     void Start()
     {
+        print(textFile.text);
+        
         speaker = 0; //the first speaker
         textBox.SetActive(false);
         //the delimiter is currently the speaker's name with an @ after the line
@@ -79,6 +85,7 @@ public class TextBoxButtonForTwo : MonoBehaviour
             endAtLine = speakerLines1.Count;
             Debug.Log(speakerLines1.Count);
         }
+        
     }
 
     void OnTriggerStay2D(Collider2D c)
@@ -117,15 +124,15 @@ public class TextBoxButtonForTwo : MonoBehaviour
                 {
                     //First Speaker is talking
                     case 0:
-                        theText.color = Color.blue;
-                        StartCoroutine(TextScroll(speakerLines1[currentLine]));
+                        theTextPlayer.color = Color.blue;
+                        StartCoroutine(TextScrollPlayer(speakerLines1[currentLine]));
                         speaker = 1;
                         spoken1 = true;
                         break;
                     //Second Speaker is talking
                     case 1: 
-                        theText.color = Color.green;
-                        StartCoroutine(TextScroll(speakerLines2[currentLine]));
+                        theTextNPC.color = Color.green;
+                        StartCoroutine(TextScrollNPC(speakerLines2[currentLine]));
                         speaker = 0;
                         spoken2 = true;
                         break;
@@ -166,22 +173,41 @@ public class TextBoxButtonForTwo : MonoBehaviour
         }
     }
 
-    private IEnumerator TextScroll(string lineOfText) //making words appear word by word
+    private IEnumerator TextScrollPlayer(string lineOfText) //making words appear word by word
     {
         int letter = 0;
-        theText.text = ""; //display nothing on textbox
+        theTextPlayer.text = ""; //display nothing on textbox
         isTyping = true;
         cancelTyping = false;
+
         while (isTyping && !cancelTyping && (letter < lineOfText.Length - 1))
         {
-            theText.text += lineOfText[letter];
+            theTextPlayer.text += lineOfText[letter];
             letter += 1; // next letter
             yield return new WaitForSeconds(typeSpeed); // waiting for text to appear
         }
-        theText.text = lineOfText; //print whole line of text on screen
+        theTextPlayer.text = lineOfText; //print whole line of text on screen
 
         isTyping = false;
         cancelTyping = false;
     }
 
+    private IEnumerator TextScrollNPC(string lineOfText) //making words appear word by word
+    {
+        int letter = 0;
+        theTextNPC.text = ""; //display nothing on textbox
+        isTyping = true;
+        cancelTyping = false;
+
+        while (isTyping && !cancelTyping && (letter < lineOfText.Length - 1))
+        {
+            theTextNPC.text += lineOfText[letter];
+            letter += 1; // next letter
+            yield return new WaitForSeconds(typeSpeed); // waiting for text to appear
+        }
+        theTextNPC.text = lineOfText; //print whole line of text on screen
+
+        isTyping = false;
+        cancelTyping = false;
+    }
 }
