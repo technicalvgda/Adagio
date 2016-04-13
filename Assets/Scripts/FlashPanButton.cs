@@ -42,7 +42,7 @@ public class FlashPanButton : MonoBehaviour
 				player.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 				camPos = Vector3.SmoothDamp (camPos, new Vector3 (target.transform.position.x, target.transform.position.y, camPos.z), ref currentVelocity, panTime);
 				Camera.main.transform.position = camPos;
-				Debug.Log (currentVelocity);
+				//Debug.Log (currentVelocity);
 				if (Vector2.Distance (camPos, target.transform.position) < 0.1f) {
 					panState = state.panwait;
 				}
