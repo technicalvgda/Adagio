@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	public float minSwipeDistY;
     private Vector2 startPos;
 	public bool downButton;
+    bool leftGround = false;
 
 	private float swipeValue;
     //stores the specific block the player touches at an instance in time
@@ -95,10 +96,16 @@ public class PlayerController : MonoBehaviour {
 			blockJumpTimer = blockJumpTimerDuration;
 		}
         //check for landing
-        if(raycast.collisionDown)
+        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
         {
+            leftGround = true;
+        }
+        else if(raycast.collisionDown && leftGround == true)
+        {
+            leftGround = false;
             anim.SetBool("Airborne", false);
         }
+        
 		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
 		if(raycast.collisionLeft && !raycast.collisionDown){
 			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
