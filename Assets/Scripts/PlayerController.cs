@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
 
-		#else	
+#else
 
 		if(swipeValue < 0)
 		{
@@ -144,7 +144,16 @@ public class PlayerController : MonoBehaviour {
 		else {
 			moveHorizontal = 0;
 		}
-
+         //check for landing
+        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
+        {
+            leftGround = true;
+        }
+        else if(raycast.collisionDown && leftGround == true)
+        {
+            leftGround = false;
+            anim.SetBool("Airborne", false);
+        }
         //swipe up to move up
         //to dowuble jump, finger has to go past the minimum distance and swip again.
 
@@ -173,6 +182,8 @@ public class PlayerController : MonoBehaviour {
 						{
 								if (rb2d.velocity.y <= 0)
 								{
+                                    anim.SetTrigger("Jump");
+                                    anim.SetBool("Airborne", true);
 									rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 								}
 								//If player tries to jump before apex, they cannot jump for a set time
@@ -185,7 +196,7 @@ public class PlayerController : MonoBehaviour {
 						break;
 					}
 				}
-			#endif
+#endif
 
 
 
