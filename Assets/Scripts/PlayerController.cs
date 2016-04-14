@@ -94,6 +94,11 @@ public class PlayerController : MonoBehaviour {
 		{
 			blockJumpTimer = blockJumpTimerDuration;
 		}
+        //check for landing
+        if(raycast.collisionDown)
+        {
+            anim.SetBool("Airborne", false);
+        }
 		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
 		if(raycast.collisionLeft && !raycast.collisionDown){
 			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
