@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour {
 		}   
 		else if (Input.GetKeyDown(KeyCode.Space))
 		{
-			//Player can jump if they are falling or reached max height
-			if (rb2d.velocity.y <= 0) {
+            anim.SetBool("Jumping", true);
+            //Player can jump if they are falling or reached max height
+            if (rb2d.velocity.y <= 0) {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
