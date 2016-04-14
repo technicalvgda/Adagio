@@ -65,6 +65,9 @@ public class BoardCreator : MonoBehaviour
 	private Rect toBePlacedRect;							//Rectangle for the room/corridor that is to be placed on the board
 	private bool placementNeeded;							//bool for entering and exiting placement loops for rooms/corridors
 
+	public GameObject AudioTrigger1;
+	public GameObject AudioTrigger2;
+
 	private void Start()
 	{
 		LoadingScreenCanvas.SetActive(true);
@@ -96,11 +99,17 @@ public class BoardCreator : MonoBehaviour
 
 			//SetTilesUnactive(ActiveTiles);
 
+
 		}
+		if(corridors [2] != null)
+			spawnAudioTrigger (corridors [2], AudioTrigger1);
+		if(corridors[3] != null)
+			spawnAudioTrigger (corridors [3], AudioTrigger2);
+
 	}
 	void FixedUpdate()
 	{	
-
+		
 
 		if (LoadingScreenCanvas.activeSelf == true)
 		{
@@ -130,45 +139,51 @@ public class BoardCreator : MonoBehaviour
 
 		if(!boardTilesAreActive)
 		{
-			timer += Time.deltaTime;
-			//Get the players position
-			if(player == null)
-			{
-				player = GameObject.Find("Player");
-			}
-			playerPos = player.GetComponent<Transform> ().position;
+			StartCoroutine ("makeTilesActiveInSquare");
+		}
+	}
 
-			//Activates the tiles that are within the player's viewable range
-			for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+	IEnumerator makeTilesActiveInSquare()
+	{
+		timer += Time.deltaTime;
+		//Get the players position
+		if(player == null)
+		{
+			player = GameObject.Find("Player");
+		}
+		playerPos = player.GetComponent<Transform> ().position;
+
+		//Activates the tiles that are within the player's viewable range
+		for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+		{
+			for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
 			{
-				for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
+				if (i >= -1 && i <= 200 && j >= -1 && j <= 200)
 				{
-					if (i >= -1 && i <= 200 && j >= -1 && j <= 200)
+					if (ActiveTiles [i+1] [j+1] != null) 
 					{
-						if (ActiveTiles [i+1] [j+1] != null) 
-						{
-							ActiveTiles [i + 1] [j + 1].SetActive (true);
-						}
+						ActiveTiles [i + 1] [j + 1].SetActive (true);
 					}
 				}
-			}
-			//If the timer reaches the determined amount of time
-			if (timer > TileInactiveTimer) 
-			{
-				//Reset the timer and set blocks outside of player area inactive
-				for (int i = -1; i < columns; i++) 
-				{
-					for (int j = -1; j < rows; j++) 
-					{
-						if ((i <= (int)playerPos.x - ActiveTileLength) || (i >= (int)playerPos.x + ActiveTileLength) || (j <= (int)playerPos.y - ActiveTileHeight) || (j >= (int)playerPos.y + ActiveTileHeight))
-						if(ActiveTiles [i + 1] [j + 1] != null)
-						if (ActiveTiles [i + 1] [j + 1].activeSelf == true)
-							ActiveTiles [i + 1] [j + 1].SetActive (false);
-					}
-				}
-				timer = 0;
 			}
 		}
+		//If the timer reaches the determined amount of time
+		if (timer > TileInactiveTimer) 
+		{
+			//Reset the timer and set blocks outside of player area inactive
+			for (int i = -1; i < columns; i++) 
+			{
+				for (int j = -1; j < rows; j++) 
+				{
+					if ((i <= (int)playerPos.x - ActiveTileLength) || (i >= (int)playerPos.x + ActiveTileLength) || (j <= (int)playerPos.y - ActiveTileHeight) || (j >= (int)playerPos.y + ActiveTileHeight))
+					if(ActiveTiles [i + 1] [j + 1] != null)
+					if (ActiveTiles [i + 1] [j + 1].activeSelf == true)
+						ActiveTiles [i + 1] [j + 1].SetActive (false);
+				}
+			}
+			timer = 0;
+		}
+		yield return null;
 	}
 	//Sets the tiles unactive
 	void SetTilesUnactive(GameObject[][] o)
@@ -401,6 +416,11 @@ public class BoardCreator : MonoBehaviour
 							break;
 						//Create the Corridor
 						corridorToAppend.SetUpAppendedCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
+
+						//Checks to see if the appended corridor overlaps with the dead end corridor that is to be placed
+						if(doCorridorsOverlapCorridor(deadEndCorridor,corridorToAppend))
+							break;
+						
 						if (corridorToAppend.corridorLength < minCorridorLength)
 						{
 							//break;
@@ -1155,6 +1175,25 @@ public class BoardCreator : MonoBehaviour
 			}
 		}
 		return doesOverlap;
+	}
+
+	void spawnAudioTrigger(Corridor corridor, GameObject audioTrigger)
+	{
+		switch(corridor.direction)
+		{
+		case Direction.North:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.identity);
+			break;
+		case Direction.East:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			break;
+		case Direction.South:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos-4,0), Quaternion.identity);
+			break;
+		case Direction.West:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos-4,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			break;
+		}
 	}
 }
 
