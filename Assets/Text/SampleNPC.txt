@@ -2,7 +2,7 @@ NPC:Hello Zimri.@
 Zimri:Hello stranger.@
 NPC:How are you?@
 Zimri:I am doing fine.@
-NPC:That is good to hear. 
+NPC:That is good to hear.
 Good Luck on your journey!@
 Zimri:Many Thanks!@
 NPC:Let me tell you a story before you go though.@

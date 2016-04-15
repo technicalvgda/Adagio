@@ -7,8 +7,13 @@ public class PlayerController : MonoBehaviour {
 	public float jumpSpeed;
 	public float blockJumpTimerDuration = 1.0f;
 
+	public delegate void TapAction ();
+	public static event TapAction OnTap;
+
 	private Rect leftside = new Rect(0, 0, Screen.width * 0.3f, Screen.height);
 	private Rect rightside = new Rect(Screen.width * 0.7f, 0, Screen.width * 0.3f, Screen.height);
+	private Rect center = new Rect (Screen.width * 0.3f, 0, Screen.width * 0.4f, Screen.height);
+
 	private float blockJumpTimer = 0f;
 	private Vector2 currentVelocity;
 	private Rigidbody2D rb2d;
@@ -18,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	public float minSwipeDistY;
     private Vector2 startPos;
 	public bool downButton;
+    bool leftGround = false;
 
 	private float swipeValue;
     //stores the specific block the player touches at an instance in time
@@ -56,6 +62,16 @@ public class PlayerController : MonoBehaviour {
 				downButton = false;
 		}
 
+		//Uses mouse clicking for testing tapping screen to activate buttons
+		/*
+		if(Input.GetMouseButtonDown(0)){
+			if(center.Contains(Input.mousePosition)){
+				if(OnTap != null)
+					OnTap();
+			}
+		}
+		*/
+
 		//The jump mechanic
         if (blockJumpTimer > 0) 
 		{
@@ -63,8 +79,10 @@ public class PlayerController : MonoBehaviour {
 		}   
 		else if (Input.GetKeyDown(KeyCode.Space))
 		{
-			//Player can jump if they are falling or reached max height
-			if (rb2d.velocity.y <= 0) {
+            anim.SetTrigger("Jump");
+            anim.SetBool("Airborne", true);
+            //Player can jump if they are falling or reached max height
+            if (rb2d.velocity.y <= 0) {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
@@ -80,6 +98,17 @@ public class PlayerController : MonoBehaviour {
 		{
 			blockJumpTimer = blockJumpTimerDuration;
 		}
+        //check for landing
+        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
+        {
+            leftGround = true;
+        }
+        else if(raycast.collisionDown && leftGround == true)
+        {
+            leftGround = false;
+            anim.SetBool("Airborne", false);
+        }
+        
 		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
 		if(raycast.collisionLeft && !raycast.collisionDown){
 			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
@@ -89,31 +118,47 @@ public class PlayerController : MonoBehaviour {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
 
-		#else	
+#else
 
-				if(swipeValue < 0)
-				{
-					downButton = true;
-					swipeValue = 0;
-				}
-					else
-					{
-					downButton = false;
-					}
-				if (Input.touchCount > 0) {
-					if (leftside.Contains (Input.GetTouch(0).position)) {
-					moveHorizontal = (raycast.collisionLeft && !raycast.collisionDown) ? 0 : -1;
-					}
-					else if (rightside.Contains (Input.GetTouch(0).position)) {
-					moveHorizontal = (raycast.collisionRight && !raycast.collisionDown) ? 0 : 1;
-					}
-				}
-				else {
-					moveHorizontal = 0;
-				}
+		if(swipeValue < 0)
+		{
+			downButton = true;
+			swipeValue = 0;
+		}
+		else
+		{
+			downButton = false;
+		}
 
-		        //swipe up to move up
-		        //to dowuble jump, finger has to go past the minimum distance and swip again.
+		if (Input.touchCount > 0) {
+			if (leftside.Contains (Input.GetTouch(0).position)) {
+				moveHorizontal = (raycast.collisionLeft && !raycast.collisionDown) ? 0 : -1;
+			}
+			else if (rightside.Contains (Input.GetTouch(0).position)) {
+				moveHorizontal = (raycast.collisionRight && !raycast.collisionDown) ? 0 : 1;
+			}
+			else if (center.Contains (Input.GetTouch(0).position)){
+				//Broadcast Tap Screen Event
+				if(OnTap != null){
+					OnTap();
+				}
+			}
+		}
+		else {
+			moveHorizontal = 0;
+		}
+         //check for landing
+        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
+        {
+            leftGround = true;
+        }
+        else if(raycast.collisionDown && leftGround == true)
+        {
+            leftGround = false;
+            anim.SetBool("Airborne", false);
+        }
+        //swipe up to move up
+        //to dowuble jump, finger has to go past the minimum distance and swip again.
 
 		if(raycast.collisionUp)
 				{
@@ -140,6 +185,8 @@ public class PlayerController : MonoBehaviour {
 						{
 								if (rb2d.velocity.y <= 0)
 								{
+                                    anim.SetTrigger("Jump");
+                                    anim.SetBool("Airborne", true);
 									rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 								}
 								//If player tries to jump before apex, they cannot jump for a set time
@@ -152,7 +199,7 @@ public class PlayerController : MonoBehaviour {
 						break;
 					}
 				}
-			#endif
+#endif
 
 
 

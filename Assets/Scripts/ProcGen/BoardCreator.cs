@@ -10,7 +10,6 @@ public class BoardCreator : MonoBehaviour
 		Wall, Floor,
 	}
 
-
 	public int columns = 100;                                 // The number of columns on the board (how wide it will be).
 	public int rows = 100;                                    // The number of rows on the board (how tall it will be).
 	public IntRange numRooms = new IntRange(15, 20);         // The range of the number of rooms there can be.
@@ -62,42 +61,56 @@ public class BoardCreator : MonoBehaviour
 
 	public GameObject LoadingScreenCanvas;
 
-	private void Start()
-	{
-		LoadingScreenCanvas.SetActive(true);
+	private Rect alreadyPlacedRect;							//Rectangle for the room/corridor that is already placed on the board
+	private Rect toBePlacedRect;							//Rectangle for the room/corridor that is to be placed on the board
+	private bool placementNeeded;							//bool for entering and exiting placement loops for rooms/corridors
 
-		//Set to false when starting the generation
-		reloadLevelNeeded = false;
+	public GameObject AudioTrigger1;
+	public GameObject AudioTrigger2;
 
-		// Create the board holder.
-		boardHolder = new GameObject("BoardHolder");
 
-		SetupTilesArray();
-		//Create the array that holds the instantiated tile objects
-		SetupActiveTilesArray();
-		CreateRoomsAndCorridors();
 
-		//Even after reloading the level these functions will still execute.
-		//If statement needed to prevent time wasted generating the map when
-		//the level is going to reload
-		if (reloadLevelNeeded == false)
-		{
+    private void Start()
+    {
+        LoadingScreenCanvas.SetActive(true);
 
-			SetTilesValuesForRooms ();
-			SetTilesValuesForCorridors ();
-			SetTilesValuesForAppendedCorridors ();
-			SetTilesValuesForDeadEndCorridors ();
+        //Set to false when starting the generation
+        reloadLevelNeeded = false;
 
-			InstantiateTiles ();
-			InstantiateOuterWalls ();
+        // Create the board holder.
+        boardHolder = new GameObject("BoardHolder");
 
-			//SetTilesUnactive(ActiveTiles);
+        SetupTilesArray();
+        //Create the array that holds the instantiated tile objects
+        SetupActiveTilesArray();
+        CreateRoomsAndCorridors();
 
-		}
-	}
-	void FixedUpdate()
+        //Even after reloading the level these functions will still execute.
+        //If statement needed to prevent time wasted generating the map when
+        //the level is going to reload
+        if (reloadLevelNeeded == false)
+        {
+
+            SetTilesValuesForRooms();
+            SetTilesValuesForCorridors();
+            SetTilesValuesForAppendedCorridors();
+            SetTilesValuesForDeadEndCorridors();
+            InstantiateTiles();
+            InstantiateOuterWalls();
+
+            //SetTilesUnactive(ActiveTiles);
+
+
+        }
+        if (corridors[2] != null)
+            spawnAudioTrigger(corridors[2], AudioTrigger1);
+        if (corridors[3] != null)
+            spawnAudioTrigger(corridors[3], AudioTrigger2);
+
+    }
+            void FixedUpdate()
 	{	
-
+		
 
 		if (LoadingScreenCanvas.activeSelf == true)
 		{
@@ -127,45 +140,51 @@ public class BoardCreator : MonoBehaviour
 
 		if(!boardTilesAreActive)
 		{
-			timer += Time.deltaTime;
-			//Get the players position
-			if(player == null)
-			{
-				player = GameObject.Find("Player");
-			}
-			playerPos = player.GetComponent<Transform> ().position;
+			StartCoroutine ("makeTilesActiveInSquare");
+		}
+	}
 
-			//Activates the tiles that are within the player's viewable range
-			for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+	IEnumerator makeTilesActiveInSquare()
+	{
+		timer += Time.deltaTime;
+		//Get the players position
+		if(player == null)
+		{
+			player = GameObject.Find("Player");
+		}
+		playerPos = player.GetComponent<Transform> ().position;
+
+		//Activates the tiles that are within the player's viewable range
+		for (int i = (int)playerPos.x - ActiveTileLength / 2; i < (int)playerPos.x + ActiveTileLength / 2; i++) 
+		{
+			for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
 			{
-				for (int j = (int)playerPos.y - ActiveTileHeight / 2; j < (int)playerPos.y + ActiveTileHeight / 2; j++) 
+				if (i >= -1 && i <= 200 && j >= -1 && j <= 200)
 				{
-					if (i >= -1 && i <= 200 && j >= -1 && j <= 200)
+					if (ActiveTiles [i+1] [j+1] != null) 
 					{
-						if (ActiveTiles [i+1] [j+1] != null) 
-						{
-							ActiveTiles [i + 1] [j + 1].SetActive (true);
-						}
+						ActiveTiles [i + 1] [j + 1].SetActive (true);
 					}
 				}
-			}
-			//If the timer reaches the determined amount of time
-			if (timer > TileInactiveTimer) 
-			{
-				//Reset the timer and set blocks outside of player area inactive
-				for (int i = -1; i < columns; i++) 
-				{
-					for (int j = -1; j < rows; j++) 
-					{
-						if ((i <= (int)playerPos.x - ActiveTileLength) || (i >= (int)playerPos.x + ActiveTileLength) || (j <= (int)playerPos.y - ActiveTileHeight) || (j >= (int)playerPos.y + ActiveTileHeight))
-						if(ActiveTiles [i + 1] [j + 1] != null)
-						if (ActiveTiles [i + 1] [j + 1].activeSelf == true)
-							ActiveTiles [i + 1] [j + 1].SetActive (false);
-					}
-				}
-				timer = 0;
 			}
 		}
+		//If the timer reaches the determined amount of time
+		if (timer > TileInactiveTimer) 
+		{
+			//Reset the timer and set blocks outside of player area inactive
+			for (int i = -1; i < columns; i++) 
+			{
+				for (int j = -1; j < rows; j++) 
+				{
+					if ((i <= (int)playerPos.x - ActiveTileLength) || (i >= (int)playerPos.x + ActiveTileLength) || (j <= (int)playerPos.y - ActiveTileHeight) || (j >= (int)playerPos.y + ActiveTileHeight))
+					if(ActiveTiles [i + 1] [j + 1] != null)
+					if (ActiveTiles [i + 1] [j + 1].activeSelf == true)
+						ActiveTiles [i + 1] [j + 1].SetActive (false);
+				}
+			}
+			timer = 0;
+		}
+		yield return null;
 	}
 	//Sets the tiles unactive
 	void SetTilesUnactive(GameObject[][] o)
@@ -252,26 +271,28 @@ public class BoardCreator : MonoBehaviour
 			bool goodCorridorPlacement = false;
 			bool goodAppCorridorPlacement = false;
 			bool goodDeadEndCorridorPlacement = false;
-			bool goodCorridorNotOverlapRoomPlacement = false;
+			//bool goodCorridorNotOverlapRoomPlacement = false;
 			bool goodRoomNotOverlapCorridorPlacement = false;
-			bool roomOverlapsCorridor = false;
-			bool roomOverlapsAppCorridor = false;
-			bool roomOverlapsDeadEndCorridor = false;
+			//bool roomOverlapsCorridor = false;
+			//bool roomOverlapsAppCorridor = false;
+			//bool roomOverlapsDeadEndCorridor = false;
 			bool makeDeadEndCorridor = true;
 
 			//If generation has tried different corridor/room placements exceeding the number of rooms there are
 			if (triedCounter >= numbRooms) {
 				//Then reload the level
 				reloadLevelNeeded = true;
+                
 				SceneManager.LoadScene (3);
 				break;
 			}
+            
 
 
 
 
 			// If room overlaps with any other rooms, create entirely new corridor leaving from the last created room
-			while (!goodRoomPlacement && !goodCorridorPlacement && !goodDeadEndCorridorPlacement && !goodCorridorNotOverlapRoomPlacement && !goodAppCorridorPlacement && !goodRoomNotOverlapCorridorPlacement) {
+			while (!goodRoomPlacement && !goodCorridorPlacement && !goodDeadEndCorridorPlacement && !goodAppCorridorPlacement && !goodRoomNotOverlapCorridorPlacement) {
 				bool appendCorridor = false;
 				// Create test corridor and room
 				Corridor corridorToBePlaced = new Corridor ();
@@ -280,230 +301,336 @@ public class BoardCreator : MonoBehaviour
 					appendCorridor = true;
 
 				//If a room in the array is null then there was an error with generation. Restart the scene
-				if (rooms [i - 1] == null) 
-				{
+				if (rooms [i - 1] == null) {
 					reloadLevelNeeded = true;
 					SceneManager.LoadScene (3);
 					break;
 				}
-				corridorToBePlaced.SetupCorridor (rooms [i - 1], corridorLength, roomWidth, roomHeight, columns, rows, false);
-				if (corridorToBePlaced.corridorLength < minCorridorLength)
+
+				//Set tried counter to 0 and enter into while loop with placementNeeded as true
+				triedCounter = 0;
+				placementNeeded = true;
+				//Stays in this loop until a good placement or the amount of tries has been exceeded
+				while (placementNeeded == true) 
+				{
+					triedCounter++;
+					if (triedCounter >= numbRooms)
+						break;
+					//Create the corridor
+					corridorToBePlaced.SetupCorridor (rooms [i - 1], corridorLength, roomWidth, roomHeight, columns, rows, false);
+					if (corridorToBePlaced.corridorLength < minCorridorLength) 
+					{
+						//Do nothing
+					}
+					else
+					{
+						//Check to see if it overlaps any rooms/corridors
+						for (int j = 0; j < i; j++) {
+							//Check if it overlaps a regular corridor
+							if (corridors [j] != null) {
+								if (doCorridorsOverlapCorridor (corridors [j], corridorToBePlaced))
+									break;
+							}
+							//Check if it overlaps with an appended corridor
+							if (j < aCorridors.Length) {
+								if (aCorridors [j] != null) {
+									if (doCorridorsOverlapCorridor (aCorridors [j], corridorToBePlaced))
+										break;
+								}
+							}
+							//check if it overlaps with another dead end corridor
+							if (deadEndCorridorsArray [j] != null) {
+								if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToBePlaced))
+									break;
+							}
+							// If last room has been checked and room to be placed doesn't overlap with it...
+							if (j == (i - 1)) {
+								//Dead end corridorto be placed doesn't overlap with any existing rooms, so exit while loop
+								goodCorridorPlacement = true;
+								//Exit the loop since a good placement has been achieved
+								placementNeeded = false;
+							}								
+						}
+					}
+				}
+				if (triedCounter >= numbRooms)
 					break;
-				
 				Corridor deadEndCorridor = new Corridor ();
 				roll = Random.Range (0, 100);
 				if (roll <= DeadEndChance) {
 					makeDeadEndCorridor = true;
-					deadEndCorridor.SetupDeadEndCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
-				}
-
-				triedCounter++;
-				Room roomToBePlaced = new Room ();
-
-				if (appendCorridor) {
-					//corridorToAppend.appendCorridor (corridorToBePlaced, corridorLength, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY, columns, rows);
-					corridorToAppend.SetUpAppendedCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
-					roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToAppend);
-					if (corridorToAppend.corridorLength < minCorridorLength) 
-						break;
-				} else
-					roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToBePlaced);
-
-				// Loop over all other rooms created, except for one to be placed
-				for (int j = 0; j < i; j++) {
-
-					// If room to be placed overlaps with j-th room...
-					if (doRoomsOverlap (rooms [j], roomToBePlaced)) {
-						/* No need to check other rooms, so break from
-						 * for loop and setup a new corridor and room */
-						break;
-					} 
-
-
-					// If last room has been checked and room to be placed doesn't overlap with it...
-					if (j == (i - 1)) {
-						// Room to be placed doesn't overlap with any existing rooms, so exit while loop
-						goodRoomPlacement = true;
-					}
-				}
-				//If there are no good room placements then break here and start over
-				if (goodRoomPlacement == false)
-					break;
-
-				//Go through and make sure that no corridors overlap any corridors in the regular corridors array
-				for (int j = 0; j < i; j++) {
-					if (corridors [j] != null) {
-						if (doCorridorsOverlapCorridor (corridors [j], corridorToBePlaced) &&
-							doCorridorsOverlapCorridor (corridors [j], corridorToAppend) &&
-							doCorridorsOverlapCorridor (corridors [j], deadEndCorridor)) 
-						{
-							Debug.Log ("CORRIDORS *** OVERLAPS");
-							break;
-						}
-					}
-
-
-					// If last room has been checked and no corridor is overlapping
-					if (j == (i - 1)) {
-						// exit the loop
-						goodCorridorPlacement = true;
-					}
-				}
-				//If there was any corridor overlapping the regular corridors array then exit the loop and start over
-				if (goodCorridorPlacement == false)
-					break;
-
-				for (int j = 0; j < i; j++) {
-					if (deadEndCorridorsArray [j] != null) {
-						if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToBePlaced) &&
-							doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToAppend) &&
-							doCorridorsOverlapCorridor (deadEndCorridorsArray [j], deadEndCorridor)) {
-							Debug.Log ("DEADEND *** OVERLAPS");
-							break;
-						}
-					}
-
-					if (j == (i - 1)) 
+					triedCounter = 0;
+					placementNeeded = true;
+					//Stays in this loop until a good placement or the amount of tries has been exceeded
+					while (placementNeeded == true)
 					{
-
-						goodDeadEndCorridorPlacement = true;
-					}
-				}
-
-				if (goodDeadEndCorridorPlacement == false)
-					break;
-
-				for (int j = 0; j < i; j++) 
-				{
-					if (j < aCorridors.Length) 
-					{
-						if (aCorridors [j] != null) 
-						{
-							if (doCorridorsOverlapCorridor (aCorridors [j], corridorToBePlaced) &&
-								doCorridorsOverlapCorridor (aCorridors [j], corridorToAppend) &&
-								doCorridorsOverlapCorridor (aCorridors [j], deadEndCorridor))
+						triedCounter++;
+						if (triedCounter >= numbRooms)
+							break;
+						//Make the corridor
+						deadEndCorridor.SetupDeadEndCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
+						//Check placement with all other corridors/rooms
+						for (int j = 0; j < i; j++) {
+							//Check if it overlaps a room
+							if (doCorridorsOverlapRooms (rooms [j], deadEndCorridor)) 
 							{
-								Debug.Log ("APP *** OVERLAPS");
 								break;
 							}
+							//Check if it overlaps a regular corridor
+							if (corridors [j] != null) {
+								if (doCorridorsOverlapCorridor (corridors [j], deadEndCorridor))
+									break;
+							}
+							//Check if it overlaps with an appended corridor
+							if (j < aCorridors.Length) {
+								if (aCorridors [j] != null) {
+									if (doCorridorsOverlapCorridor (aCorridors [j], deadEndCorridor))
+										break;
+								}
+							}
+							//check if it overlaps with another dead end corridor
+							if (deadEndCorridorsArray [j] != null) {
+								if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], deadEndCorridor))
+									break;
+							}
+							// If last room has been checked and room to be placed doesn't overlap with it...
+							if (j == (i - 1)) {
+								//Dead end corridorto be placed doesn't overlap with any existing rooms, so exit while loop
+								goodDeadEndCorridorPlacement = true;
+								placementNeeded = false;
+							}								
 						}
 					}
-
-					if (j == (i - 1))
-					{
-						goodAppCorridorPlacement = true;
-					}
-
 				}
-
-				if (goodAppCorridorPlacement == false)
-					break;
-
-				for (int j = 0; j < i; j++) 
-				{
-					if (rooms [j] != null) {
-						if (doCorridorsOverlapRooms (rooms [j], corridorToBePlaced) &&
-							doCorridorsOverlapRooms (rooms [j], corridorToAppend) &&
-							doCorridorsOverlapRooms (rooms [j], deadEndCorridor)) {
-							Debug.Log ("CORRIDOR OVERLAPS ROOM - BREAK");
-							break;
-						}
-					}
-
-					if (j == (i - 1)) 
-					{
-						goodCorridorNotOverlapRoomPlacement = true;
-					}
-				}
-
-				if (goodCorridorNotOverlapRoomPlacement== false)
-					break;
-
-				for (int j = 0; j < i; j++) 
-				{
-					if (corridors [j] != null)
-					if (doRoomsOverlapCorridor (corridors [j], roomToBePlaced))
-						roomOverlapsCorridor = true;
-
-					if(j < aCorridors.Length)
-					if (aCorridors [j] != null)
-					if (doRoomsOverlapCorridor (aCorridors [j], roomToBePlaced))
-						roomOverlapsAppCorridor = true;
-
-					if (deadEndCorridorsArray [j] != null)
-					if (doRoomsOverlapCorridor (deadEndCorridorsArray [j], roomToBePlaced))
-						roomOverlapsDeadEndCorridor = true;
-
-					if (roomOverlapsCorridor && roomOverlapsAppCorridor && roomOverlapsDeadEndCorridor)
-						break;
-
-					if (j == (i - 1)) 
-					{
-						goodRoomNotOverlapCorridorPlacement = true;
-					}
-				}
-
-				if (goodRoomNotOverlapCorridorPlacement == false)
-					break;
-
-				//Break out of loop if genertion has tried generating corridors/rooms more than the number of rooms
 				if (triedCounter >= numbRooms)
 					break;
 
-				// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
-				if (goodRoomPlacement && goodCorridorPlacement && goodDeadEndCorridorPlacement && goodCorridorNotOverlapRoomPlacement && goodAppCorridorPlacement && goodRoomNotOverlapCorridorPlacement) {
-					//If room is good, then reset the tried counter
-					triedCounter = 0;
+					//triedCounter++;
+					Room roomToBePlaced = new Room ();
 
-					corridors [i - 1] = corridorToBePlaced;
-					if (appendCorridor) {
-						if (numAppend < aCorridors.Length) {
-							aCorridors [numAppend] = corridorToAppend;
-							numAppend++;
+				if (appendCorridor) {
+					triedCounter = 0;
+					placementNeeded = true;
+
+					while (placementNeeded == true) 
+					{
+						triedCounter++;
+						if (triedCounter >= numbRooms)
+							break;
+						//Create the Corridor
+						corridorToAppend.SetUpAppendedCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.EndPositionX, corridorToBePlaced.EndPositionY);
+
+						//Checks to see if the appended corridor overlaps with the dead end corridor that is to be placed
+						if(doCorridorsOverlapCorridor(deadEndCorridor,corridorToAppend))
+							break;
+						
+						if (corridorToAppend.corridorLength < minCorridorLength)
+						{
+							//break;
+						}
+						else {
+							//Check to see if it overlaps with any rooms/corridors
+							for (int j = 0; j < i; j++) 
+							{
+								//checks to see if the appending corridor overlaps with rooms
+								if (doCorridorsOverlapRooms (rooms [j], corridorToAppend)) {
+									break;
+								}
+								//checks to see if the appending corridor overlaps with regular corridors
+								if (corridors [j] != null) {
+									if (doCorridorsOverlapCorridor (corridors [j], corridorToAppend))
+										break;
+								}
+								//checks to see if it overlaps with the other appending corridors
+								if (j < aCorridors.Length) {
+									if (aCorridors [j] != null) {
+										if (doCorridorsOverlapCorridor (aCorridors [j], corridorToAppend))
+											break;
+									}
+								}
+								//checks to see if it overlaps with any dead end corridors
+								if (deadEndCorridorsArray [j] != null) {
+									if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToAppend))
+										break;
+								}
+
+								if (j == (i - 1)) {
+									// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+									goodAppCorridorPlacement = true;
+									placementNeeded = false;
+								}
+							}
 						}
 					}
-					rooms [i] = roomToBePlaced;
-					if (makeDeadEndCorridor)
-						deadEndCorridorsArray [i - 1] = deadEndCorridor;
-					//Rolls the dice
-					roll = Random.Range (0, 100);
-					//If the roll is between 0 and the PercentChance value
-					if (roll <= PercentChance) {
-						//Spawn the prefab
-						element = Random.Range (0, 7); //Only used 8 elements to test, this can change later
-
-						//Spawn the prefab
-						//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
-						//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
-
-						Instantiate (RandomPrefabs [element], new Vector3 (roomToBePlaced.xPos + roomToBePlaced.roomWidth / 2, roomToBePlaced.yPos + roomToBePlaced.roomHeight / 2, 0), Quaternion.identity);
+					if (triedCounter >= numbRooms)
+						break;
+					triedCounter = 0;
+					placementNeeded = true;
+					//Stays in this loop until a good placement or the amount of tries has been exceeded
+					while (placementNeeded == true) 
+					{
+						triedCounter++;
+						if (triedCounter >= numbRooms)
+							break;
+						//Create Room
+						roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToAppend);
+						if(doRoomsOverlapCorridor(deadEndCorridor,roomToBePlaced))
+						{
+							break;
+						}
+						//Check to see if it overlaps any corridors
+						for (int j = 0; j < i; j++) 
+						{
+							//checks to see if the room overlaps with regular corridors
+							if (corridors [j] != null) {
+								if (doRoomsOverlapCorridor (corridors [j], roomToBePlaced))
+									break;
+							}
+							//checks to see if it overlaps any appending corridors
+							if (j < aCorridors.Length) {
+								if (aCorridors [j] != null) {
+									if (doRoomsOverlapCorridor (aCorridors [j], roomToBePlaced))
+										break;
+								}
+							}
+							//checks to see if it overlaps with any dead end corridors
+							if (deadEndCorridorsArray [j] != null) {
+								if (doRoomsOverlapCorridor (deadEndCorridorsArray [j], roomToBePlaced))
+									break;
+							}
+							if (j == (i - 1)) {
+								// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+								goodRoomNotOverlapCorridorPlacement = true;
+								placementNeeded = false;
+							}
+						}
 					}
-				}
-
-				//Instantiates player in the i-th/2 room created
-				//Cast as int so condition is always reachable
-				if (i == (int)(rooms.Length * .5f)) {
-
-
-					Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
-					Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
-
-				}
-
-				if (i == (int)(rooms.Length - 1)) 
+					if (triedCounter >= numbRooms)
+						break;
+				} 
+				else 
 				{
-					if (rooms [rooms.Length - 1] != null) {
-						Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
-						Instantiate (teleporter, teleporterPos, Quaternion.identity);
+					triedCounter = 0;
+					placementNeeded = true;
+					//Stays in this loop until a good placement or the amount of tries has been exceeded
+					while (placementNeeded == true) 
+					{
+						triedCounter++;
+						if (triedCounter >= numbRooms)
+							break;
+						//Create Room
+						roomToBePlaced.SetupRoom (roomWidth, roomHeight, columns, rows, corridorToAppend);
+						if(doRoomsOverlapCorridor(deadEndCorridor,roomToBePlaced))
+						{
+							break;
+						}
+						//Check to see if it overlaps any corridors
+						for (int j = 0; j < i; j++) {
+							if (corridors [j] != null) {
+								if (doRoomsOverlapCorridor (corridors [j], roomToBePlaced))
+									break;
+							}
+							if (j < aCorridors.Length) {
+								if (aCorridors [j] != null) {
+									if (doRoomsOverlapCorridor (aCorridors [j], roomToBePlaced))
+										break;
+								}
+							}
+							if (deadEndCorridorsArray [j] != null) {
+								if (doRoomsOverlapCorridor (deadEndCorridorsArray [j], roomToBePlaced))
+									break;
+							}
+							if (j == (i - 1)) {
+								// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+								goodRoomNotOverlapCorridorPlacement = true;
+								placementNeeded = false;
+							}
+						}
+					}
+					if (triedCounter >= numbRooms)
+						break;
+				}
+
+					// Loop over all other rooms created, except for one to be placed
+					for (int j = 0; j < i; j++) {
+
+						// If room to be placed overlaps with j-th room...
+						if (doRoomsOverlap (rooms [j], roomToBePlaced)) {
+							/* No need to check other rooms, so break from
+							 * for loop and setup a new corridor and room */
+							break;
+						} 
+
+
+						// If last room has been checked and room to be placed doesn't overlap with it...
+						if (j == (i - 1)) {
+							// Room to be placed doesn't overlap with any existing rooms, so exit while loop
+							goodRoomPlacement = true;
+						}
+					}
+					//If there are no good room placements then break here and start over
+					if (goodRoomPlacement == false)
+						break;
+				
+					//Break out of loop if genertion has tried generating corridors/rooms more than the number of rooms
+					if (triedCounter >= numbRooms)
+						break;
+
+					// Room doesn't overlap with any other rooms, so add corridor and room to their arrays
+					if (goodRoomPlacement && goodCorridorPlacement && goodDeadEndCorridorPlacement && goodAppCorridorPlacement && goodRoomNotOverlapCorridorPlacement) {
+						//If room is good, then reset the tried counter
+						triedCounter = 0;
+
+						corridors [i - 1] = corridorToBePlaced;
+						if (appendCorridor) {
+							if (numAppend < aCorridors.Length) {
+								aCorridors [numAppend] = corridorToAppend;
+								numAppend++;
+							}
+						}
+						rooms [i] = roomToBePlaced;
+						if (makeDeadEndCorridor)
+							deadEndCorridorsArray [i - 1] = deadEndCorridor;
+						//Rolls the dice
+						roll = Random.Range (0, 100);
+						//If the roll is between 0 and the PercentChance value
+						if (roll <= PercentChance) {
+							//Spawn the prefab
+							element = Random.Range (0, 7); //Only used 8 elements to test, this can change later
+
+							//Spawn the prefab
+							//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
+							//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
+
+							Instantiate (RandomPrefabs [element], new Vector3 (roomToBePlaced.xPos + roomToBePlaced.roomWidth / 2, roomToBePlaced.yPos + roomToBePlaced.roomHeight / 2, 0), Quaternion.identity);
+						}
+					}
+
+					//Instantiates player in the i-th/2 room created
+					//Cast as int so condition is always reachable
+					if (i == (int)(rooms.Length * .5f)) {
+
+
+						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
+						Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
+
+					}
+
+					if (i == (int)(rooms.Length - 1)) {
+						if (rooms [rooms.Length - 1] != null) {
+							Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
+							Instantiate (teleporter, teleporterPos, Quaternion.identity);
+						}
 					}
 				}
 			}
-		}
-		/*
-		playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
-		Instantiate (player, playerPos, Quaternion.identity);
-        */
-	}
+        /*
+    playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
+    Instantiate (player, playerPos, Quaternion.identity);
+    */
+        
+    }
+
 
 	// Method takes two rooms as arguments and returns true/false if they overlap/don't overlap
 	bool doRoomsOverlap(Room alreadyPlaced, Room toBePlaced) 
@@ -518,258 +645,6 @@ public class BoardCreator : MonoBehaviour
 		// Both condition weren't met, so rooms must be overlapping
 		return true;
 	}
-	bool doRoomsOverlapCorridor(Corridor alreadyPlaced, Room toBePlaced)
-	{
-		bool doesOverlap = false;
-		switch (alreadyPlaced.direction) 
-		{
-		case Direction.North:
-			//If the room was placed with the corridor exiting from the top
-			if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			//If the room was placed with the corridor exiting from the bottom
-			else if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorLength && toBePlaced.yPos >= alreadyPlaced.startYPos) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			//if the room was placed with the corridor cutting through the entire room
-			else if (toBePlaced.yPos >= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.EndPositionY) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.East:
-			//If the room was placed with the corridor exiting from the left
-			if (toBePlaced.xPos >= alreadyPlaced.startXPos && toBePlaced.xPos <= alreadyPlaced.EndPositionX) 
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			//If the room was placed with the corridor exiting from the right
-			else if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			//If the room was placed with the corridor cutting through the entire room
-			else if (toBePlaced.xPos >= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.EndPositionX) 
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.South:
-			//If the room is placed with the corridor exiting from the top
-			if (toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.EndPositionY) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
-					doesOverlap = true;
-			}
-			//If the room is placed with the corridor exiting from the bottom
-			else if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos >= alreadyPlaced.EndPositionY) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
-					doesOverlap = true;
-			}
-			//If the room is placed with the corridor cutting through the entire room
-			else if (toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.startYPos && toBePlaced.yPos >= alreadyPlaced.EndPositionY) 
-			{
-				if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.West:
-			//If the room is placed with the corridor exiting from the left
-			if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos >= alreadyPlaced.EndPositionX) 
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
-					doesOverlap = true;
-			}
-			//If the room is placed with the corridor exiting from the right
-			else if (toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.EndPositionX && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.startXPos) 
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
-					doesOverlap = true;
-			}
-			//If the room is placed with the corridor is cutting through the entire room
-			else if (toBePlaced.xPos >= alreadyPlaced.EndPositionX && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.startXPos) 
-			{
-				if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
-					doesOverlap = true;
-			}
-			break;
-		}
-
-
-
-		return doesOverlap;
-	}
-
-	bool doCorridorsOverlapRooms(Room alreadyPlaced, Corridor toBePlaced)
-	{
-		bool doesOverlap = false;
-
-		switch (toBePlaced.direction) 
-		{
-		case Direction.North:
-			//If the corridor starts below the room
-			if (toBePlaced.startYPos <= alreadyPlaced.yPos && toBePlaced.EndPositionY >= alreadyPlaced.yPos) 
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			}
-			//If the corridor exits the room from above
-			else if (toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY >= alreadyPlaced.yPos + alreadyPlaced.roomHeight) 
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			}
-			//If the corridor goes through the room completely
-			else if (toBePlaced.startYPos <= alreadyPlaced.yPos && toBePlaced.EndPositionY >= alreadyPlaced.yPos + alreadyPlaced.roomHeight) 
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.East:
-			//Entering from the left side
-			if (toBePlaced.startXPos <= alreadyPlaced.xPos && toBePlaced.EndPositionX >= alreadyPlaced.xPos) 
-			{
-				if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			//Exiting from the right side
-			else if (toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX >= alreadyPlaced.yPos + alreadyPlaced.roomWidth) 
-			{
-				if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			//If the corridor goes through the room completely
-			else if (toBePlaced.startXPos <= alreadyPlaced.xPos && toBePlaced.EndPositionX >= alreadyPlaced.xPos + alreadyPlaced.roomWidth) 
-			{
-				if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.South:		
-			//If the corridor exits the room from the bottom	
-			if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.EndPositionY <= alreadyPlaced.yPos) 
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			}
-			//If the corridor enters the room from above
-			else if (toBePlaced.startYPos >= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			} 
-			else if (toBePlaced.startYPos >= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY <= alreadyPlaced.yPos) 
-			{
-				if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.West:
-			//If the corridor exits the room on the right side
-			if (toBePlaced.startXPos >= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX <= alreadyPlaced.xPos + alreadyPlaced.roomWidth) 
-			{
-				if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			//If the corridor exits the room on the left side
-			else if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.EndPositionX <= alreadyPlaced.xPos) 
-			{
-				if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			//If the corridor goes through the room completely
-			else if (toBePlaced.startXPos >= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX <= alreadyPlaced.xPos) 
-			{
-				if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
-					doesOverlap = true;
-			}
-			break;
-		}
-
-
-		return doesOverlap;
-	}
-	bool doCorridorsOverlapCorridor(Corridor alreadyPlaced, Corridor toBePlaced)
-	{
-		//Need to check if X and Y of both corridors are the same
-		//If so then they are overlapping
-		bool doesOverlap = false;
-
-		switch (toBePlaced.direction) 
-		{
-		case Direction.North:
-			//If the X position of the corridor to be placed is within the range of the already placed corridor
-			//EAST DIRECTION alreadyPlaced
-			if (toBePlaced.startXPos >= alreadyPlaced.startXPos && toBePlaced.startXPos <= alreadyPlaced.EndPositionX) 
-			{
-				if (alreadyPlaced.startYPos >= toBePlaced.startYPos && alreadyPlaced.startYPos <= toBePlaced.EndPositionY)
-					doesOverlap = true;				
-			}
-			//WEST DIRECTION alreadyPlaced
-			else if (toBePlaced.startXPos <= alreadyPlaced.startXPos && toBePlaced.startXPos >= alreadyPlaced.EndPositionX) 
-			{
-				if (alreadyPlaced.startYPos >= toBePlaced.startYPos && alreadyPlaced.startYPos <= toBePlaced.EndPositionY)
-					doesOverlap = true;	
-			}
-			break;
-		case Direction.East:
-			//NORTH DIRECTION alreadyPlaced
-			if (toBePlaced.startYPos >= alreadyPlaced.startYPos && toBePlaced.startYPos <= alreadyPlaced.EndPositionY) 
-			{
-				if (alreadyPlaced.startXPos >= toBePlaced.startXPos && alreadyPlaced.startXPos <= toBePlaced.EndPositionX)
-					doesOverlap = true;
-			}
-			//SOUTH DIRECTION alreadyPlaced
-			else if (toBePlaced.startYPos <= alreadyPlaced.startYPos && toBePlaced.startYPos >= alreadyPlaced.EndPositionY) 
-			{
-				if (alreadyPlaced.startXPos >= toBePlaced.startXPos && alreadyPlaced.startXPos <= toBePlaced.EndPositionX)
-					doesOverlap = true;				
-			}
-			break;
-		case Direction.South:
-			//EAST DIRECTION alreadyPlaced
-			if (toBePlaced.startXPos >= alreadyPlaced.startXPos && toBePlaced.startXPos <= alreadyPlaced.EndPositionX) 
-			{
-				if (alreadyPlaced.startYPos <= toBePlaced.startYPos && alreadyPlaced.startYPos >= toBePlaced.EndPositionY)
-					doesOverlap = true;			
-			}
-			//WEST DIRECTION alreadyPlaced
-			else if (toBePlaced.startXPos <= alreadyPlaced.startXPos && toBePlaced.startXPos >= alreadyPlaced.EndPositionX) 
-			{
-				if (alreadyPlaced.startYPos <= toBePlaced.startYPos && alreadyPlaced.startYPos >= toBePlaced.EndPositionY)
-					doesOverlap = true;
-			}
-			break;
-		case Direction.West:
-			//NORTH DIRECTION alreadyPlaced
-			if (toBePlaced.startYPos >= alreadyPlaced.startYPos && toBePlaced.startYPos <= alreadyPlaced.EndPositionY) 
-			{
-				if (alreadyPlaced.startXPos >= toBePlaced.EndPositionX && alreadyPlaced.startXPos <= toBePlaced.startXPos)
-					doesOverlap = true;
-			}
-			//SOUTH DIRECTION alreadyPlaced
-			else if (toBePlaced.startYPos <= alreadyPlaced.startYPos && toBePlaced.startYPos >= alreadyPlaced.EndPositionY) 
-			{
-				if (alreadyPlaced.startXPos >= toBePlaced.EndPositionX && alreadyPlaced.startXPos <= toBePlaced.startXPos)
-					doesOverlap = true;		
-			}
-			break;
-		}
-
-		return doesOverlap;
-	}
-
 
 
 	void SetTilesValuesForRooms()
@@ -804,6 +679,7 @@ public class BoardCreator : MonoBehaviour
 				}
 			}
 		}
+        
 	}
 
 	void SetTilesValuesForCorridors()
@@ -899,8 +775,9 @@ public class BoardCreator : MonoBehaviour
 
 			}
 		}
+       
 
-	}
+    }
 
 
 	void SetTilesValuesForAppendedCorridors()
@@ -1144,4 +1021,563 @@ public class BoardCreator : MonoBehaviour
 			tileInstance.SetActive (false);
 		}
 	}
+
+
+	bool doCorridorsOverlapCorridor(Corridor alreadyPlaced, Corridor toBePlaced)
+	{
+		bool doesOverlap = false;
+
+		//finds the direction of the alreadyPlaced corridor and makes the correct rectangle
+		switch(alreadyPlaced.direction)
+		{
+		case Direction.North:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.startYPos, alreadyPlaced.corridorWidth+2, alreadyPlaced.corridorLength);
+			break;
+		case Direction.East:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.startYPos, alreadyPlaced.corridorLength, alreadyPlaced.corridorWidth+2);
+			break;
+		case Direction.South:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.EndPositionY, alreadyPlaced.corridorWidth+2, alreadyPlaced.corridorLength);
+			break;
+		case Direction.West:
+			alreadyPlacedRect = new Rect (alreadyPlaced.EndPositionX, alreadyPlaced.startYPos, alreadyPlaced.corridorLength, alreadyPlaced.corridorWidth+2);
+			break;
+		}
+		//finds the direction of the toBePlaced corridor and makes the correct rectangle
+		switch(toBePlaced.direction)
+		{
+		case Direction.North:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.startYPos, toBePlaced.corridorWidth+2, toBePlaced.corridorLength);
+			break;
+		case Direction.East:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.startYPos, toBePlaced.corridorLength, toBePlaced.corridorWidth+2);
+			break;
+		case Direction.South:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.EndPositionY, toBePlaced.corridorWidth+2, toBePlaced.corridorLength);
+			break;
+		case Direction.West:
+			toBePlacedRect = new Rect (toBePlaced.EndPositionX, toBePlaced.startYPos, toBePlaced.corridorLength, toBePlaced.corridorWidth+2);
+			break;
+		}
+		//checks to see if the toBePlaced rectangle overlaps the already placed
+		if (alreadyPlacedRect.Overlaps (toBePlacedRect)) 
+		{
+			doesOverlap = true;
+		}
+		//if previous did not register then checks vise versa
+		else if (toBePlacedRect.Overlaps (alreadyPlacedRect))
+		{
+			doesOverlap = true;
+		} 
+		else 
+		{
+			//Lastly if code gets to this point it individually checks each block and see if it is contained within the other
+			for (float i = toBePlacedRect.x; i <= toBePlacedRect.x + toBePlacedRect.width; i++) {
+				for (float j = toBePlacedRect.y; j <= toBePlacedRect.y + toBePlacedRect.height; j++) {
+					if (alreadyPlacedRect.Contains (new Vector2 (i, j))) {
+						doesOverlap = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return doesOverlap;
+
+	}
+
+	bool doCorridorsOverlapRooms(Room alreadyPlaced, Corridor toBePlaced)
+	{
+		bool doesOverlap = false;
+
+		//creates the room rectangle
+		alreadyPlacedRect = new Rect (alreadyPlaced.xPos-2, alreadyPlaced.yPos-2, alreadyPlaced.roomWidth+3, alreadyPlaced.roomHeight+3);
+
+		//finds the direction of the toBePlaced corridor and makes the correct rectangle
+		switch(toBePlaced.direction)
+		{
+		case Direction.North:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.startYPos, toBePlaced.corridorWidth+2, toBePlaced.corridorLength);
+			break;
+		case Direction.East:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.startYPos, toBePlaced.corridorLength, toBePlaced.corridorWidth+2);
+			break;
+		case Direction.South:
+			toBePlacedRect = new Rect (toBePlaced.startXPos, toBePlaced.EndPositionY, toBePlaced.corridorWidth+2, toBePlaced.corridorLength);
+			break;
+		case Direction.West:
+			toBePlacedRect = new Rect (toBePlaced.EndPositionX, toBePlaced.startYPos, toBePlaced.corridorLength, toBePlaced.corridorWidth+2);
+			break;
+		}
+		//checks to see if the toBePlaced rectangle overlaps the already placed
+		if (alreadyPlacedRect.Overlaps (toBePlacedRect)) 
+		{
+			doesOverlap = true;
+		}
+		//if previous did not register then checks vise versa
+		else if (toBePlacedRect.Overlaps (alreadyPlacedRect)) 
+		{
+			doesOverlap = true;
+		} 
+		else 
+		{
+			//lastly if code reaches here then it individually checks each tile in one rectangle and checks if it is within the other
+			for (float i = toBePlacedRect.x; i <= toBePlacedRect.x + toBePlacedRect.width; i++) {
+				for (float j = toBePlacedRect.y; j <= toBePlacedRect.y + toBePlacedRect.height; j++) {
+					if (alreadyPlacedRect.Contains (new Vector2 (i, j))) {
+						doesOverlap = true;
+						break;
+					}
+				}
+			}
+		}
+		return doesOverlap;
+	}
+
+
+	bool doRoomsOverlapCorridor(Corridor alreadyPlaced, Room toBePlaced)
+	{
+		bool doesOverlap = false;
+		//finds the direction of the corridor and makes the correct rectangle
+		switch(alreadyPlaced.direction)
+		{
+		case Direction.North:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.startYPos, alreadyPlaced.corridorWidth+2, alreadyPlaced.corridorLength);
+			break;
+		case Direction.East:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.startYPos, alreadyPlaced.corridorLength, alreadyPlaced.corridorWidth+2);
+			break;
+		case Direction.South:
+			alreadyPlacedRect = new Rect (alreadyPlaced.startXPos, alreadyPlaced.EndPositionY, alreadyPlaced.corridorWidth+2, alreadyPlaced.corridorLength);
+			break;
+		case Direction.West:
+			alreadyPlacedRect = new Rect (alreadyPlaced.EndPositionX, alreadyPlaced.startYPos, alreadyPlaced.corridorLength, alreadyPlaced.corridorWidth+2);
+			break;
+		}
+
+		//makes the room rectangle
+		toBePlacedRect = new Rect (toBePlaced.xPos-2, toBePlaced.yPos-2, toBePlaced.roomWidth+3, toBePlaced.roomHeight+3);
+
+		//checks to see if the toBePlaced rectangle overlaps the already placed
+		if (alreadyPlacedRect.Overlaps (toBePlacedRect)) 
+		{
+			doesOverlap = true;
+		}
+		//if previous did not register then checks vise versa
+		else if (toBePlacedRect.Overlaps (alreadyPlacedRect)) 
+		{
+			doesOverlap = true;
+		} 
+		else 
+		{
+			//Lastly if code gets here then it individually checks each tile and checks if it is within the other rect
+			for (float i = toBePlacedRect.x; i <= toBePlacedRect.x + toBePlacedRect.width; i++) {
+				for (float j = toBePlacedRect.y; j <= toBePlacedRect.y + toBePlacedRect.height; j++) {
+					if (alreadyPlacedRect.Contains (new Vector2 (i, j))) {
+						doesOverlap = true;
+						break;
+					}
+				}
+			}
+		}
+		return doesOverlap;
+	}
+
+	void spawnAudioTrigger(Corridor corridor, GameObject audioTrigger)
+	{
+		switch(corridor.direction)
+		{
+		case Direction.North:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.identity);
+			break;
+		case Direction.East:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			break;
+		case Direction.South:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos-4,0), Quaternion.identity);
+			break;
+		case Direction.West:
+			Instantiate(audioTrigger, new Vector3(corridor.startXPos-4,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			break;
+		}
+	}
 }
+
+/*
+					//Go through and make sure that no corridors overlap any corridors in the regular corridors array
+for (int j = 0; j < i; j++) {
+	if (corridors [j] != null) {
+		if (doCorridorsOverlapCorridor (corridors [j], corridorToBePlaced) &&
+			doCorridorsOverlapCorridor (corridors [j], corridorToAppend) &&
+			doCorridorsOverlapCorridor (corridors [j], deadEndCorridor)) {
+			Debug.Log ("CORRIDORS *** OVERLAPS");
+			break;
+		}
+	}
+
+
+	// If last room has been checked and no corridor is overlapping
+	if (j == (i - 1)) {
+		// exit the loop
+		goodCorridorPlacement = true;
+	}
+}
+
+//If there was any corridor overlapping the regular corridors array then exit the loop and start over
+if (goodCorridorPlacement == false)
+	break;*/
+/*
+for (int j = 0; j < i; j++) {
+	if (deadEndCorridorsArray [j] != null) {
+		if (doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToBePlaced) &&
+			doCorridorsOverlapCorridor (deadEndCorridorsArray [j], corridorToAppend) &&
+			doCorridorsOverlapCorridor (deadEndCorridorsArray [j], deadEndCorridor)) {
+			Debug.Log ("DEADEND *** OVERLAPS");
+			break;
+		}
+	}
+
+	if (j == (i - 1)) {
+
+		goodDeadEndCorridorPlacement = true;
+	}
+}
+
+if (goodDeadEndCorridorPlacement == false)
+	break;
+*/
+/*
+for (int j = 0; j < i; j++) {
+	if (j < aCorridors.Length) {
+		if (aCorridors [j] != null) {
+			if (doCorridorsOverlapCorridor (aCorridors [j], corridorToBePlaced) &&
+				doCorridorsOverlapCorridor (aCorridors [j], corridorToAppend) &&
+				doCorridorsOverlapCorridor (aCorridors [j], deadEndCorridor)) {
+				Debug.Log ("APP *** OVERLAPS");
+				break;
+			}
+		}
+	}
+
+	if (j == (i - 1)) {
+		goodAppCorridorPlacement = true;
+	}
+
+}
+
+if (goodAppCorridorPlacement == false)
+	break;
+*/
+/*
+for (int j = 0; j < i; j++) {
+	if (rooms [j] != null) {
+		if (doCorridorsOverlapRooms (rooms [j], corridorToBePlaced) &&
+			doCorridorsOverlapRooms (rooms [j], corridorToAppend) &&
+			doCorridorsOverlapRooms (rooms [j], deadEndCorridor)) {
+			Debug.Log ("CORRIDOR OVERLAPS ROOM - BREAK");
+			break;
+		}
+	}
+
+	if (j == (i - 1)) {
+		goodCorridorNotOverlapRoomPlacement = true;
+	}
+}
+
+if (goodCorridorNotOverlapRoomPlacement == false)
+	break;*/
+/*
+for (int j = 0; j < i; j++) {
+	if (corridors [j] != null)
+	if (doRoomsOverlapCorridor (corridors [j], roomToBePlaced))
+		roomOverlapsCorridor = true;
+
+	if (j < aCorridors.Length)
+	if (aCorridors [j] != null)
+	if (doRoomsOverlapCorridor (aCorridors [j], roomToBePlaced))
+		roomOverlapsAppCorridor = true;
+
+	if (deadEndCorridorsArray [j] != null)
+	if (doRoomsOverlapCorridor (deadEndCorridorsArray [j], roomToBePlaced))
+		roomOverlapsDeadEndCorridor = true;
+
+	if (roomOverlapsCorridor && roomOverlapsAppCorridor && roomOverlapsDeadEndCorridor)
+		break;
+
+	if (j == (i - 1)) {
+		goodRoomNotOverlapCorridorPlacement = true;
+	}
+}
+
+if (goodRoomNotOverlapCorridorPlacement == false)
+	break;
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+bool doRoomsOverlapCorridor(Corridor alreadyPlaced, Room toBePlaced)
+{
+	bool doesOverlap = false;
+	switch (alreadyPlaced.direction) 
+	{
+	case Direction.North:
+		//If the room was placed with the corridor exiting from the top
+		if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		//If the room was placed with the corridor exiting from the bottom
+		else if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorLength && toBePlaced.yPos >= alreadyPlaced.startYPos) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		//if the room was placed with the corridor cutting through the entire room
+		else if (toBePlaced.yPos >= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.EndPositionY) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.East:
+		//If the room was placed with the corridor exiting from the left
+		if (toBePlaced.xPos >= alreadyPlaced.startXPos && toBePlaced.xPos <= alreadyPlaced.EndPositionX) 
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		//If the room was placed with the corridor exiting from the right
+		else if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		//If the room was placed with the corridor cutting through the entire room
+		else if (toBePlaced.xPos >= alreadyPlaced.startXPos && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.EndPositionX) 
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.South:
+		//If the room is placed with the corridor exiting from the top
+		if (toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.startYPos && toBePlaced.yPos + toBePlaced.roomHeight >= alreadyPlaced.EndPositionY) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
+				doesOverlap = true;
+		}
+		//If the room is placed with the corridor exiting from the bottom
+		else if (toBePlaced.yPos <= alreadyPlaced.startYPos && toBePlaced.yPos >= alreadyPlaced.EndPositionY) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
+				doesOverlap = true;
+		}
+		//If the room is placed with the corridor cutting through the entire room
+		else if (toBePlaced.yPos + toBePlaced.roomHeight <= alreadyPlaced.startYPos && toBePlaced.yPos >= alreadyPlaced.EndPositionY) 
+		{
+			if (toBePlaced.xPos <= alreadyPlaced.startXPos + alreadyPlaced.corridorWidth && toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.startXPos)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.West:
+		//If the room is placed with the corridor exiting from the left
+		if (toBePlaced.xPos <= alreadyPlaced.startXPos && toBePlaced.xPos >= alreadyPlaced.EndPositionX) 
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
+				doesOverlap = true;
+		}
+		//If the room is placed with the corridor exiting from the right
+		else if (toBePlaced.xPos + toBePlaced.roomWidth >= alreadyPlaced.EndPositionX && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.startXPos) 
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
+				doesOverlap = true;
+		}
+		//If the room is placed with the corridor is cutting through the entire room
+		else if (toBePlaced.xPos >= alreadyPlaced.EndPositionX && toBePlaced.xPos + toBePlaced.roomWidth <= alreadyPlaced.startXPos) 
+		{
+			if (toBePlaced.yPos <= alreadyPlaced.startYPos + alreadyPlaced.corridorWidth && toBePlaced.yPos + toBePlaced.roomHeight >= toBePlaced.yPos)
+				doesOverlap = true;
+		}
+		break;
+	}
+
+
+
+	return doesOverlap;
+}
+*/
+/*
+bool doCorridorsOverlapRooms(Room alreadyPlaced, Corridor toBePlaced)
+{
+	bool doesOverlap = false;
+
+	switch (toBePlaced.direction) 
+	{
+	case Direction.North:
+		//If the corridor starts below the room
+		if (toBePlaced.startYPos <= alreadyPlaced.yPos && toBePlaced.EndPositionY >= alreadyPlaced.yPos) 
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		}
+		//If the corridor exits the room from above
+		else if (toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY >= alreadyPlaced.yPos + alreadyPlaced.roomHeight) 
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		}
+		//If the corridor goes through the room completely
+		else if (toBePlaced.startYPos <= alreadyPlaced.yPos && toBePlaced.EndPositionY >= alreadyPlaced.yPos + alreadyPlaced.roomHeight) 
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.East:
+		//Entering from the left side
+		if (toBePlaced.startXPos <= alreadyPlaced.xPos && toBePlaced.EndPositionX >= alreadyPlaced.xPos) 
+		{
+			if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		//Exiting from the right side
+		else if (toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX >= alreadyPlaced.yPos + alreadyPlaced.roomWidth) 
+		{
+			if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		//If the corridor goes through the room completely
+		else if (toBePlaced.startXPos <= alreadyPlaced.xPos && toBePlaced.EndPositionX >= alreadyPlaced.xPos + alreadyPlaced.roomWidth) 
+		{
+			if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.South:		
+		//If the corridor exits the room from the bottom	
+		if (toBePlaced.startYPos >= alreadyPlaced.yPos && toBePlaced.EndPositionY <= alreadyPlaced.yPos) 
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		}
+		//If the corridor enters the room from above
+		else if (toBePlaced.startYPos >= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		} 
+		else if (toBePlaced.startYPos >= alreadyPlaced.yPos + alreadyPlaced.roomHeight && toBePlaced.EndPositionY <= alreadyPlaced.yPos) 
+		{
+			if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.startXPos <= alreadyPlaced.xPos + alreadyPlaced.roomWidth)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.West:
+		//If the corridor exits the room on the right side
+		if (toBePlaced.startXPos >= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX <= alreadyPlaced.xPos + alreadyPlaced.roomWidth) 
+		{
+			if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		//If the corridor exits the room on the left side
+		else if (toBePlaced.startXPos >= alreadyPlaced.xPos && toBePlaced.EndPositionX <= alreadyPlaced.xPos) 
+		{
+			if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		//If the corridor goes through the room completely
+		else if (toBePlaced.startXPos >= alreadyPlaced.xPos + alreadyPlaced.roomWidth && toBePlaced.EndPositionX <= alreadyPlaced.xPos) 
+		{
+			if (toBePlaced.startYPos+toBePlaced.corridorWidth >= alreadyPlaced.yPos && toBePlaced.startYPos <= alreadyPlaced.yPos + alreadyPlaced.roomHeight)
+				doesOverlap = true;
+		}
+		break;
+	}
+
+
+	return doesOverlap;
+}
+bool doCorridorsOverlapCorridor(Corridor alreadyPlaced, Corridor toBePlaced)
+{
+	//Need to check if X and Y of both corridors are the same
+	//If so then they are overlapping
+	bool doesOverlap = false;
+
+	switch (toBePlaced.direction) 
+	{
+	case Direction.North:
+		//If the X position of the corridor to be placed is within the range of the already placed corridor
+		//EAST DIRECTION alreadyPlaced
+		if (toBePlaced.startXPos >= alreadyPlaced.startXPos && toBePlaced.startXPos <= alreadyPlaced.EndPositionX) 
+		{
+			if (alreadyPlaced.startYPos >= toBePlaced.startYPos && alreadyPlaced.startYPos <= toBePlaced.EndPositionY)
+				doesOverlap = true;				
+		}
+		//WEST DIRECTION alreadyPlaced
+		else if (toBePlaced.startXPos <= alreadyPlaced.startXPos && toBePlaced.startXPos >= alreadyPlaced.EndPositionX) 
+		{
+			if (alreadyPlaced.startYPos >= toBePlaced.startYPos && alreadyPlaced.startYPos <= toBePlaced.EndPositionY)
+				doesOverlap = true;	
+		}
+		break;
+	case Direction.East:
+		//NORTH DIRECTION alreadyPlaced
+		if (toBePlaced.startYPos >= alreadyPlaced.startYPos && toBePlaced.startYPos <= alreadyPlaced.EndPositionY) 
+		{
+			if (alreadyPlaced.startXPos >= toBePlaced.startXPos && alreadyPlaced.startXPos <= toBePlaced.EndPositionX)
+				doesOverlap = true;
+		}
+		//SOUTH DIRECTION alreadyPlaced
+		else if (toBePlaced.startYPos <= alreadyPlaced.startYPos && toBePlaced.startYPos >= alreadyPlaced.EndPositionY) 
+		{
+			if (alreadyPlaced.startXPos >= toBePlaced.startXPos && alreadyPlaced.startXPos <= toBePlaced.EndPositionX)
+				doesOverlap = true;				
+		}
+		break;
+	case Direction.South:
+		//EAST DIRECTION alreadyPlaced
+		if (toBePlaced.startXPos >= alreadyPlaced.startXPos && toBePlaced.startXPos <= alreadyPlaced.EndPositionX) 
+		{
+			if (alreadyPlaced.startYPos <= toBePlaced.startYPos && alreadyPlaced.startYPos >= toBePlaced.EndPositionY)
+				doesOverlap = true;			
+		}
+		//WEST DIRECTION alreadyPlaced
+		else if (toBePlaced.startXPos <= alreadyPlaced.startXPos && toBePlaced.startXPos >= alreadyPlaced.EndPositionX) 
+		{
+			if (alreadyPlaced.startYPos <= toBePlaced.startYPos && alreadyPlaced.startYPos >= toBePlaced.EndPositionY)
+				doesOverlap = true;
+		}
+		break;
+	case Direction.West:
+		//NORTH DIRECTION alreadyPlaced
+		if (toBePlaced.startYPos >= alreadyPlaced.startYPos && toBePlaced.startYPos <= alreadyPlaced.EndPositionY) 
+		{
+			if (alreadyPlaced.startXPos >= toBePlaced.EndPositionX && alreadyPlaced.startXPos <= toBePlaced.startXPos)
+				doesOverlap = true;
+		}
+		//SOUTH DIRECTION alreadyPlaced
+		else if (toBePlaced.startYPos <= alreadyPlaced.startYPos && toBePlaced.startYPos >= alreadyPlaced.EndPositionY) 
+		{
+			if (alreadyPlaced.startXPos >= toBePlaced.EndPositionX && alreadyPlaced.startXPos <= toBePlaced.startXPos)
+				doesOverlap = true;		
+		}
+		break;
+	}
+
+	return doesOverlap;
+}
+
+/*\\*/

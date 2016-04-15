@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
 	public float catchupDivisor = 2f; //Lower values for more snapping when falling
 	private Vector3 offset; //Set relative position to player object
 	private float cameraCatchup;
-	   
+	public float playerCameraOffset;
 	void Awake() {
 		playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
 	}
@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour {
 				cameraCatchup = 0.0f;
 			}
 			//Follow the player code
-			transform.position = Vector3.Lerp (transform.position, new Vector3 (player.transform.position.x, player.transform.position.y, transform.position.z),  Time.deltaTime*(damping+cameraCatchup));
+			transform.position = Vector3.Lerp (transform.position, new Vector3 (player.transform.position.x, player.transform.position.y+playerCameraOffset, transform.position.z),  Time.deltaTime*(damping+cameraCatchup));
 		}
 
 	}
