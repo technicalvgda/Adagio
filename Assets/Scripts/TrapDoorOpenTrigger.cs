@@ -15,19 +15,32 @@ public class TrapDoorOpenTrigger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(playerContact == true && Input.GetKeyDown(KeyCode.E)){
-			receiver.Deactivate ();
-			//Extra stuff to activate if desired
-			receiver2.Deactivate ();
-			receiver3.Deactivate ();
-			gameObject.SetActive (false);
-
+		if(Input.GetKeyDown(KeyCode.E)){
+			Activate ();
 		}
 	}
 
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.tag == "Player") {
 			playerContact = true;
+		}
+	}
+
+	//Subscribe Activate method to the OnTap Event when object becomes active
+	void OnEnable(){
+		PlayerController.OnTap += Activate;
+	}
+	//Unsubscrite Activate method from the OnTap event when object becomes deactive
+	void OnDisable(){
+		PlayerController.OnTap -= Activate;
+	}
+
+	void Activate(){
+		if(playerContact == true){
+			receiver.Deactivate ();
+			receiver2.Deactivate ();
+			receiver3.Deactivate ();
+			gameObject.SetActive (false);
 		}
 	}
 }
