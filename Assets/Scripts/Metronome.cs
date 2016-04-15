@@ -25,7 +25,6 @@ public class Metronome : MonoBehaviour {
 			yield return new WaitForSeconds(1);
 			sr.color = Color.black;
 			yield return new WaitForSeconds (1);
-		}
-        
+		} 
     }
 }

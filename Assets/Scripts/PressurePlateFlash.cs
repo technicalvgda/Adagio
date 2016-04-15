@@ -42,9 +42,10 @@ public class PressurePlateFlash : MonoBehaviour {
 		//Time interval between flashing blocks
 		yield return new WaitForSeconds(4);
 		DemoBlock2.GetComponent<FlashDemoBlock> ().Invoke ("beginDemo", 0);
-		//Time interval between flashing blocks
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (4);
 		DemoBlock3.GetComponent<FlashDemoBlock> ().Invoke ("beginDemo", 0); 
+		yield return new WaitForSeconds (4);
+
 		//Play caller
 		//StartCoroutine(Play());
 	}
