@@ -68,31 +68,50 @@ public class BoardCreator : MonoBehaviour
 	public GameObject AudioTrigger1;
 	public GameObject AudioTrigger2;
 
-	private void Start()
-	{
-		LoadingScreenCanvas.SetActive(true);
+    //success check bools
+    bool createdRoomsCorridors = false;
+    bool valuesForCorridors = false;
+    bool valuesForRooms = false;
+   
 
-		//Set to false when starting the generation
-		reloadLevelNeeded = false;
+    private void Start()
+    {
+        LoadingScreenCanvas.SetActive(true);
 
-		// Create the board holder.
-		boardHolder = new GameObject("BoardHolder");
+        //Set to false when starting the generation
+        reloadLevelNeeded = false;
 
-		SetupTilesArray();
-		//Create the array that holds the instantiated tile objects
-		SetupActiveTilesArray();
-		CreateRoomsAndCorridors();
+        // Create the board holder.
+        boardHolder = new GameObject("BoardHolder");
 
-		//Even after reloading the level these functions will still execute.
-		//If statement needed to prevent time wasted generating the map when
-		//the level is going to reload
-		if (reloadLevelNeeded == false)
-		{
+        SetupTilesArray();
+        //Create the array that holds the instantiated tile objects
+        SetupActiveTilesArray();
 
-			SetTilesValuesForRooms ();
-			SetTilesValuesForCorridors ();
-			SetTilesValuesForAppendedCorridors ();
-			SetTilesValuesForDeadEndCorridors ();
+        while (createdRoomsCorridors == false)
+        {
+            CreateRoomsAndCorridors();
+        }
+        //reloadLevelNeeded = false;
+        //Even after reloading the level these functions will still execute.
+        //If statement needed to prevent time wasted generating the map when
+        //the level is going to reload
+        //if (reloadLevelNeeded == false)
+        //{
+        while (valuesForRooms == false)
+        {
+            SetTilesValuesForRooms();
+        }
+        while (valuesForCorridors == false)
+        {
+            SetTilesValuesForCorridors();
+        }
+        
+            SetTilesValuesForAppendedCorridors();
+        
+        
+            SetTilesValuesForDeadEndCorridors();
+       
 
 			InstantiateTiles ();
 			InstantiateOuterWalls ();
@@ -100,7 +119,7 @@ public class BoardCreator : MonoBehaviour
 			//SetTilesUnactive(ActiveTiles);
 
 
-		}
+		//}
 		if(corridors [2] != null)
 			spawnAudioTrigger (corridors [2], AudioTrigger1);
 		if(corridors[3] != null)
@@ -281,9 +300,11 @@ public class BoardCreator : MonoBehaviour
 			if (triedCounter >= numbRooms) {
 				//Then reload the level
 				reloadLevelNeeded = true;
-				SceneManager.LoadScene (3);
+                
+				//SceneManager.LoadScene (3);
 				break;
 			}
+            
 
 
 
@@ -300,7 +321,7 @@ public class BoardCreator : MonoBehaviour
 				//If a room in the array is null then there was an error with generation. Restart the scene
 				if (rooms [i - 1] == null) {
 					reloadLevelNeeded = true;
-					SceneManager.LoadScene (3);
+					//SceneManager.LoadScene (3);
 					break;
 				}
 
@@ -621,11 +642,12 @@ public class BoardCreator : MonoBehaviour
 					}
 				}
 			}
-			/*
-		playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
-		Instantiate (player, playerPos, Quaternion.identity);
-        */
-		}
+        /*
+    playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
+    Instantiate (player, playerPos, Quaternion.identity);
+    */
+        createdRoomsCorridors = true;
+    }
 
 
 	// Method takes two rooms as arguments and returns true/false if they overlap/don't overlap
@@ -654,7 +676,7 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentRoom == null) 
 			{
-				SceneManager.LoadScene (3);
+				//SceneManager.LoadScene (3);
 				break;
 			} 
 			else 
@@ -675,6 +697,7 @@ public class BoardCreator : MonoBehaviour
 				}
 			}
 		}
+        valuesForRooms = true;
 	}
 
 	void SetTilesValuesForCorridors()
@@ -688,7 +711,7 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentCorridor == null) 
 			{				
-				SceneManager.LoadScene (3);
+				//SceneManager.LoadScene (3);
 				break;
 			} 
 			else 
@@ -770,8 +793,9 @@ public class BoardCreator : MonoBehaviour
 
 			}
 		}
+        valuesForCorridors = true;
 
-	}
+    }
 
 
 	void SetTilesValuesForAppendedCorridors()
