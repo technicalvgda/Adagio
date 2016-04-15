@@ -108,7 +108,58 @@ public class BoardCreator : MonoBehaviour
             spawnAudioTrigger(corridors[3], AudioTrigger2);
 
     }
-            void FixedUpdate()
+
+    //Subscribe Activate method to the OnTap Event when object becomes active
+    void OnEnable(){
+		Teleporter.OnTeleport += createBoard;
+	}
+	//Unsubscrite Activate method from the OnTap event when object becomes deactive
+	void OnDisable(){
+		Teleporter.OnTeleport -= createBoard;
+	}
+
+   	void createBoard(){
+   		
+   		LoadingScreenCanvas.SetActive(true);
+
+        //Set to false when starting the generation
+        reloadLevelNeeded = false;
+
+        // Create the board holder.
+        boardHolder = new GameObject("BoardHolder");
+
+        SetupTilesArray();
+        //Create the array that holds the instantiated tile objects
+        SetupActiveTilesArray();
+        CreateRoomsAndCorridors();
+
+        //Even after reloading the level these functions will still execute.
+        //If statement needed to prevent time wasted generating the map when
+        //the level is going to reload
+        if (reloadLevelNeeded == false)
+        {
+
+            SetTilesValuesForRooms();
+            SetTilesValuesForCorridors();
+            SetTilesValuesForAppendedCorridors();
+            SetTilesValuesForDeadEndCorridors();
+            InstantiateTiles();
+            InstantiateOuterWalls();
+
+            //SetTilesUnactive(ActiveTiles);
+
+
+        }
+        if (corridors[2] != null)
+            spawnAudioTrigger(corridors[2], AudioTrigger1);
+        if (corridors[3] != null)
+            spawnAudioTrigger(corridors[3], AudioTrigger2);
+
+        player.transform.position = playerTeleportPlat.transform.position;
+
+   	}
+
+   	void FixedUpdate()
 	{	
 		
 
@@ -611,8 +662,8 @@ public class BoardCreator : MonoBehaviour
 					if (i == (int)(rooms.Length * .5f)) {
 
 
-						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
-						Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
+						//Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
+						//Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
 
 					}
 
