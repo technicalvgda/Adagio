@@ -12,6 +12,7 @@ public class FlashDemoBlock : MonoBehaviour {
 
 	public void beginDemo()
 	{
+		// Demo for how long each block should be held.
 		StartCoroutine(begin());
 	}
 	IEnumerator begin()
@@ -20,5 +21,18 @@ public class FlashDemoBlock : MonoBehaviour {
 		//Controls how long the flash stays on
 		yield return new WaitForSeconds(time);
 		sr.color = Color.black;
+	}
+	public void onYourMarks()
+	{
+		// Marks the beginning of the puzzle
+		StartCoroutine(go());
+	}
+	IEnumerator go()
+	{
+		sr.color = Color.red;
+		yield return new WaitForSeconds (2);
+		sr.color = Color.yellow;
+		yield return new WaitForSeconds (2);
+		sr.color = Color.green;
 	}
 }
