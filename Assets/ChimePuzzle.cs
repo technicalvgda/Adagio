@@ -34,6 +34,7 @@ public class ChimePuzzle : MonoBehaviour {
     {
         if (SimonSaysSwitch.GetComponent<ChimeReset>().pressed == true)
         {
+            Debug.Log("RESET");
             bpressed.Clear();
             SimonSaysSwitch.GetComponent<ChimeReset>().pressed = false;
 
