@@ -45,8 +45,8 @@ public class BoardCreator : MonoBehaviour
 	private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
 	public GameObject[] RandomPrefabs;                          //An array o
 
-	public int element = 0;
-	private List<int> usedRooms = new List<int>();			//List of used puzzle rooms
+	public int element;
+	private List<int> unusedRooms = new List<int>() {0,1,2,3,4,5,6,7}; //List of unused puzzle room indexes
 	private int numAppend = 0;
 
 	private Vector3 playerPos;								//The position of the player
@@ -101,8 +101,6 @@ public class BoardCreator : MonoBehaviour
             InstantiateOuterWalls();
 
             //SetTilesUnactive(ActiveTiles);
-
-
         }
         if (corridors[2] != null)
             spawnAudioTrigger(corridors[2], AudioTrigger1);
@@ -598,20 +596,18 @@ public class BoardCreator : MonoBehaviour
 						//If the roll is between 0 and the PercentChance value
 						if (roll <= PercentChance) {
 							//Spawn the prefab
-							element = Random.Range (0, 7); //Only used 8 elements to test, this can change later
+							
+							//Randomly select from remaining unused rooms list
+							element = unusedRooms[Random.Range(0,unusedRooms.Count)];
 
-							//Check if room is already used, rolls again if so
-							while (usedRooms.Contains(element)){
-								element = Random.Range (0, 7);
-							}
-
-							usedRooms.Add(element);
 
 							//Spawn the prefab
 							//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
 							//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
-
 							Instantiate (RandomPrefabs [element], new Vector3 (roomToBePlaced.xPos + roomToBePlaced.roomWidth / 2, roomToBePlaced.yPos + roomToBePlaced.roomHeight / 2, 0), Quaternion.identity);
+
+							//Remove used room from list
+							unusedRooms.Remove(element);
 						}
 					}
 
