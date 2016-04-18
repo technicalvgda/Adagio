@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -45,6 +46,7 @@ public class BoardCreator : MonoBehaviour
 	public GameObject[] RandomPrefabs;                          //An array o
 
 	public int element = 0;
+	private List<int> usedRooms = new List<int>();			//List of used puzzle rooms
 	private int numAppend = 0;
 
 	private Vector3 playerPos;								//The position of the player
@@ -597,6 +599,13 @@ public class BoardCreator : MonoBehaviour
 						if (roll <= PercentChance) {
 							//Spawn the prefab
 							element = Random.Range (0, 7); //Only used 8 elements to test, this can change later
+
+							//Check if room is already used, rolls again if so
+							while (usedRooms.Contains(element)){
+								element = Random.Range (0, 7);
+							}
+
+							usedRooms.Add(element);
 
 							//Spawn the prefab
 							//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
