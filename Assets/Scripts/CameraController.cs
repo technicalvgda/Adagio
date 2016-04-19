@@ -10,7 +10,15 @@ public class CameraController : MonoBehaviour {
 	private float cameraCatchup;
 	public float playerCameraOffset;
 	void Awake() {
-		playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
+
+#if UNITY_IPHONE
+   Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+
+#if UNITY_ANDROID
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+        playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
 	}
 
 	    // Use this for initialization
