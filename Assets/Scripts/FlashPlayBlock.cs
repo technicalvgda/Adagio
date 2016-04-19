@@ -3,29 +3,52 @@ using System.Collections;
 
 public class FlashPlayBlock : MonoBehaviour {
 
-	GameObject pressurePlate;
+	public GameObject pressurePlate;
 	private SpriteRenderer sr;
 	public float time = 3;
 	float min, max;
 	float elapsedTime = 0;
+	bool finish;
 	void Start()
 	{
+		sr = this.GetComponent<SpriteRenderer> ();
 		min = time - 0.1f;
 		max = time + 0.1f;
+		finish = false;
 	}
+	void Update()
+	{
+		elapsedTime = Input.GetKeyDown (KeyCode.E) ? 0 : elapsedTime;
+		if (Input.GetKey (KeyCode.E)) {
+			elapsedTime += Time.deltaTime;
+			Debug.Log (elapsedTime);
+		}
+	}
+	void restart()
+	{
+		sr.color = Color.black;
+	}
+
+
+
 	/*
     void keyTime ()
     {
-        while (!Input.GetButtonUp (KeyCode.E)) 
+		while (elapsedTime < time && !finish) 
         {
-                elapsedTime += Time.deltaTime;
-                Debug.Log (elapsedTime);
+			if (Input.GetKey (KeyCode.E)) {
+				elapsedTime += Time.deltaTime;
+			}
+			if (Input.GetKeyDown (KeyCode.E)) {
+				elapsedTime = 0;
+				finish = true;
+			}
+			Debug.Log (elapsedTime);
         }
-        //Return true if pushed for +- 0.1 seconds around time
-        //Return false otherwise.
 
     }
     */
+    
 	public float getElapsedTime()
 	{
 		return elapsedTime;

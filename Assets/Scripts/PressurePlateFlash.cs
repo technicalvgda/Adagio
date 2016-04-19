@@ -16,6 +16,10 @@ public class PressurePlateFlash : MonoBehaviour {
 		elapsedTime = 0f;
         stepped = false;
         released = false;
+		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = false;
+		PlayBlock2.GetComponent<FlashPlayBlock> ().enabled = false;
+		PlayBlock3.GetComponent<FlashPlayBlock> ().enabled = false;
+
     }
 	void Update()
 	{
@@ -26,6 +30,7 @@ public class PressurePlateFlash : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
+		pb1 = true; pb2 = true; pb3 = true;
         stepped = true;
 		released = false;
 		Debug.Log("On");
@@ -49,42 +54,45 @@ public class PressurePlateFlash : MonoBehaviour {
 		DemoBlock1.GetComponent<FlashDemoBlock> ().Invoke ("onYourMarks", 0);
 		DemoBlock2.GetComponent<FlashDemoBlock> ().Invoke ("onYourMarks", 0);
 		DemoBlock3.GetComponent<FlashDemoBlock> ().Invoke ("onYourMarks", 0);
+		yield return new WaitForSeconds (6);
 
 		//Play caller
-		Play();
+		StartCoroutine(Play());
 	}
-	void Play()
+
+	IEnumerator Play()
 	{
+		
 		Debug.Log ("Stop");
-		StartCoroutine(gamePause ());
+		//StartCoroutine(gamePause ());
 		Debug.Log ("Go");
-		PlayBlock1.GetComponent<FlashPlayBlock> ().Invoke ("keyTime", 0);
+		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = true;
+		yield return new WaitForSeconds (3);
 		if (PlayBlock1.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock1.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock1.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock1.GetComponent<FlashPlayBlock> ().getMax ()) {
 			pb1 = false;
-		}
+			Debug.Log ("Lose");
+		} else
+			Debug.Log ("Win");
+		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = false;
 
-		StartCoroutine(gamePause ());
+
+
+		/*
+		//StartCoroutine(gamePause ());
 		PlayBlock2.GetComponent<FlashPlayBlock> ().Invoke ("keyTime", 0);
 		if (PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock2.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock2.GetComponent<FlashPlayBlock> ().getMax ()) {
 			pb2 = false;
 		}
 
-		StartCoroutine (gamePause ());
+		//StartCoroutine (gamePause ());
 		PlayBlock3.GetComponent<FlashPlayBlock> ().Invoke ("keyTime", 0);
 		if (PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock3.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock3.GetComponent<FlashPlayBlock> ().getMax ()) {
 			pb3 = false;
 		}
+		*/
 
-		Debug.Log ("Win");
-			
+
 	}
-
-    void OnTriggerExit2D(Collider2D col)
-    {
-        stepped = false;
-        released = true;
-        Debug.Log("Off");
-    }
 
 	IEnumerator gamePause()
 	{
@@ -94,9 +102,26 @@ public class PressurePlateFlash : MonoBehaviour {
 			{
 				pause = false;
 			}
+			yield return new WaitForSeconds (1);
 		}
 		pause = true;
 		yield return null;
-
 	}
+
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        stepped = false;
+        released = true;
+		DemoBlock1.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
+		DemoBlock2.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
+		DemoBlock3.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
+		PlayBlock1.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
+		PlayBlock2.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
+		PlayBlock3.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
+
+		Debug.Log("Off");
+    }
+
+
 }

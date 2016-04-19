@@ -35,4 +35,8 @@ public class FlashDemoBlock : MonoBehaviour {
 		yield return new WaitForSeconds (2);
 		sr.color = Color.green;
 	}
+	void restart()
+	{
+		sr.color = Color.black;
+	}
 }
