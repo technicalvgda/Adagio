@@ -9,6 +9,8 @@ public class FlashPlayBlock : MonoBehaviour {
 	float min, max;
 	float elapsedTime = 0;
 	bool finish;
+	// Initializes the sprite renderer and the minimum and maximum time thresholds
+	// for the player pressing the 'E' button.
 	void Start()
 	{
 		sr = this.GetComponent<SpriteRenderer> ();
@@ -16,38 +18,21 @@ public class FlashPlayBlock : MonoBehaviour {
 		max = time + 0.1f;
 		finish = false;
 	}
+	// Counts for how long the 'E' button is held for and stores it in elapsedTime.
 	void Update()
 	{
 		elapsedTime = Input.GetKeyDown (KeyCode.E) ? 0 : elapsedTime;
 		if (Input.GetKey (KeyCode.E)) {
+			sr.color = Color.blue;
 			elapsedTime += Time.deltaTime;
 			Debug.Log (elapsedTime);
 		}
 	}
+	// Used to reset back to original settings
 	void restart()
 	{
 		sr.color = Color.black;
 	}
-
-
-
-	/*
-    void keyTime ()
-    {
-		while (elapsedTime < time && !finish) 
-        {
-			if (Input.GetKey (KeyCode.E)) {
-				elapsedTime += Time.deltaTime;
-			}
-			if (Input.GetKeyDown (KeyCode.E)) {
-				elapsedTime = 0;
-				finish = true;
-			}
-			Debug.Log (elapsedTime);
-        }
-
-    }
-    */
     
 	public float getElapsedTime()
 	{

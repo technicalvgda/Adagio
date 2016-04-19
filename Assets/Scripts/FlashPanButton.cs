@@ -3,6 +3,11 @@ using System.Collections;
 
 public class FlashPanButton : MonoBehaviour
 {
+
+	//Taken from the older panning class.
+	//Added the puzzleOver boolean that acts in the panwait stage.
+	//If the game ends, the boolean is true and the camera pans back.
+
 	public enum state
 	{
 		pantoward,
@@ -42,7 +47,6 @@ public class FlashPanButton : MonoBehaviour
 				player.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
 				camPos = Vector3.SmoothDamp (camPos, new Vector3 (target.transform.position.x, target.transform.position.y, camPos.z), ref currentVelocity, panTime);
 				Camera.main.transform.position = camPos;
-				//Debug.Log (currentVelocity);
 				if (Vector2.Distance (camPos, target.transform.position) < 0.1f) {
 					panState = state.panwait;
 				}

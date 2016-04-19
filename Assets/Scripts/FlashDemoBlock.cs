@@ -3,18 +3,21 @@ using System.Collections;
 
 public class FlashDemoBlock : MonoBehaviour {
 	private SpriteRenderer sr;
-	public float time;
+	public float time; // Time needed for the demo to flash white.
+
 
 	void Start()
 	{
 		sr = this.GetComponent<SpriteRenderer> ();
 	}
 
+	//Helper method for begin()
 	public void beginDemo()
 	{
-		// Demo for how long each block should be held.
 		StartCoroutine(begin());
 	}
+
+	// Demo for how long each block should be held.
 	IEnumerator begin()
 	{
 		sr.color = Color.white;
@@ -22,11 +25,14 @@ public class FlashDemoBlock : MonoBehaviour {
 		yield return new WaitForSeconds(time);
 		sr.color = Color.black;
 	}
+
+	//Helper method for go()
 	public void onYourMarks()
 	{
-		// Marks the beginning of the puzzle
 		StartCoroutine(go());
 	}
+
+	// Marks the beginning of the puzzle in a countdown style.
 	IEnumerator go()
 	{
 		sr.color = Color.red;
@@ -34,7 +40,9 @@ public class FlashDemoBlock : MonoBehaviour {
 		sr.color = Color.yellow;
 		yield return new WaitForSeconds (2);
 		sr.color = Color.green;
+
 	}
+	//Resets all blocks to orignial standards.
 	void restart()
 	{
 		sr.color = Color.black;

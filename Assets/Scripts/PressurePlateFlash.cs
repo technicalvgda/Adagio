@@ -7,13 +7,11 @@ public class PressurePlateFlash : MonoBehaviour {
 	public GameObject Metronome;
     public bool stepped;
     public bool released;
-	bool pause = true;
 	private bool pb1 = true, pb2 = true, pb3 = true;
-	public float elapsedTime;
 
+	// All 'E' button presses are disabled at game start for each play block.
     void Start()
     {
-		elapsedTime = 0f;
         stepped = false;
         released = false;
 		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = false;
@@ -21,6 +19,8 @@ public class PressurePlateFlash : MonoBehaviour {
 		PlayBlock3.GetComponent<FlashPlayBlock> ().enabled = false;
 
     }
+
+	// If a playblock has the incorrect timing, the puzzle ends.
 	void Update()
 	{
 		if (!pb1 || !pb2 || !pb3) {
@@ -28,6 +28,7 @@ public class PressurePlateFlash : MonoBehaviour {
 		}
 	}
 
+	// All play blocks start true when pressure plate is entered.
     void OnTriggerEnter2D(Collider2D col)
     {
 		pb1 = true; pb2 = true; pb3 = true;
@@ -62,64 +63,66 @@ public class PressurePlateFlash : MonoBehaviour {
 
 	IEnumerator Play()
 	{
-		
-		Debug.Log ("Stop");
-		//StartCoroutine(gamePause ());
+		//Play Block 1
 		Debug.Log ("Go");
 		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = true;
-		yield return new WaitForSeconds (3);
+		yield return new WaitForSeconds (4);
 		if (PlayBlock1.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock1.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock1.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock1.GetComponent<FlashPlayBlock> ().getMax ()) {
 			pb1 = false;
 			Debug.Log ("Lose");
 		} else
-			Debug.Log ("Win");
+			Debug.Log ("1");
 		PlayBlock1.GetComponent<FlashPlayBlock> ().enabled = false;
 
-
-
-		/*
-		//StartCoroutine(gamePause ());
-		PlayBlock2.GetComponent<FlashPlayBlock> ().Invoke ("keyTime", 0);
-		if (PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock2.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock2.GetComponent<FlashPlayBlock> ().getMax ()) {
-			pb2 = false;
-		}
-
-		//StartCoroutine (gamePause ());
-		PlayBlock3.GetComponent<FlashPlayBlock> ().Invoke ("keyTime", 0);
-		if (PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock3.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock3.GetComponent<FlashPlayBlock> ().getMax ()) {
-			pb3 = false;
-		}
-		*/
-
-
-	}
-
-	IEnumerator gamePause()
-	{
-		while (pause)
+		//Play Block 2
+		if (pb1) 
 		{
-			if (Input.GetKeyDown (KeyCode.E)) 
-			{
-				pause = false;
-			}
-			yield return new WaitForSeconds (1);
+			Debug.Log ("Go");
+			PlayBlock2.GetComponent<FlashPlayBlock> ().enabled = true;
+			yield return new WaitForSeconds (4);
+			if (PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock2.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock2.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock2.GetComponent<FlashPlayBlock> ().getMax ()) {
+				pb2 = false;
+				Debug.Log ("Lose");
+			} else
+				Debug.Log ("2");
+			PlayBlock2.GetComponent<FlashPlayBlock> ().enabled = false;
 		}
-		pause = true;
-		yield return null;
-	}
 
+
+		//Play Block 3
+		if (pb1 && pb2) 
+		{
+			Debug.Log ("Go");
+			PlayBlock3.GetComponent<FlashPlayBlock> ().enabled = true;
+			yield return new WaitForSeconds (4);
+			if (PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () < PlayBlock3.GetComponent<FlashPlayBlock> ().getMin () || PlayBlock3.GetComponent<FlashPlayBlock> ().getElapsedTime () > PlayBlock3.GetComponent<FlashPlayBlock> ().getMax ()) {
+				pb3 = false;
+				Debug.Log ("Lose");
+			} else
+				Debug.Log ("3");
+			PlayBlock3.GetComponent<FlashPlayBlock> ().enabled = false;
+		}
+
+		
+
+		// You win!!
+		// Do something here for winning.
+		GetComponent<FlashPanButton> ().puzzleOver = true;
+
+
+	}
 
     void OnTriggerExit2D(Collider2D col)
     {
         stepped = false;
         released = true;
+		// All Blocks restart to original settings
 		DemoBlock1.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
 		DemoBlock2.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
 		DemoBlock3.GetComponent<FlashDemoBlock> ().Invoke ("restart", 0);
 		PlayBlock1.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
 		PlayBlock2.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
 		PlayBlock3.GetComponent<FlashPlayBlock> ().Invoke ("restart", 0);
-
 		Debug.Log("Off");
     }
 
