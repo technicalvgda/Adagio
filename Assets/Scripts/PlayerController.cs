@@ -5,7 +5,8 @@ public class PlayerController : MonoBehaviour {
 
 	public float speed;
 	public float jumpSpeed;
-	public float blockJumpTimerDuration = 1.0f;
+    public float fallSpeed;
+    public float blockJumpTimerDuration = 1.0f;
 
 	public delegate void TapAction ();
 	public static event TapAction OnTap;
@@ -24,6 +25,8 @@ public class PlayerController : MonoBehaviour {
     private Vector2 startPos;
 	public bool downButton;
     bool leftGround = false;
+    bool slowFall = true;
+  
 
 	private float swipeValue;
     //stores the specific block the player touches at an instance in time
@@ -103,9 +106,13 @@ public class PlayerController : MonoBehaviour {
         else if(raycast.collisionDown && leftGround == true)
         {
             leftGround = false;
+            slowFall = true;
             anim.SetBool("Airborne", false);
         }
-        
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            slowFall = false;
+        }
 		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
 		if(raycast.collisionLeft && !raycast.collisionDown){
 			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
@@ -187,7 +194,7 @@ public class PlayerController : MonoBehaviour {
 						{
 							swipeValue = Mathf.Sign(touch.position.y - startPos.y);
 							if (swipeValue > 0)
-						{
+						    {
 								if (rb2d.velocity.y <= 0)
 								{
                                     anim.SetTrigger("Jump");
@@ -206,6 +213,10 @@ public class PlayerController : MonoBehaviour {
 									blockJumpTimer = blockJumpTimerDuration;
 								} 
 							}
+                            else if (swipeValue<0)
+                            {
+                                slowFall = false;
+                            }
 						}
 						break;
 					}
@@ -217,10 +228,27 @@ public class PlayerController : MonoBehaviour {
                     }
 		        }
 #endif
+        //cause player to fall slowly
+        float vertVelocity = rb2d.velocity.y;
+        
 
+        
+        if (vertVelocity < 0 && slowFall == true)
+        {
+            vertVelocity= fallSpeed;
+        }
+        else if(vertVelocity < 0 && slowFall == false)
+        {
+            if(vertVelocity == fallSpeed)
+            {
+                vertVelocity = 0;
+            }
+            
 
-
-        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
+        }
+        //set player velocity
+        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+        
        
 		rb2d.velocity = currentVelocity;
         //debugText.text = (" Rigidbody velocity=" + rb2d.velocity);
