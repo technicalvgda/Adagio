@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
@@ -32,15 +33,22 @@ public class PlayerController : MonoBehaviour {
     //stores the specific block the player touches at an instance in time
     private GameObject currentBlock;
 
-
+	//particles on jump
+	public GameObject jumpBlockA, jumpBlockB, jumpBlockC;
+	public List<GameObject> blockArray;
+	private Renderer rend;
+	private int jumpRand;
 	// Use this for initialization
 	void Start () {
 		//Reference so I don't have to type this long thing out repeatedly
+		rend = GetComponent<Renderer>();
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
 		raycast = GetComponent<DirectionRaycasting2DCollider> ();
-		
 
+		blockArray.Add(jumpBlockA);
+		blockArray.Add(jumpBlockB);
+		blockArray.Add(jumpBlockC);
         if(anim == null)
         {
             Debug.Log("No Animator Attached to Player");	
@@ -48,6 +56,9 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+		//get the position of our feet
+		Vector3 feetPos = rend.bounds.center;
+
 		if(Input.GetKeyDown(KeyCode.S)) {
 			downButton = true;
 		} else {
@@ -87,6 +98,11 @@ public class PlayerController : MonoBehaviour {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+				//only on midair jumps
+				if(!raycast.collisionDown){
+					jumpRand = Random.Range(0, blockArray.Count);
+					Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+				}
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
 			else {
