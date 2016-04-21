@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
 	public float speed;
 	public float jumpSpeed;
-	public float blockJumpTimerDuration = 1.0f;
+    public float fallSpeed;
+    public float blockJumpTimerDuration = 1.0f;
 
 	public delegate void TapAction ();
 	public static event TapAction OnTap;
@@ -24,20 +26,29 @@ public class PlayerController : MonoBehaviour {
     private Vector2 startPos;
 	public bool downButton;
     bool leftGround = false;
+    bool slowFall = true;
+  
 
 	private float swipeValue;
     //stores the specific block the player touches at an instance in time
     private GameObject currentBlock;
 
-
+	//particles on jump
+	public GameObject jumpBlockA, jumpBlockB, jumpBlockC;
+	public List<GameObject> blockArray;
+	private Renderer rend;
+	private int jumpRand;
 	// Use this for initialization
 	void Start () {
 		//Reference so I don't have to type this long thing out repeatedly
+		rend = GetComponent<Renderer>();
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
 		raycast = GetComponent<DirectionRaycasting2DCollider> ();
-		
 
+		blockArray.Add(jumpBlockA);
+		blockArray.Add(jumpBlockB);
+		blockArray.Add(jumpBlockC);
         if(anim == null)
         {
             Debug.Log("No Animator Attached to Player");	
@@ -45,6 +56,9 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+		//get the position of our feet
+		Vector3 feetPos = rend.bounds.center;
+
 		if(Input.GetKeyDown(KeyCode.S)) {
 			downButton = true;
 		} else {
@@ -84,6 +98,11 @@ public class PlayerController : MonoBehaviour {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+				//only on midair jumps
+				if(!raycast.collisionDown){
+					jumpRand = Random.Range(0, blockArray.Count);
+					Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+				}
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
 			else {
@@ -103,9 +122,13 @@ public class PlayerController : MonoBehaviour {
         else if(raycast.collisionDown && leftGround == true)
         {
             leftGround = false;
+            slowFall = true;
             anim.SetBool("Airborne", false);
         }
-        
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            slowFall = false;
+        }
 		//Fixes the wall climb bug for when you get stuck on a wall if you press the direction key on a wall that you are facing	
 		if(raycast.collisionLeft && !raycast.collisionDown){
 			moveHorizontal = Input.GetKey(KeyCode.A) ? 0 : Input.GetAxis ("Horizontal");
@@ -117,6 +140,7 @@ public class PlayerController : MonoBehaviour {
 
 #else
 
+
 		if(swipeValue < 0)
 		{
 			downButton = true;
@@ -126,8 +150,9 @@ public class PlayerController : MonoBehaviour {
 		{
 			downButton = false;
 		}
-
-		if (Input.touchCount > 0) {
+        
+		if (Input.touchCount > 0 ) {
+        
 			if (leftside.Contains (Input.GetTouch(0).position)) {
 				moveHorizontal = (raycast.collisionLeft && !raycast.collisionDown) ? 0 : -1;
 			}
@@ -140,10 +165,10 @@ public class PlayerController : MonoBehaviour {
 					OnTap();
 				}
 			}
+        
 		}
-		else {
-			moveHorizontal = 0;
-		}
+        
+		
          //check for landing
         if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
         {
@@ -174,17 +199,29 @@ public class PlayerController : MonoBehaviour {
 						startPos = touch.position;
 						break;
 					case TouchPhase.Ended:
+                        
+                        Vector2 endPos = touch.position;
+                        Vector2 swipeVec = endPos-startPos;
+                       
+
+
 						float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
 						if (swipeDistVertical > minSwipeDistY)
 						{
 							swipeValue = Mathf.Sign(touch.position.y - startPos.y);
 							if (swipeValue > 0)
-						{
+						    {
 								if (rb2d.velocity.y <= 0)
 								{
                                     anim.SetTrigger("Jump");
                                     anim.SetBool("Airborne", true);
-									rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+                                    //calculate jump force
+                                    //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
+                                    float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
+                                    float ySpeed = jumpSpeed*jumpMod;
+                                    moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
+									rb2d.velocity = new Vector2(rb2d.velocity.x, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
+                                    
 								}
 								//If player tries to jump before apex, they cannot jump for a set time
 								else 
@@ -192,17 +229,45 @@ public class PlayerController : MonoBehaviour {
 									blockJumpTimer = blockJumpTimerDuration;
 								} 
 							}
+                            else if (swipeValue<0)
+                            {
+                                slowFall = false;
+                            }
 						}
 						break;
 					}
 				}
+                else {
+                    if(leftGround == false)
+                    {
+			            moveHorizontal = 0;
+                    }
+		        }
 #endif
+        //cause player to fall slowly
+        float vertVelocity = rb2d.velocity.y;
+        
 
+        
+        if (vertVelocity < 0 && slowFall == true)
+        {
+            vertVelocity= fallSpeed;
+        }
+        else if(vertVelocity < 0 && slowFall == false)
+        {
+            if(vertVelocity == fallSpeed)
+            {
+                vertVelocity = 0;
+            }
+            
 
-
-        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
+        }
+        //set player velocity
+        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+        
        
 		rb2d.velocity = currentVelocity;
+        //debugText.text = (" Rigidbody velocity=" + rb2d.velocity);
 
 
         //set the walking animation variable to the axis, 
