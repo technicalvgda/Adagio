@@ -640,9 +640,10 @@ public class BoardCreator : MonoBehaviour
 						//If the roll is between 0 and the PercentChance value
 						if (roll <= PercentChance) {
 							//Spawn the prefab
-							
+
 							//Randomly select from remaining unused rooms list
-							element = unusedRooms[Random.Range(0,unusedRooms.Count)];
+							if(unusedRooms.Count != 0)
+								element = unusedRooms[Random.Range(0,unusedRooms.Count)];
 
 
 							//Spawn the prefab
@@ -677,7 +678,6 @@ public class BoardCreator : MonoBehaviour
 			//Need to check if any rooms or corridors are null, indicating bad generation
 			for (int i = 0; i < rooms.Length; i++) {
 				if (rooms [i] == null) {
-					Debug.Log ("ROOM AT " + i + "IS NULL");
 					triedCounter = 0;
 					needRoomsAndCorridorsCreation = true;
 					break;
@@ -688,7 +688,6 @@ public class BoardCreator : MonoBehaviour
 			for (int i = 0; i < corridors.Length; i++) {
 				
 				if (corridors [i] == null) {
-					Debug.Log ("CORRIDOR AT " + i + "IS NULL");
 					triedCounter = 0;
 					needRoomsAndCorridorsCreation = true;
 					break;
