@@ -51,6 +51,7 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 
 	//the ray that hit something
 	public RaycastHit2D TileHit;
+	public RaycastHit2D TileDownHit;
 
 	//raycast related
 	public List<GameObject> rayPoints;
@@ -193,6 +194,7 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 
 	bool checkCollision(List<Ray2D> rayList)
 	{
+		
 		for (int i = 0; i < rayList.Count; i++)
 		{
 			//check all rays
@@ -202,6 +204,9 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 			{
 				return true;
 			}
+
+
+
 		}
 		return false;
 	} 
