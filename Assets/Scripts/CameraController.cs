@@ -10,7 +10,15 @@ public class CameraController : MonoBehaviour {
 	private float cameraCatchup;
 	public float playerCameraOffset;
 	void Awake() {
-		playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
+
+#if UNITY_IPHONE
+   Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+
+#if UNITY_ANDROID
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+        playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
 	}
 
 	    // Use this for initialization
@@ -24,7 +32,8 @@ public class CameraController : MonoBehaviour {
 	void FixedUpdate() {
 		
 		if (player == null) {
-			player = GameObject.Find ("Player");
+			//player = GameObject.Find ("Player");
+            player = GameObject.FindGameObjectWithTag("Player");
 		} else {
 			//if player if falling then set the camera catchup to the absolute of the player velocity divided by catchupDivisor
 			if (playerRB2D.velocity.y < 0.0f) {

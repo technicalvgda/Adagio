@@ -6,7 +6,10 @@ using System.Collections;
 
 public class TrapDoorOpenResponse : MonoBehaviour {
 	
-	public void Deactivate(){
+	public void Deactivate()
+    {
 		gameObject.SetActive (false);
 	}
+
+   
 }	

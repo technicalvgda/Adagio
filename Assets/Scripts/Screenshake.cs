@@ -5,7 +5,7 @@ public class Screenshake : MonoBehaviour
 {
 	private Vector3 origPos;
 	private Quaternion origRot;
-	private bool shaking;
+	public bool shaking;
 	//THE MAGIC NUMBERS
 	//Decay: .0002
 	//Intesntiy: .015
