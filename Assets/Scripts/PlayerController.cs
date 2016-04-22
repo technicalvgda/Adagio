@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour {
     private GameObject currentBlock;
 
 	//particles on jump
-	public GameObject jumpBlockA, jumpBlockB, jumpBlockC;
+	//public GameObject jumpBlockA, jumpBlockB, jumpBlockC;
 	public List<GameObject> blockArray;
 	private Renderer rend;
 	private int jumpRand;
@@ -45,10 +45,11 @@ public class PlayerController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator>();
 		raycast = GetComponent<DirectionRaycasting2DCollider> ();
-
+/*
 		blockArray.Add(jumpBlockA);
 		blockArray.Add(jumpBlockB);
 		blockArray.Add(jumpBlockC);
+        */
         if(anim == null)
         {
             Debug.Log("No Animator Attached to Player");	
