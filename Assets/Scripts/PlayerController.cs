@@ -114,14 +114,16 @@ public class PlayerController : MonoBehaviour {
 		{
 			blockJumpTimer = blockJumpTimerDuration;
 		}
+        
         //check for landing
-        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
+        if(!raycast.collisionDown)
         {
-            leftGround = true;
+            anim.SetBool("Airborne", true);
+            
         }
-        else if(raycast.collisionDown && leftGround == true)
+        else if(raycast.collisionDown )
         {
-            leftGround = false;
+            
             slowFall = true;
             anim.SetBool("Airborne", false);
         }
@@ -169,18 +171,20 @@ public class PlayerController : MonoBehaviour {
 		}
         
 		
-         //check for landing
-        if(!raycast.collisionDown && anim.GetBool("Airborne") == true)
+       //check for landing
+        if(!raycast.collisionDown)
         {
-            leftGround = true;
+            anim.SetBool("Airborne", true);
+            
         }
-        else if(raycast.collisionDown && leftGround == true)
+        else if(raycast.collisionDown )
         {
-            leftGround = false;
+            
+            slowFall = true;
             anim.SetBool("Airborne", false);
         }
         //swipe up to move up
-        //to dowuble jump, finger has to go past the minimum distance and swip again.
+        //to double jump, finger has to go past the minimum distance and swipe again.
 
 		if(raycast.collisionUp)
 				{
