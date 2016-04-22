@@ -32,7 +32,8 @@ public class CameraController : MonoBehaviour {
 	void FixedUpdate() {
 		
 		if (player == null) {
-			player = GameObject.Find ("Player");
+			//player = GameObject.Find ("Player");
+            player = GameObject.FindGameObjectWithTag("Player");
 		} else {
 			//if player if falling then set the camera catchup to the absolute of the player velocity divided by catchupDivisor
 			if (playerRB2D.velocity.y < 0.0f) {

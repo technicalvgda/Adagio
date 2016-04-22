@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("Airborne", true);
             
         }
-        else if(raycast.collisionDown )
+        else if(raycast.collisionDown)
         {
             
             slowFall = true;
