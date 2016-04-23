@@ -25,8 +25,12 @@ public class BoardCreator : MonoBehaviour
 	public GameObject playerTeleportPlat;
 	public GameObject teleporter;
 	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
-	public GameObject HorizontalPuzzleCorridor;
-    public GameObject VerticalPuzzleCorridor;
+	public GameObject[] NorthCorridorPuzzles;
+	public GameObject[] EastCorridorPuzzles;
+	public GameObject[] SouthCorridorPuzzles;
+	public GameObject[] WestCorridorPuzzles;
+
+
     public int CorridorPercChance = 50;
 	private float roll;										  // Variable to hold the roll on the randomly instantiated puzzel rooms
 	public int PercentChance = 50;							  // Variable for the percent chance of the randomly instantiated puzzel rooms.
@@ -77,7 +81,7 @@ public class BoardCreator : MonoBehaviour
         LoadingScreenCanvas.SetActive(true);
 		needRoomsAndCorridorsCreation = true;
         //Set to false when starting the generation
-        reloadLevelNeeded = false;
+       // reloadLevelNeeded = false;
 
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
@@ -287,7 +291,6 @@ public class BoardCreator : MonoBehaviour
 				if (triedCounter >= numbRooms * 2) {
 					//Then reload the level
 					//reloadLevelNeeded = true;
-					Debug.Log ("HERE");
 					//SceneManager.LoadScene (3);
 					break;
 				}
@@ -307,8 +310,7 @@ public class BoardCreator : MonoBehaviour
 
 					//If a room in the array is null then there was an error with generation. Restart the scene
 					if (rooms [i - 1] == null) {
-						reloadLevelNeeded = true;
-						Debug.Log ("HERE2");
+						//reloadLevelNeeded = true;
 						//SceneManager.LoadScene (3);
 						break;
 					}
@@ -566,10 +568,10 @@ public class BoardCreator : MonoBehaviour
 								break;
 							//Make the corridor
 
-							deadEndCorridor.SetupDeadEndCorridor (corridorToBePlaced, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
+							deadEndCorridor.SetupDeadEndCorridor (corridorToAppend, corridorLength, roomWidth, roomHeight, columns, rows, corridorToBePlaced.startXPos, corridorToBePlaced.startYPos);
 							bool deadEndOverlaps = false;
 
-							if (doCorridorsOverlapCorridor (corridorToAppend, deadEndCorridor))
+							if (doCorridorsOverlapCorridor (corridorToBePlaced, deadEndCorridor))
 								deadEndOverlaps = true;
 							
 							if (doCorridorsOverlapRooms (roomToBePlaced, deadEndCorridor))
@@ -796,7 +798,6 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentCorridor == null) 
 			{				
-				Debug.Log ("HERE3");
 				//SceneManager.LoadScene (3);
 				break;
 			} 
@@ -863,16 +864,16 @@ public class BoardCreator : MonoBehaviour
 					switch (currentCorridor.direction) 
 					{
 					case Direction.North:
-						Instantiate (VerticalPuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						Instantiate (NorthCorridorPuzzles[Random.Range(0,NorthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
 						break;
 					case Direction.East:
-						Instantiate (HorizontalPuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength / 2.0f, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						Instantiate (EastCorridorPuzzles[Random.Range(0,EastCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity);
 						break;
 					case Direction.South:
-						Instantiate (VerticalPuzzleCorridor, new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						Instantiate (SouthCorridorPuzzles[Random.Range(0,SouthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
 						break;
 					case Direction.West:
-						Instantiate (HorizontalPuzzleCorridor, new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength / 2.0f, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						Instantiate (WestCorridorPuzzles[Random.Range(0,WestCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity);
 						break;
 					}
 				}
@@ -889,7 +890,6 @@ public class BoardCreator : MonoBehaviour
 			// and go through it's length.
 			if (currentCorridor == null) 
 			{				
-				Debug.Log ("HERE4");
 				//SceneManager.LoadScene (3);
 				break;
 			} 
