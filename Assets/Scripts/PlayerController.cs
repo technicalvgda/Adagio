@@ -94,6 +94,8 @@ public class PlayerController : MonoBehaviour {
 		{
             anim.SetTrigger("Jump");
             anim.SetBool("Airborne", true);
+
+            slowFall = true;
             //Player can jump if they are falling or reached max height
             if (rb2d.velocity.y <= 0) {
 				//Making it directly alter vertical velocity so jump is instantaneous as well
@@ -220,6 +222,8 @@ public class PlayerController : MonoBehaviour {
 								{
                                     anim.SetTrigger("Jump");
                                     anim.SetBool("Airborne", true);
+         
+                                    slowFall = true;
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
