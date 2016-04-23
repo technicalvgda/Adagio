@@ -83,6 +83,10 @@ public class BoardCreator : MonoBehaviour
         //Set to false when starting the generation
        // reloadLevelNeeded = false;
 
+		if (GameObject.Find ("BoardHolder") != null) {
+			Destroy (boardHolder);
+		}
+
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
 
@@ -115,58 +119,15 @@ public class BoardCreator : MonoBehaviour
 
     }
 
-    //Subscribe Activate method to the OnTap Event when object becomes active
+    //Subscribe Start method to the OnTap Event when object becomes active
     void OnEnable(){
-		Teleporter.OnTeleport += createBoard;
+		Teleporter.OnTeleport += Start;
 	}
-	//Unsubscrite Activate method from the OnTap event when object becomes deactive
+	//Unsubscrite Start method from the OnTap event when object becomes deactive
 	void OnDisable(){
-		Teleporter.OnTeleport -= createBoard;
+		Teleporter.OnTeleport -= Start;
 	}
-
-   	void createBoard(){
-   		
-   		LoadingScreenCanvas.SetActive(true);
-		needRoomsAndCorridorsCreation = true;
-        //Set to false when starting the generation
-		// reloadLevelNeeded = false;
-
-		//Destroy the old boardHolder and the prefabs attached to it
-		Destroy(boardHolder);
-        
-		// Create the new board holder.
-        boardHolder = new GameObject("BoardHolder");
-
-        SetupTilesArray();
-        //Create the array that holds the instantiated tile objects
-        SetupActiveTilesArray();
-        CreateRoomsAndCorridors();
-
-        //Even after reloading the level these functions will still execute.
-        //If statement needed to prevent time wasted generating the map when
-        //the level is going to reload
-        //if (reloadLevelNeeded == false)
-        //{
-
-            SetTilesValuesForRooms();
-            SetTilesValuesForCorridors();
-            SetTilesValuesForAppendedCorridors();
-            SetTilesValuesForDeadEndCorridors();
-            InstantiateTiles();
-            InstantiateOuterWalls();
-
-            //SetTilesUnactive(ActiveTiles);
-       	// }
-        if (corridors[2] != null)
-            spawnAudioTrigger(corridors[2], AudioTrigger1);
-        if (corridors[3] != null)
-            spawnAudioTrigger(corridors[3], AudioTrigger2);
 		
-		SpawnPuzzles ();
-
-        player.transform.position = playerTeleportPlat.transform.position;
-
-   	}
 
    	void FixedUpdate()
 	{	

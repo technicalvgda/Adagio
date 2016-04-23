@@ -52,8 +52,8 @@ public class Teleporter : MonoBehaviour {
 		if (isInTeleporter)
 		{
 			if(OnTeleport != null){	
-				OnTeleport();
 				player.transform.position = playerTeleportPlat.transform.position;
+				OnTeleport();
             	Debug.Log("Teleport");
 			}
         }
