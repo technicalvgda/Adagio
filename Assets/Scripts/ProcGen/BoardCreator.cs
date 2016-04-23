@@ -126,11 +126,11 @@ public class BoardCreator : MonoBehaviour
 
    	void createBoard(){
    		
-   		LoadingScreenCanvas.SetActive(true);
-
+   		 LoadingScreenCanvas.SetActive(true);
+		needRoomsAndCorridorsCreation = true;
         //Set to false when starting the generation
-        reloadLevelNeeded = false;
-
+       // reloadLevelNeeded = false;
+		Destroy(boardHolder);
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
 
@@ -142,8 +142,8 @@ public class BoardCreator : MonoBehaviour
         //Even after reloading the level these functions will still execute.
         //If statement needed to prevent time wasted generating the map when
         //the level is going to reload
-        if (reloadLevelNeeded == false)
-        {
+        //if (reloadLevelNeeded == false)
+        //{
 
             SetTilesValuesForRooms();
             SetTilesValuesForCorridors();
@@ -153,13 +153,13 @@ public class BoardCreator : MonoBehaviour
             InstantiateOuterWalls();
 
             //SetTilesUnactive(ActiveTiles);
-
-
-        }
+       // }
         if (corridors[2] != null)
             spawnAudioTrigger(corridors[2], AudioTrigger1);
         if (corridors[3] != null)
             spawnAudioTrigger(corridors[3], AudioTrigger2);
+		
+		SpawnPuzzles ();
 
         player.transform.position = playerTeleportPlat.transform.position;
 
