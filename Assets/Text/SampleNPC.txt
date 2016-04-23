@@ -1,11 +1,19 @@
 NPC:Hello Zimri.@
-Zimri:Hello stranger.@
+GRACE:Hello I am Grace.@
+GRACE:Hello I am Grace.@
+Zimri:Hello stranger and Grace.@
+BUSH:Please clap.@
 NPC:How are you?@
 Zimri:I am doing fine.@
+BUSH:Please clap.@
+GRACE:Hello I am Grace.@
 NPC:That is good to hear.
 Good Luck on your journey!@
 Zimri:Many Thanks!@
+BUSH:Please clap.@
 NPC:Let me tell you a story before you go though.@
 Zimri:What could it be?@
+GRACE:Hello I am Grace.@
 NPC:We're actually in a video game.@
+GRACE:Hello I am Grace.@
 Zimri:WOAH.
