@@ -90,8 +90,8 @@ public class BoardCreator : MonoBehaviour
         //Even after reloading the level these functions will still execute.
         //If statement needed to prevent time wasted generating the map when
         //the level is going to reload
-        if (reloadLevelNeeded == false)
-        {
+        //if (reloadLevelNeeded == false)
+        //{
 
             SetTilesValuesForRooms();
             SetTilesValuesForCorridors();
@@ -101,11 +101,13 @@ public class BoardCreator : MonoBehaviour
             InstantiateOuterWalls();
 
             //SetTilesUnactive(ActiveTiles);
-        }
+       // }
         if (corridors[2] != null)
             spawnAudioTrigger(corridors[2], AudioTrigger1);
         if (corridors[3] != null)
             spawnAudioTrigger(corridors[3], AudioTrigger2);
+		
+		SpawnPuzzles ();
 
     }
             void FixedUpdate()
@@ -284,9 +286,9 @@ public class BoardCreator : MonoBehaviour
 				//If generation has tried different corridor/room placements exceeding the number of rooms there are
 				if (triedCounter >= numbRooms * 2) {
 					//Then reload the level
-					reloadLevelNeeded = true;
-                
-					SceneManager.LoadScene (3);
+					//reloadLevelNeeded = true;
+					Debug.Log ("HERE");
+					//SceneManager.LoadScene (3);
 					break;
 				}
             
@@ -306,7 +308,8 @@ public class BoardCreator : MonoBehaviour
 					//If a room in the array is null then there was an error with generation. Restart the scene
 					if (rooms [i - 1] == null) {
 						reloadLevelNeeded = true;
-						SceneManager.LoadScene (3);
+						Debug.Log ("HERE2");
+						//SceneManager.LoadScene (3);
 						break;
 					}
 
@@ -625,35 +628,23 @@ public class BoardCreator : MonoBehaviour
 						//If room is good, then reset the tried counter
 						triedCounter = 0;
 
+						//Put the well placed corridor in the corridors array
 						corridors [i - 1] = corridorToBePlaced;
+
+						//Put the well placed appended corridor in the their array
 						if (appendCorridor) {
 							if (numAppend < aCorridors.Length) {
 								aCorridors [numAppend] = corridorToAppend;
 								numAppend++;
 							}
 						}
+						//Put the well placed room in the room array
 						rooms [i] = roomToBePlaced;
+
+						//Put the well placed dead end corridor in their array 
 						if (makeDeadEndCorridor)
 							deadEndCorridorsArray [i - 1] = deadEndCorridor;
-						//Rolls the dice
-						roll = Random.Range (0, 100);
-						//If the roll is between 0 and the PercentChance value
-						if (roll <= PercentChance) {
-							//Spawn the prefab
-
-							//Randomly select from remaining unused rooms list
-							if(unusedRooms.Count != 0)
-								element = unusedRooms[Random.Range(0,unusedRooms.Count)];
-
-
-							//Spawn the prefab
-							//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
-							//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
-							Instantiate (RandomPrefabs [element], new Vector3 (roomToBePlaced.xPos + (roomToBePlaced.roomWidth / 2) - 0.5f, roomToBePlaced.yPos + (roomToBePlaced.roomHeight / 2) -0.2f, 0), Quaternion.identity);
-
-							//Remove used room from list
-							unusedRooms.Remove(element);
-						}
+						
 					}
 
 					//Instantiates player in the i-th/2 room created
@@ -678,6 +669,7 @@ public class BoardCreator : MonoBehaviour
 			//Need to check if any rooms or corridors are null, indicating bad generation
 			for (int i = 0; i < rooms.Length; i++) {
 				if (rooms [i] == null) {
+					numAppend = 0;
 					triedCounter = 0;
 					needRoomsAndCorridorsCreation = true;
 					break;
@@ -688,12 +680,23 @@ public class BoardCreator : MonoBehaviour
 			for (int i = 0; i < corridors.Length; i++) {
 				
 				if (corridors [i] == null) {
+					numAppend = 0;
 					triedCounter = 0;
 					needRoomsAndCorridorsCreation = true;
 					break;
 				} else if (i == corridors.Length - 1 && corridors [i] != null) {
 					needRoomsAndCorridorsCreation = false;
 				}
+			}
+			for (int i = 0; i < aCorridors.Length; i++) {
+				if (aCorridors [i] == null) {
+					numAppend = 0;
+					triedCounter = 0;
+					needRoomsAndCorridorsCreation = true;
+					break;
+				} else if (i == aCorridors.Length - 1 && aCorridors [i] != null)
+					needRoomsAndCorridorsCreation = false;
+
 			}
 		}
 	}
@@ -756,6 +759,31 @@ public class BoardCreator : MonoBehaviour
 		}
         
 	}
+	void SpawnPuzzles()
+	{
+		for (int i = 2; i < rooms.Length; i++) 
+		{
+			//Rolls the dice
+			roll = Random.Range (0, 100);
+			//If the roll is between 0 and the PercentChance value
+			if (roll <= PercentChance) {
+				//Spawn the prefab
+
+				//Randomly select from remaining unused rooms list
+				if(unusedRooms.Count != 0)
+					element = unusedRooms[Random.Range(0,unusedRooms.Count)];
+
+
+				//Spawn the prefab
+				//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
+				//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
+				Instantiate (RandomPrefabs [element], new Vector3 (rooms[i].xPos + (rooms[i].roomWidth / 2) - 0.5f, rooms[i].yPos + (rooms[i].roomHeight / 2) -0.2f, 0), Quaternion.identity);
+
+				//Remove used room from list
+				unusedRooms.Remove(element);
+			}
+		}
+	}
 
 	void SetTilesValuesForCorridors()
 	{
@@ -768,7 +796,8 @@ public class BoardCreator : MonoBehaviour
 			//Reloading the level is necessary, else continue with generation
 			if (currentCorridor == null) 
 			{				
-				SceneManager.LoadScene (3);
+				Debug.Log ("HERE3");
+				//SceneManager.LoadScene (3);
 				break;
 			} 
 			else 
@@ -860,7 +889,8 @@ public class BoardCreator : MonoBehaviour
 			// and go through it's length.
 			if (currentCorridor == null) 
 			{				
-				SceneManager.LoadScene (3);
+				Debug.Log ("HERE4");
+				//SceneManager.LoadScene (3);
 				break;
 			} 
 			else
