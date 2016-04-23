@@ -8,6 +8,9 @@ public class Teleporter : MonoBehaviour {
 
     public bool isInTeleporter;
 
+    public delegate void TeleportAction ();
+	public static event TeleportAction OnTeleport;
+
 	// Use this for initialization
 	void Start () {
        
@@ -48,8 +51,11 @@ public class Teleporter : MonoBehaviour {
     {
 		if (isInTeleporter)
 		{
-            player.transform.position = playerTeleportPlat.transform.position;
-            Debug.Log("Teleport");
+			if(OnTeleport != null){	
+				player.transform.position = playerTeleportPlat.transform.position;
+				OnTeleport();
+            	Debug.Log("Teleport");
+			}
         }
     }
 }

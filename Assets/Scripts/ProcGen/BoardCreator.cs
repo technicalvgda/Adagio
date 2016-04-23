@@ -24,7 +24,7 @@ public class BoardCreator : MonoBehaviour
 	public GameObject player;
 	public GameObject playerTeleportPlat;
 	public GameObject teleporter;
-	public GameObject PuzzelRoom;							  // The prefab for the puzzel room
+	public GameObject ChildOfBoardHolder;					//Temporary holder for objects that will become a child of the borderholder object
 	public GameObject[] NorthCorridorPuzzles;
 	public GameObject[] EastCorridorPuzzles;
 	public GameObject[] SouthCorridorPuzzles;
@@ -83,6 +83,10 @@ public class BoardCreator : MonoBehaviour
         //Set to false when starting the generation
        // reloadLevelNeeded = false;
 
+		if (GameObject.Find ("BoardHolder") != null) {
+			Destroy (boardHolder);
+		}
+
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
 
@@ -114,7 +118,18 @@ public class BoardCreator : MonoBehaviour
 		SpawnPuzzles ();
 
     }
-            void FixedUpdate()
+
+    //Subscribe Start method to the OnTap Event when object becomes active
+    void OnEnable(){
+		Teleporter.OnTeleport += Start;
+	}
+	//Unsubscrite Start method from the OnTap event when object becomes deactive
+	void OnDisable(){
+		Teleporter.OnTeleport -= Start;
+	}
+		
+
+   	void FixedUpdate()
 	{	
 		
 
@@ -655,14 +670,16 @@ public class BoardCreator : MonoBehaviour
 
 
 						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
-						Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity);
+						ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
 					}
 
 					if (i == (int)(rooms.Length - 1)) {
 						if (rooms [rooms.Length - 1] != null) {
 							Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
-							Instantiate (teleporter, teleporterPos, Quaternion.identity);
+							ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
+							ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						}
 					}
 				}
@@ -779,7 +796,8 @@ public class BoardCreator : MonoBehaviour
 				//Spawn the prefab
 				//NOTE: when spawing in the random prefabs from the elements, i needed to divide the points by 2 so that each prefab AKA the images are spawned in the center of the room.
 				//	Instantiate (PuzzelRoom, new Vector3 (roomToBePlaced.xPos+roomToBePlaced.roomWidth, roomToBePlaced.yPos+roomToBePlaced.roomHeight, 0), Quaternion.identity);          
-				Instantiate (RandomPrefabs [element], new Vector3 (rooms[i].xPos + (rooms[i].roomWidth / 2) - 0.5f, rooms[i].yPos + (rooms[i].roomHeight / 2) -0.2f, 0), Quaternion.identity);
+				ChildOfBoardHolder = Instantiate (RandomPrefabs [element], new Vector3 (rooms[i].xPos + (rooms[i].roomWidth / 2) - 0.5f, rooms[i].yPos + (rooms[i].roomHeight / 2) -0.2f, 0), Quaternion.identity) as GameObject;
+				ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
 				//Remove used room from list
 				unusedRooms.Remove(element);
@@ -864,16 +882,20 @@ public class BoardCreator : MonoBehaviour
 					switch (currentCorridor.direction) 
 					{
 					case Direction.North:
-						Instantiate (NorthCorridorPuzzles[Random.Range(0,NorthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (NorthCorridorPuzzles[Random.Range(0,NorthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.East:
-						Instantiate (EastCorridorPuzzles[Random.Range(0,EastCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (EastCorridorPuzzles[Random.Range(0,EastCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.South:
-						Instantiate (SouthCorridorPuzzles[Random.Range(0,SouthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (SouthCorridorPuzzles[Random.Range(0,SouthCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.West:
-						Instantiate (WestCorridorPuzzles[Random.Range(0,WestCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (WestCorridorPuzzles[Random.Range(0,WestCorridorPuzzles.Length)], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength / 4.0f, currentCorridor.startYPos, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					}
 				}
@@ -1012,16 +1034,20 @@ public class BoardCreator : MonoBehaviour
 					switch (currentCorridor.direction) 
 					{
 					case Direction.North:
-						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength-2, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength-2, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.East:
-						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength-2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength-2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.South:
-						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength+2, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength+2, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.West:
-						Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength+2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity);
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength+2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					}
 				}
@@ -1293,16 +1319,20 @@ public class BoardCreator : MonoBehaviour
 		switch(corridor.direction)
 		{
 		case Direction.North:
-			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.identity);
+			ChildOfBoardHolder = Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.East:
-			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			ChildOfBoardHolder = Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.Euler(0,0,90)) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.South:
-			Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos-4,0), Quaternion.identity);
+			ChildOfBoardHolder = Instantiate(audioTrigger, new Vector3(corridor.startXPos+3,corridor.startYPos-4,0), Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.West:
-			Instantiate(audioTrigger, new Vector3(corridor.startXPos-4,corridor.startYPos+3,0), Quaternion.Euler(0,0,90));
+			ChildOfBoardHolder = Instantiate(audioTrigger, new Vector3(corridor.startXPos-4,corridor.startYPos+3,0), Quaternion.Euler(0,0,90)) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		}
 	}
