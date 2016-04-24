@@ -34,7 +34,7 @@ public class TextBoxButton : MonoBehaviour
 		
 				if (endAtLine == 0) // create empty lines at the end so Array error does not occur
 					{
-					endAtLine = textLines.Length - 1; // last line of text, one less because of array
+					    endAtLine = textLines.Length - 1; // last line of text, one less because of array
 					}
 			}
 	

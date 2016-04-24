@@ -8,6 +8,9 @@ public class Teleporter : MonoBehaviour {
 
     public bool isInTeleporter;
 
+    public delegate void TeleportAction ();
+	public static event TeleportAction OnTeleport;
+
 	// Use this for initialization
 	void Start () {
        
@@ -15,8 +18,8 @@ public class Teleporter : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(isInTeleporter && Input.GetKeyDown(KeyCode.E)){
-			Teleport(player);
+		if(Input.GetKeyDown(KeyCode.E)){
+			Teleport();
 						}
 
     }
@@ -34,13 +37,25 @@ public class Teleporter : MonoBehaviour {
 		   }
 
 	   
+	//Subscribe Activate method to the OnTap Event when object becomes active
+	void OnEnable(){
+		PlayerController.OnTap += Teleport;
+	}
+	//Unsubscrite Activate method from the OnTap event when object becomes deactive
+	void OnDisable(){
+		PlayerController.OnTap -= Teleport;
+	}
+		
 
-	void Teleport(GameObject player)
+	void Teleport()
     {
-      //  if (Input.GetKeyDown(KeyCode.E))
-      //  {
-            player.transform.position = playerTeleportPlat.transform.position;
-            Debug.Log("Teleport");
-      //  }
+		if (isInTeleporter)
+		{
+			if(OnTeleport != null){	
+				player.transform.position = playerTeleportPlat.transform.position;
+				OnTeleport();
+            	Debug.Log("Teleport");
+			}
+        }
     }
 }

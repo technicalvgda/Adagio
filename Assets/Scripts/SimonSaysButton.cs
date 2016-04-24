@@ -7,6 +7,7 @@ public class SimonSaysButton : MonoBehaviour
 
     public bool pressed = false;
     public bool collide = false;
+    int count = 0;
     //GameObject pressureplate1 = GameObject.FindGameObjectWithTag("pressureplate1");
     void Start()
     {
@@ -15,10 +16,14 @@ public class SimonSaysButton : MonoBehaviour
     }
     void Update()
     {
-        if (collide && Input.GetKeyDown(KeyCode.E))
+        if (collide)
         {
-            pressed = true;
-            Debug.Log("ON");
+            if (count == 0)
+            {
+                pressed = true;
+                Debug.Log("ON");
+                count++;
+            }
 
         }
     }
@@ -38,6 +43,7 @@ public class SimonSaysButton : MonoBehaviour
         collide = false;
         pressed = false;
         Debug.Log("Exit");
+        count = 0;
     }
     
 }
