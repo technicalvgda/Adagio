@@ -51,6 +51,7 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 
 	//the ray that hit something
 	public RaycastHit2D TileHit;
+	public RaycastHit2D TileHitDown;
 
 	//raycast related
 	public List<GameObject> rayPoints;
