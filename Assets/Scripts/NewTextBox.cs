@@ -63,7 +63,7 @@ public class NewTextBox : MonoBehaviour
         {
 			speakerLines.Add(textLines[i]);
         }
-        
+		endAtLine = speakerLines.Count;
     }
 
     void OnTriggerStay2D(Collider2D c)
@@ -95,35 +95,42 @@ public class NewTextBox : MonoBehaviour
     {
 		if (playerContact == true && Input.GetKey(KeyCode.E)){
 			if(!isTyping){
-				filespeaker = speakerLines[currentLine].Split(':');
+	//			filespeaker = speakerLines[currentLine].Split(':');
 				//Clears the other textboxes
 				boxArray[0].text = "";
 				boxArray[1].text = "";
 				boxArray[2].text = "";
 				boxArray[3].text = "";
-				if(speakerLines[currentLine].Contains(speaker1+":")){
-					theTextPlayer.color = Color.white;
-					speaker = 0;
-					currentLine++;
-				}
-				else if(speakerLines[currentLine].Contains(speaker2+":")){
-					theTextNPC1.color = Color.green;
-					speaker = 1;
-					currentLine++;
-				}
-				else if(speakerLines[currentLine].Contains(speaker3+":")){
-					theTextNPC2.color = Color.red;
-					speaker = 2;
-					currentLine++;
-				}
-				else if(speakerLines[currentLine].Contains(speaker4+":")){
-					theTextNPC3.color = Color.black;
-					speaker = 3;
-					currentLine++;
-				}
-				StartCoroutine(TextScroll(filespeaker[1], speaker));
-				Array.Clear(filespeaker,0,2); //clears our delimiter array from origin to the end
-
+			                if (currentLine < endAtLine)
+				                {
+				                    filespeaker = speakerLines[currentLine].Split(':');
+				                    if (speakerLines[currentLine].Contains(speaker1 + ":"))
+					                    {
+					                        theTextPlayer.color = Color.white;
+					                        speaker = 0;
+					                        currentLine++;
+					                    }
+				                    else if (speakerLines[currentLine].Contains(speaker2 + ":"))
+					                    {
+					                        theTextNPC1.color = Color.green;
+					                        speaker = 1;
+					                        currentLine++;
+					                    }
+				                    else if (speakerLines[currentLine].Contains(speaker3 + ":"))
+					                    {
+					                        theTextNPC2.color = Color.red;
+					                        speaker = 2;
+					                        currentLine++;
+					                    }
+				                    else if (speakerLines[currentLine].Contains(speaker4 + ":"))
+					                    {
+					                        theTextNPC3.color = Color.black;
+					                        speaker = 3;
+					                        currentLine++;
+					                    }
+				                    StartCoroutine(TextScroll(filespeaker[1], speaker));
+				                    Array.Clear(filespeaker, 0, 2); //clears our delimiter array from origin to the end
+				                }
 			}
 		}
     }
