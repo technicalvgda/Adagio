@@ -12,6 +12,9 @@ public class ThreeFluteButton : MonoBehaviour
         {
             firstContact = false;
             value++;
+
+            if (value > 3)
+                value = 1;
             Debug.Log(value);
         }
     }
