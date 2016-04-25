@@ -220,10 +220,8 @@ public class PlayerController : MonoBehaviour {
 						    {
 								if (rb2d.velocity.y <= 0)
 								{
-                                    slowFall = false;
-                                   
          
-                                    //slowFall = true;
+                                    slowFall = true;
                                    
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
