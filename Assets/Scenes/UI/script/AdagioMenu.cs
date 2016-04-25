@@ -3,8 +3,15 @@ using System.Collections;
 
 public class AdagioMenu : AdagioUIElement
 {
+    public float initialDelay;
     public AdagioSelectable[] selectables;
-    protected WaitForSeconds delay = new WaitForSeconds(0.2f);
+    protected WaitForSeconds waitDelay;
+    protected WaitForSeconds waitOffset = new WaitForSeconds(0.2f);
+    
+    public void Awake()
+    {
+        waitDelay = new WaitForSeconds(initialDelay);
+    }
 
     public override void Enter()
     {
@@ -21,20 +28,24 @@ public class AdagioMenu : AdagioUIElement
 
     protected virtual IEnumerator _SelectablesFadeIn()
     {
+        yield return waitDelay;
+
         for (int i = 0; i < selectables.Length; i++)
         {
             selectables[i].Enter();
-            yield return delay;
+            yield return waitOffset;
         }
 
         // This is supposed to enable the button after it has completely settled,
         // because doing it early will break the fade-in animation (due to it sharing
         // the same layer with Highlighted)
         // This is no longer necessary as the fade-in is moved to its own layer.
-        // Huge props to Unity for having the layer Weight default to fucking 0, so nothing appears to play
+        // Huge props to Unity for having the layer Weight default to 0, so nothing appears to play
         //for (int i = 0; i < 50; i++)
         //    yield return null;
-        SetAllInteractable(true);
+
+        // This is now done in the objects' animation clips.
+        //SetAllInteractable(true);
     }
 
     protected void SetAllInteractable(bool arg)

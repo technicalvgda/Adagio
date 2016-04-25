@@ -4,7 +4,7 @@ using System.Collections;
 public class CrossFadeControl : MonoBehaviour {
 
     public AudioSource audio1, audio2, audio3;
-    public AudioClip startingMusic;
+    public AudioClip level2p1, level2p2, level2p3, level3p1, level3p2, level3p3;
     
     
 	// Use this for initialization
@@ -17,8 +17,22 @@ public class CrossFadeControl : MonoBehaviour {
 
 
     }
-	
-	
+    public void StartLevelTwo()
+    {
+
+        audio1.clip = level2p1;
+        audio2.clip = level2p2;
+        audio3.clip = level2p3;
+
+    }
+    public void StartLevelThree()
+    {
+
+        audio1.clip = level3p1;
+        audio2.clip = level3p2;
+        audio3.clip = level3p3;
+    }
+
     public void CrossFadeOneTwo()
     {
        
@@ -47,7 +61,7 @@ public class CrossFadeControl : MonoBehaviour {
             fadeIn = audio1;
         }
         else//if both sources are silent (this shouldnt happen)
-        { StopCoroutine("ChangeMusic"); }
+        { StopCoroutine("ChangeMusicOneAndTwo"); }
 
         float fTimeCounter = 0f;
        
@@ -59,7 +73,7 @@ public class CrossFadeControl : MonoBehaviour {
             yield return new WaitForSeconds(0.02f);
         }
 
-        StopCoroutine("ChangeMusic");
+        StopCoroutine("ChangeMusicOneAndTwo");
     }
     // one fades out, two fades in
     private IEnumerator ChangeMusicTwoAndThree()
@@ -76,7 +90,7 @@ public class CrossFadeControl : MonoBehaviour {
             fadeIn = audio2;
         }
         else//if both sources are silent (this shouldnt happen)
-        {StopCoroutine("ChangeMusic");}
+        {StopCoroutine("ChangeMusicTwoAndThree");}
 
         float fTimeCounter = 0f;
 
@@ -88,7 +102,7 @@ public class CrossFadeControl : MonoBehaviour {
             yield return new WaitForSeconds(0.02f);
         }
 
-        StopCoroutine("ChangeMusic");
+        StopCoroutine("ChangeMusicTwoAndThree");
     }
 
 }
