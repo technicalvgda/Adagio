@@ -669,7 +669,7 @@ public class BoardCreator : MonoBehaviour
 					if (i == (int)(rooms.Length * .5f)) {
 
 
-						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos, rooms [0].yPos, 0);
+						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos-38f, rooms [0].yPos, 0);//Puts the teleporter in the hub
 						ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
