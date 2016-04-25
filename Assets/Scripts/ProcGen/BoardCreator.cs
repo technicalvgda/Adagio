@@ -664,21 +664,14 @@ public class BoardCreator : MonoBehaviour
 						
 					}
 
-					//Instantiates player in the i-th/2 room created
-					//Cast as int so condition is always reachable
-					if (i == (int)(rooms.Length * .5f)) {
-
-
-						Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos-38f, rooms [0].yPos, 0);//Puts the teleporter in the hub
-						ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
-						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
-
-					}
-
 					if (i == (int)(rooms.Length - 1)) {
 						if (rooms [rooms.Length - 1] != null) {
 							Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
 							ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
+							ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
+
+							Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos-38f, rooms [0].yPos, 0);//Puts the teleporter in the hub
+							ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
 							ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						}
 					}

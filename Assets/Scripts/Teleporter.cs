@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Teleporter : MonoBehaviour {
 
-    public GameObject playerTeleportPlat;
+    private GameObject playerTeleportPlat;
     private GameObject player;
 
     public bool isInTeleporter;
@@ -13,7 +13,7 @@ public class Teleporter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-       
+       playerTeleportPlat = GameObject.FindWithTag("TeleportEnd");
 	}
 	
 	// Update is called once per frame
@@ -32,9 +32,9 @@ public class Teleporter : MonoBehaviour {
         
     }
 
-	   void OnTriggerExit2D(Collider2D col){
-		   		isInTeleporter = false;
-		   }
+	void OnTriggerExit2D(Collider2D col){
+		isInTeleporter = false;
+	}
 
 	   
 	//Subscribe Activate method to the OnTap Event when object becomes active
