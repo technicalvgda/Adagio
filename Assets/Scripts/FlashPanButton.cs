@@ -30,7 +30,6 @@ public class FlashPanButton : MonoBehaviour
 			{
 				if (target != null)
 				{
-				puzzleOver = false;
 					panState = state.pantoward;
 					player = c.transform;
 					camPos = Camera.main.transform.position;

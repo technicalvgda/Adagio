@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class Metronome : MonoBehaviour {
-    bool on;
-    public GameObject plate;
+    bool on; 
+    public GameObject BeginButton;
     float timing;
     SpriteRenderer sr;
 
@@ -19,7 +19,7 @@ public class Metronome : MonoBehaviour {
 
     IEnumerator Blink()
     {
-		while (!plate.GetComponent<FlashPanButton> ().puzzleOver)
+		while (!BeginButton.GetComponent<FlashBeginButton> ().puzzleOver)
 		{
 			sr.color = Color.white;
 			yield return new WaitForSeconds(1);
