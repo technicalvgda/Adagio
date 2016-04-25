@@ -147,7 +147,7 @@ public class CapturePNG : MonoBehaviour
             {
                 System.IO.File.Delete(filename);
             }
-            System.IO.File.WriteAllBytes(filename, bytes);
+            //System.IO.File.WriteAllBytes(filename, bytes);
         }
         catch (System.IO.IOException e)
         {
