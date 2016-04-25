@@ -220,10 +220,11 @@ public class PlayerController : MonoBehaviour {
 						    {
 								if (rb2d.velocity.y <= 0)
 								{
-                                    anim.SetTrigger("Jump");
-                                    anim.SetBool("Airborne", true);
+                                    slowFall = false;
+                                   
          
-                                    slowFall = true;
+                                    //slowFall = true;
+                                   
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
@@ -231,6 +232,11 @@ public class PlayerController : MonoBehaviour {
                                     moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
 									rb2d.velocity = new Vector2(rb2d.velocity.x, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
                                     
+                                    //only on midair jumps
+				                    if(!raycast.collisionDown){
+					                    jumpRand = Random.Range(0, blockArray.Count);
+					                    Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+                                    }
 								}
 								//If player tries to jump before apex, they cannot jump for a set time
 								else 
@@ -332,4 +338,5 @@ public class PlayerController : MonoBehaviour {
     		}
     	}
     }
+   
  }
