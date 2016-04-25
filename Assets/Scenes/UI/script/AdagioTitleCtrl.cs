@@ -6,7 +6,7 @@ using System.Collections;
 // spr_: A sprite
 // menu_: A set of UI elements
 // scrn_: A menu on top of a background
-public class AdagioTitleScreen : MonoBehaviour
+public class AdagioTitleCtrl : MonoBehaviour
 {
     [Header("Graphics")]
     public SpriteRenderer spriteFade;
@@ -78,23 +78,23 @@ public class AdagioTitleScreen : MonoBehaviour
 
     IEnumerator _Run()
     {
-        yield return _ForceLoad();
-        for (int i = 0; i < 60; i++) yield return null;
+        //yield return _ForceLoad();
+        for (int i = 0; i < 30; i++) yield return null;
 
-        objIntro.SetActive(true);
+        //objIntro.SetActive(true);
         audioCtrl.PlayBgm(0, true);
 
-        for (int i = 0; i < 1480; i++)
+        /*for (int i = 0; i < 1480; i++)
         {
             if (Input.anyKeyDown)
             {
                 break;
             }
             yield return null;
-        }
+        }*/
 
         // Fade to the logo
-        {
+        /*{
             while (spriteFade.color.a < 1)
             {
                 spriteFade.color += new Color(0.05f, 0.05f, 0.05f, 0.05f);
@@ -113,7 +113,7 @@ public class AdagioTitleScreen : MonoBehaviour
                 yield return null;
             }
             spriteFade.color = Color.clear;
-        }
+        }*/
 
         objButtonBar.SetActive(true);
 
