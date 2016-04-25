@@ -1034,19 +1034,19 @@ public class BoardCreator : MonoBehaviour
 					switch (currentCorridor.direction) 
 					{
 					case Direction.North:
-						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos + currentCorridor.corridorLength-2, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos+3, currentCorridor.startYPos + currentCorridor.corridorLength-2, 0), Quaternion.identity) as GameObject;
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.East:
-						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength-2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorLength-2, currentCorridor.startYPos+1, 0), Quaternion.identity) as GameObject;
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.South:
-						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos + currentCorridor.corridorWidth / 2.0f, currentCorridor.startYPos - currentCorridor.corridorLength+2, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos+3, currentCorridor.startYPos - currentCorridor.corridorLength+1, 0), Quaternion.identity) as GameObject;
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					case Direction.West:
-						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength+2, currentCorridor.startYPos + currentCorridor.corridorWidth / 2.0f, 0), Quaternion.identity) as GameObject;
+						ChildOfBoardHolder = Instantiate (codexArray[element], new Vector3 (currentCorridor.startXPos - currentCorridor.corridorLength+2, currentCorridor.startYPos+1, 0), Quaternion.identity) as GameObject;
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						break;
 					}
