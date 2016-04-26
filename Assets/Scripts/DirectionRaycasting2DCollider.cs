@@ -199,7 +199,11 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 			//check all rays
 			TileHit = Physics2D.Raycast(rayList[i].origin, rayList[i].direction,rayDistance + .001f);
 
-			if(TileHit != null && TileHit.collider != null && TileHit.collider.tag == "WallTile" )//&& TileHit.collider.tag != "Phasing Platform")
+			/*if(TileHit != null && TileHit.collider != null && TileHit.collider.tag == "WallTile" )//&& TileHit.collider.tag != "Phasing Platform")
+			{
+				return true;
+			}*/
+			if(TileHit != null && TileHit.collider != null && TileHit.collider.tag != "Phasing Platform")
 			{
 				return true;
 			}

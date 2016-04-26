@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Codex : MonoBehaviour {
 	public bool onCodex;
-	public int travelDistance = 1;
+	public float travelDistance = 1f;
 	public float speed = 1;
 	private Vector3 codexPosition;
 	private Vector3 startingPosition;
@@ -25,7 +25,7 @@ public class Codex : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
-		transform.position = new Vector3 (transform.position.x, Mathf.PingPong (Time.time*speed, 1)+startingPosition.y, transform.position.z);
+		transform.position = new Vector3 (transform.position.x, Mathf.PingPong (Time.time*speed, travelDistance)+startingPosition.y, transform.position.z);
 
 	}
 
