@@ -5,6 +5,8 @@ using System;
 
 public class GongController : MonoBehaviour {
 
+	private GameObject gong;
+	private AudioSource gongAudio;
     SpriteRenderer sr, ss;
     public GameObject SimonSaysSwitch;
     public GameObject sb1, sb2, sb3, sb4, sb5, sb6, sb7, sb8, sb9;
@@ -19,6 +21,8 @@ public class GongController : MonoBehaviour {
     void Start()
     {
         // Get a reference to the SpriteRenderer so that we can change the button's color.
+		gong = GameObject.Find("Gong");
+		gongAudio = gong.GetComponent<AudioSource> ();
         gameObject.SetActive(true);
         sequence.Add(3);
         sequence.Add(2);
@@ -85,7 +89,11 @@ public class GongController : MonoBehaviour {
             }
             if (b1 == true && b2 == true && b3 == true && b4 == true)
             {
+				gongAudio.PlayOneShot (gongAudio.clip, 1.0f);
                 GameObject.Destroy(door);
+
+
+
 				Camera.main.GetComponent<OpenGate> ().doneCounter++;
 				this.gameObject.SetActive (false);
             }
