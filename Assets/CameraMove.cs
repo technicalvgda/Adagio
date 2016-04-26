@@ -49,14 +49,16 @@ public class CameraMove : MonoBehaviour
                 camPos = Vector3.SmoothDamp(camPos, new Vector3(target.transform.position.x, target.transform.position.y, camPos.z), ref currentVelocity, panTime);
                 Camera.main.transform.position = camPos;
                 Debug.Log(currentVelocity);
-				Invoke ("startDialog", 1f);
+				Invoke ("startDialog", 1.5f);
 
-                if (Vector2.Distance(camPos, target.transform.position) < 0.1f && Input.GetKeyDown(KeyCode.E))
-                {
+                //if (Vector2.Distance(camPos, target.transform.position) < 0.1f && Input.GetKeyDown(KeyCode.E))
+				if (Vector2.Distance(camPos, target.transform.position) < 0.1f && finished)
+				{
                     
                     Invoke("startPanBack", stayTime);
                     panState = state.panwait;
                     finished = true;
+				
                 }
 
             }

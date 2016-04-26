@@ -39,7 +39,6 @@ public class TextBoxManager : MonoBehaviour {
 
 	void Update() {
 
-
 		//Press enter to read each sentence.
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			if (!isTyping) {
@@ -48,6 +47,11 @@ public class TextBoxManager : MonoBehaviour {
 
 				if (currentLine > endAtLine) {
 					textBox.SetActive (false);
+					GameObject button = GameObject.Find ("ButtonScene");
+					if (button != null) {
+						CameraMove cameraMove = button.GetComponent<CameraMove> ();
+						cameraMove.finished = true;
+					}
 				} 
 				else 
 				{
