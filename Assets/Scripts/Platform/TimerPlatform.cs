@@ -119,7 +119,7 @@ public class TimerPlatform : MonoBehaviour {
 			GameObject rayDown = GameObject.Find ("Player");
 			DirectionRaycasting2DCollider ray = rayDown.GetComponent<DirectionRaycasting2DCollider> ();
 			if (ray.collisionDown && !ray.collisionLeft && !ray.collisionRight && !ray.collisionUp) {
-
+				Debug.Log ("Platform name: " + platform.name);
 				Debug.Log ("Time in checkPlayer" +time);
 				GameObject theDoorBell = GameObject.Find ("DoorBellRoom");
 				if (theDoorBell != null) {
