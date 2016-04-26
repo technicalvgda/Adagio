@@ -24,9 +24,10 @@ public class TextBoxManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		endAtLine = 0;
 		player = FindObjectOfType<PlayerController> ();
 		if (textFile != null) {
-			textLines = (textFile.text.Split ('\n'));
+			textLines = (textFile.text.Split ('@'));
 		}
 
 		if (endAtLine == 0) {
@@ -47,7 +48,7 @@ public class TextBoxManager : MonoBehaviour {
 
 				if (currentLine > endAtLine) {
 					textBox.SetActive (false);
-					GameObject button = GameObject.Find ("ButtonScene");
+					GameObject button = GameObject.Find ("Button");
 					if (button != null) {
 						CameraMove cameraMove = button.GetComponent<CameraMove> ();
 						cameraMove.finished = true;
