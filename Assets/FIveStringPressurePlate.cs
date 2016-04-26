@@ -3,7 +3,6 @@ using System.Collections;
 
 public class FIveStringPressurePlate : MonoBehaviour {
     public GameObject pp1, pp2, pp3, pp4, pp5, door;
-
 	// Use this for initialization
 	void Start () {
        
@@ -63,6 +62,8 @@ public class FIveStringPressurePlate : MonoBehaviour {
             pp5.GetComponent<Renderer>().enabled = false;
             pp5.SetActive(false);
             GameObject.Destroy(door);
+			Camera.main.GetComponent<OpenGate> ().doneCounter++;
+			this.gameObject.SetActive (false);
         }
     }
 

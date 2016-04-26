@@ -64,6 +64,8 @@ public class FluteController : MonoBehaviour {
         if (solution[0].state == true && solution[1].state == true && solution[2].state == true)
         {
             Debug.Log("Flute solved");
+			Camera.main.GetComponent<OpenGate> ().doneCounter++;
+			this.gameObject.SetActive (false);
         }
 
     }

@@ -16,7 +16,6 @@ public class GongController : MonoBehaviour {
     int state = 0;
     int rnd = 0;
 
-
     void Start()
     {
         // Get a reference to the SpriteRenderer so that we can change the button's color.
@@ -87,6 +86,8 @@ public class GongController : MonoBehaviour {
             if (b1 == true && b2 == true && b3 == true && b4 == true)
             {
                 GameObject.Destroy(door);
+				Camera.main.GetComponent<OpenGate> ().doneCounter++;
+				this.gameObject.SetActive (false);
             }
         }
       // Debug.Log(bpressed[0] + bpressed[1] + bpressed[2] + bpressed[3]);
