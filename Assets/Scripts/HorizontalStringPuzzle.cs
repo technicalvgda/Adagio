@@ -96,6 +96,7 @@ public class HorizontalStringPuzzle : MonoBehaviour {
         if (solution[0] == topNoteIndex && solution[1]== midNoteIndex && solution[2]== bottomNoteIndex  && complete == false)
         {
             Debug.Log("You solved the string puzzle");
+            StartCoroutine(PlayWin());
             complete = true;
             Camera.main.GetComponent<OpenGate>().doneCounter++;
         }
@@ -184,6 +185,19 @@ public class HorizontalStringPuzzle : MonoBehaviour {
         audioSource.Play();
         yield return new WaitForSeconds(1);
     }
+    IEnumerator PlayWin()
+    {
+        yield return new WaitForSeconds(1);
+        audioSource.clip = topClips[solution[0]];
+        audioSource.Play();
+        yield return new WaitForSeconds(0.2f);
+        audioSource.clip = middleClips[solution[1]];
+        audioSource.Play();
+        yield return new WaitForSeconds(0.2f);
+        audioSource.clip = bottomClips[solution[2]];
+        audioSource.Play();
+        yield return new WaitForSeconds(0.2f);
+    }
 
-    
+
 }

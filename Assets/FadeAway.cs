@@ -23,7 +23,7 @@ public class FadeAway : MonoBehaviour {
 		if(t < fadeTime){
 			t += Time.deltaTime;
 			rend.material.color = Color.Lerp(startCol, fadeCol, t/fadeTime);
-			Debug.Log(rend.material.color.a);
+			//Debug.Log(rend.material.color.a);
 			if(t > fadeTime){
 				Destroy(this.gameObject);
 			}
