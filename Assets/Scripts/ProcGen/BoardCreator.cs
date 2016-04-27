@@ -76,9 +76,10 @@ public class BoardCreator : MonoBehaviour
 	public GameObject Gate1;
 	public GameObject Gate2;
 	bool needRoomsAndCorridorsCreation;
-
+	private Camera mainCamera;
     private void Start()
     {
+		mainCamera = Camera.main;
         LoadingScreenCanvas.SetActive(true);
 		needRoomsAndCorridorsCreation = true;
         //Set to false when starting the generation
@@ -141,8 +142,20 @@ public class BoardCreator : MonoBehaviour
 
    	void FixedUpdate()
 	{	
-		
+		if (mainCamera.GetComponent<OpenGate> ().doneCounter == 3) 
+		{
+			//spawn the teleporter
+			Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
+			ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
+			Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos-38f, rooms [0].yPos, 0);//Puts the teleporter in the hub
+			ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
+
+			//set counter to 0
+			mainCamera.GetComponent<OpenGate> ().doneCounter = 0;
+		}
 		if (LoadingScreenCanvas.activeSelf == true)
 		{
 			LoadingScreenCanvas.SetActive(false);
@@ -676,6 +689,7 @@ public class BoardCreator : MonoBehaviour
 
 					//Instantiates player in the i-th/2 room created
 					//Cast as int so condition is always reachable
+					/*
 					if (i == (int)(rooms.Length * .5f)) {
 
 
@@ -684,14 +698,14 @@ public class BoardCreator : MonoBehaviour
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
 					}
-
+					/*
 					if (i == (int)(rooms.Length - 1)) {
 						if (rooms [rooms.Length - 1] != null) {
 							Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
 							ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
 							ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						}
-					}
+					}*/
 				}
 			}
 

@@ -29,7 +29,6 @@ public class OpenGate : MonoBehaviour {
 		if (doneCounter == 2) 
 		{
 			gate2.SetActive (false);
-			doneCounter = 0;
 		}
 	}
 }
