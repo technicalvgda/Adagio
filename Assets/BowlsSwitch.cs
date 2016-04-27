@@ -6,10 +6,11 @@ public class BowlsSwitch : MonoBehaviour {
     public bool stepped;
     int state = 0;
     public bool pressed;
+    public bool cheat;
 
     void Start()
     {
-
+        cheat = false;
         stepped = false;
         pressed = false;
 
@@ -24,6 +25,10 @@ public class BowlsSwitch : MonoBehaviour {
         {
             Debug.Log("ON");
             pressed = true;
+        }
+        if (stepped && Input.GetKeyDown(KeyCode.K))
+        {
+            cheat = true;
         }
     }
 
