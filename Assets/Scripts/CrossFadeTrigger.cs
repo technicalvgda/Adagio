@@ -14,9 +14,11 @@ public class CrossFadeTrigger : MonoBehaviour {
     {
         if(audioHandler == null)
         {
-            Debug.Log("Place an audiohandler prefab into the scene and drag it to this object in the inspector");
+			audioHandler = GameObject.Find ("AudioHandler");
+           // Debug.Log("Place an audiohandler prefab into the scene and drag it to this object in the inspector");
         }
         handlerScript = audioHandler.GetComponent<CrossFadeControl>();
+        
 	}
 	
 	void OnTriggerEnter2D(Collider2D col)
