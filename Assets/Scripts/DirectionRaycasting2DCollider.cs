@@ -203,9 +203,9 @@ public class DirectionRaycasting2DCollider : MonoBehaviour
 			{
 				return true;
 			}*/
-			if(TileHit != null && TileHit.collider != null && TileHit.collider.tag != "Phasing Platform"
-                && TileHit.collider.tag != "InvisibleTrigger")
-			{
+			if(TileHit != null && TileHit.collider != null && TileHit.collider.tag != "InvisibleTrigger")//&&TileHit.collider.tag != "Phasing Platform"
+
+            {
 				return true;
 			}
 		}
