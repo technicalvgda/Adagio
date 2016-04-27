@@ -5,10 +5,12 @@ public class CrossFadeControl : MonoBehaviour {
 
     public AudioSource audio1, audio2, audio3;
     public AudioClip level2p1, level2p2, level2p3, level3p1, level3p2, level3p3;
-    
-    
-	// Use this for initialization
-	void Start ()
+
+
+    int levelsComplete = 0;
+    public int levelToActivate;
+    // Use this for initialization
+    void Start ()
     {
         
         audio1.volume = 1;
@@ -17,20 +19,40 @@ public class CrossFadeControl : MonoBehaviour {
 
 
     }
+    void OnDisable()
+    {
+        Teleporter.OnTeleport -= IncreaseLevels;
+    }
+    void OnEnable()
+    {
+        Teleporter.OnTeleport += IncreaseLevels;
+    }
+    void IncreaseLevels()
+    {
+        levelsComplete++;
+        if(levelsComplete == 1)
+        {
+            StartLevelTwo();
+        }
+        if (levelsComplete == 2)
+        {
+            StartLevelThree();
+        }
+    }
     public void StartLevelTwo()
     {
 
         audio1.clip = level2p1;
-        audio2.clip = level2p2;
-        audio3.clip = level2p3;
+        StartCoroutine(ChangeMusicNextLevel(level2p2, level2p3));
+       
 
     }
     public void StartLevelThree()
     {
 
         audio1.clip = level3p1;
-        audio2.clip = level3p2;
-        audio3.clip = level3p3;
+        StartCoroutine(ChangeMusicNextLevel(level3p2, level3p3));
+        
     }
 
     public void CrossFadeOneTwo()
@@ -103,6 +125,28 @@ public class CrossFadeControl : MonoBehaviour {
         }
 
         StopCoroutine("ChangeMusicTwoAndThree");
+    }
+    ///fades three to one
+    private IEnumerator ChangeMusicNextLevel(AudioClip clip2, AudioClip clip3)
+    {
+        AudioSource fadeOut = null, fadeIn = null;
+       //set audio 1 to new music
+        fadeOut = audio3;
+        fadeIn = audio1;
+      
+        //do fade
+        float fTimeCounter = 0f;
+
+        while (!(Mathf.Approximately(fTimeCounter, 1f)))
+        {
+            fTimeCounter = Mathf.Clamp01(fTimeCounter + Time.deltaTime);
+            fadeOut.volume = 1f - fTimeCounter;
+            fadeIn.volume = fTimeCounter;
+            yield return new WaitForSeconds(0.02f);
+        }
+        audio2.clip = clip2;
+        audio3.clip = clip3;
+        StopCoroutine("ChangeMusicNextLevel");
     }
 
 }
