@@ -13,11 +13,14 @@ public class CameraMove : MonoBehaviour
     public float panTime = 0.75f;
     public float stayTime = 2f;
     public GameObject target;
+	public GameObject CanvasObject;
+	public GameObject TextBoxManager;
     state panState = state.notpanning;
     Transform player;
     Vector3 camPos;
     Vector3 currentVelocity = Vector3.zero;
     public bool finished = false;
+
 
     void OnTriggerStay2D(Collider2D c)
     {
@@ -46,13 +49,18 @@ public class CameraMove : MonoBehaviour
                 camPos = Vector3.SmoothDamp(camPos, new Vector3(target.transform.position.x, target.transform.position.y, camPos.z), ref currentVelocity, panTime);
                 Camera.main.transform.position = camPos;
                 Debug.Log(currentVelocity);
-                if (Vector2.Distance(camPos, target.transform.position) < 0.1f && Input.GetKeyDown(KeyCode.E))
-                {
+				Invoke ("startDialog", 1.5f);
+
+                //if (Vector2.Distance(camPos, target.transform.position) < 0.1f && Input.GetKeyDown(KeyCode.E))
+				if (Vector2.Distance(camPos, target.transform.position) < 0.1f && finished)
+				{
                     
                     Invoke("startPanBack", stayTime);
                     panState = state.panwait;
                     finished = true;
+				
                 }
+
             }
             else if (panState == state.panback)
             {
@@ -71,4 +79,9 @@ public class CameraMove : MonoBehaviour
         player.GetComponent<PlayerController>().enabled = true;
         panState = state.panback;
     }
+
+	void startDialog() {
+		CanvasObject.SetActive (true);
+		TextBoxManager.SetActive (true);
+	}
 }

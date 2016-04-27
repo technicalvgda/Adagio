@@ -6,14 +6,13 @@ public class FluteController : MonoBehaviour {
 	public Flute flute1, flute2, flute3, flute4, flute5;
 	List<Flute> fluteArray = new List<Flute>();
 	Flute temp;
-	int randStart, index;
+	int randStart, index = -1;
 	private Flute[] solution = new Flute[3];
 	public List<Flute> wipSolution = new List<Flute>();
 	private SpriteRenderer sr;
 	private Color solutionColor;
 	// Use this for initialization
 	void Start () {
-        index = -1;
 		sr = this.GetComponent<SpriteRenderer>();
         fluteArray.Add(flute1);
         fluteArray.Add(flute2);
@@ -46,7 +45,7 @@ public class FluteController : MonoBehaviour {
         //if our array is maxed out, then ignores this add
         //if we press a button for a fltue in the array, we remove it from the progress array, allowing us to add a new flute
         index++;
-        if (index > 5)
+        if (index >= 5)
         {
             index = 0;
         }
@@ -55,9 +54,9 @@ public class FluteController : MonoBehaviour {
             wipSolution.Add(fluteArray[index]);
             Debug.Log("Added to progress");
         }
-        if (index <= wipSolution.Count && wipSolution[index].state == false)
+		if (fluteArray[index].state == false && wipSolution.Contains(fluteArray[index]))
         {
-            wipSolution.RemoveAt(index);
+			wipSolution.Remove(fluteArray[index]);
             Debug.Log("removed from progress");
             index--;
         }
@@ -65,6 +64,8 @@ public class FluteController : MonoBehaviour {
         if (solution[0].state == true && solution[1].state == true && solution[2].state == true)
         {
             Debug.Log("Flute solved");
+			Camera.main.GetComponent<OpenGate> ().doneCounter++;
+			this.gameObject.SetActive (false);
         }
 
     }

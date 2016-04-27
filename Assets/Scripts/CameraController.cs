@@ -9,8 +9,18 @@ public class CameraController : MonoBehaviour {
 	private Vector3 offset; //Set relative position to player object
 	private float cameraCatchup;
 	public float playerCameraOffset;
+
+    float minXDist = -71.5f;
 	void Awake() {
-		playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
+
+#if UNITY_IPHONE
+   Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+
+#if UNITY_ANDROID
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#endif
+        playerRB2D = GameObject.FindWithTag ("Player").GetComponent<Rigidbody2D> ();
 	}
 
 	    // Use this for initialization
@@ -24,16 +34,24 @@ public class CameraController : MonoBehaviour {
 	void FixedUpdate() {
 		
 		if (player == null) {
-			player = GameObject.Find ("Player");
-		} else {
+			//player = GameObject.Find ("Player");
+            player = GameObject.FindGameObjectWithTag("Player");
+		} else{
 			//if player if falling then set the camera catchup to the absolute of the player velocity divided by catchupDivisor
 			if (playerRB2D.velocity.y < 0.0f) {
 				cameraCatchup = Mathf.Abs (playerRB2D.velocity.y / catchupDivisor);
 			} else {
 				cameraCatchup = 0.0f;
 			}
-			//Follow the player code
-			transform.position = Vector3.Lerp (transform.position, new Vector3 (player.transform.position.x, player.transform.position.y+playerCameraOffset, transform.position.z),  Time.deltaTime*(damping+cameraCatchup));
+            //Follow the player code 
+            if (player.transform.position.x >= minXDist)
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + playerCameraOffset, transform.position.z), Time.deltaTime * (damping + cameraCatchup));
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, player.transform.position.y + playerCameraOffset, transform.position.z), Time.deltaTime * (damping + cameraCatchup));
+            }
 		}
 
 	}
