@@ -15,7 +15,7 @@ public class AdagioSelectable : AdagioUIElement
     // Start() is called before the first Update() call (LATE)
     // Awake() is called as part of the instantiation process (EARLY)
 
-    public void Awake()
+    void Awake()
     {
         t = this.transform;
         selectable = this.GetComponent<Selectable>();

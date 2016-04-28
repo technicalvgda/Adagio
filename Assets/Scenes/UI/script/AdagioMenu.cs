@@ -8,7 +8,7 @@ public class AdagioMenu : AdagioUIElement
     protected WaitForSeconds waitDelay;
     protected WaitForSeconds waitOffset = new WaitForSeconds(0.2f);
     
-    public void Awake()
+    void Awake()
     {
         waitDelay = new WaitForSeconds(initialDelay);
     }
