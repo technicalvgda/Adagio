@@ -89,7 +89,7 @@ public class GongController : MonoBehaviour {
             }
             if (b1 == true && b2 == true && b3 == true && b4 == true)
             {
-				gongAudio.PlayOneShot (gongAudio.clip, 1.0f);
+				//gongAudio.PlayOneShot (gongAudio.clip, 1.0f);
 				door.SetActive (false);
 
 

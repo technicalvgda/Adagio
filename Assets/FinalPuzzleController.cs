@@ -3,6 +3,8 @@ using System.Collections;
 
 public class FinalPuzzleController : MonoBehaviour
 {
+	public bool FinalPuzzleDone;
+	public bool FinalPuzzleReady;
     bool phase1 = true, phase2 = false, phase3 = false, start = true;
     public GameObject[] buttons = new GameObject[9];
     int[] sequence = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -13,7 +15,9 @@ public class FinalPuzzleController : MonoBehaviour
     bool collide = false;
     // Use this for initialization
     void Start () {
-       
+		FinalPuzzleDone = false;
+		FinalPuzzleReady = false;
+		player = GameObject.FindGameObjectWithTag ("Player");
     }
 	
 	// Update is called once per frame
@@ -171,6 +175,7 @@ public class FinalPuzzleController : MonoBehaviour
                 && sequence[3] == pressed[3] && sequence[4] == pressed[4] && sequence[5] == pressed[5] && sequence[6] == pressed[6]
                 && sequence[7] == pressed[7] && sequence[8] == pressed[8])
             {
+				FinalPuzzleDone = true;
                 Debug.Log("DONE");
             }
         }

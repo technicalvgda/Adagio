@@ -8,6 +8,8 @@ public class ZoomOut : MonoBehaviour
     Vector3 cameraLocation;
     public float zoomAmount;
     float originalZoomAmount;
+	CrossFadeControl audioHandler;
+	float vol1, vol2, vol3;
 
 	// Use this for initialization
 	void Start ()
@@ -19,6 +21,7 @@ public class ZoomOut : MonoBehaviour
         originalZoomAmount = playerCamera.orthographicSize;
         zoomAmount += playerCamera.orthographicSize;
         cameraLocation.z = playerCamera.transform.position.z;
+		audioHandler = GameObject.Find ("AudioHandler").GetComponent<CrossFadeControl> ();
     }
 	
 	
@@ -27,6 +30,21 @@ public class ZoomOut : MonoBehaviour
        
         if (col.tag == "Player")
         {
+			vol1 = audioHandler.audio1.volume;
+			if (audioHandler.audio1.volume > 0.5f) 
+			{
+				audioHandler.audio1.volume = 0.2f;
+			}
+			vol2 = audioHandler.audio3.volume;
+			if (audioHandler.audio2.volume > 0.5f) 
+			{
+				audioHandler.audio2.volume = 0.2f;
+			}
+			vol3 = audioHandler.audio3.volume;
+			if (audioHandler.audio3.volume > 0.5f) 
+			{
+				audioHandler.audio3.volume = 0.2f;
+			}
             StopCoroutine(ReturnZoom());
             playerCamControl.enabled = false;
             playerCamera.transform.position =Vector3.Lerp(playerCamera.transform.position, cameraLocation, Time.deltaTime);
@@ -44,6 +62,10 @@ public class ZoomOut : MonoBehaviour
     {
         if (col.tag == "Player")
         {
+			audioHandler.audio1.volume = vol1;
+			audioHandler.audio2.volume = vol2;
+			audioHandler.audio3.volume = vol3;
+
             playerCamControl.enabled = true;
             //playerCamera.orthographicSize = originalZoomAmount;
             StartCoroutine(ReturnZoom());

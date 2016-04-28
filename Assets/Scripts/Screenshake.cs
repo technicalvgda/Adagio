@@ -35,7 +35,7 @@ public class Screenshake : MonoBehaviour
 			Camera.main.transform.rotation = new Quaternion(
 				origRot.x + Random.Range(-shake_intensity, shake_intensity) * 2f,
 				origRot.y + Random.Range(-shake_intensity, shake_intensity) * 2f,
-				origRot.z + Random.Range(-shake_intensity, shake_intensity) * 2f,
+				origRot.z ,//+ Random.Range(-shake_intensity, shake_intensity) * 2f,
 				origRot.w + Random.Range(-shake_intensity, shake_intensity) * 2f);
 			//lessening the shake over time
 			shake_intensity -= shake_decay;
