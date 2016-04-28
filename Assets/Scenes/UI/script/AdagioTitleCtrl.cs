@@ -26,6 +26,8 @@ public class AdagioTitleCtrl : MonoBehaviour
     public int startIndex = 0;
     [Tooltip("Build index of the loading screen")]
     public int loaderIndex = -1;
+    [Tooltip("Build index of the credits screen")]
+    public int creditsIndex = 0;
 
     WaitForSeconds delay05s = new WaitForSeconds(0.5f);
     WaitForSeconds delay1s = new WaitForSeconds(1);
@@ -92,8 +94,8 @@ public class AdagioTitleCtrl : MonoBehaviour
     IEnumerator _Run()
     {
         // Enable only one
-        //yield return _ForceLoad();
-        yield return delay05s;
+        yield return _ForceLoad();
+        //yield return delay05s;
         //yield return delay1s;
 
         objIntro.SetActive(true);
@@ -164,8 +166,10 @@ public class AdagioTitleCtrl : MonoBehaviour
         menuCurrent = menu;
     }
 
-    public void StartGame() { if (loaderIndex > 0) StartCoroutine(_StartGame() ); }
-    IEnumerator _StartGame()
+    public void ToGame() { if (loaderIndex > 0) StartCoroutine(_LoadIndex(startIndex) ); }
+    public void ToCredits() { if (loaderIndex > 0) StartCoroutine(_LoadIndex(creditsIndex) ); }
+
+    IEnumerator _LoadIndex(int index)
     {
         // a method called StartGame is not supposed to do this but
         // it isn't like there's a black fade/audio fade anywhere else (lol
@@ -189,7 +193,7 @@ public class AdagioTitleCtrl : MonoBehaviour
         yield return null;
 
         // Set this to the desired scene's build index; invalid values will default to title
-        AdagioLoad.destination = startIndex;
+        AdagioLoad.destination = index;
         // Loading the load scene after this will bring you to the destination scene
         SceneManager.LoadScene(loaderIndex);
     }

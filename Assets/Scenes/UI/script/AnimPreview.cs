@@ -22,9 +22,4 @@ public class AnimPreview : MonoBehaviour
         //anim.Play("Blank", 0);
         anim.Play("Blank", 1);
     }
-    
-    //in your dreams
-    //public Animation[] anims;
-    //public string[] clips;
-    //public void Play(int animIndex, int clipIndex) {}
 }
