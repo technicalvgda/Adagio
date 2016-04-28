@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Teleporter : MonoBehaviour {
 
-    public GameObject playerTeleportPlat;
+    private GameObject playerTeleportPlat;
     private GameObject player;
 
     public bool isInTeleporter;
@@ -17,10 +17,16 @@ public class Teleporter : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.E)){
+	void Update () 
+	{
+		if (playerTeleportPlat == null) 
+		{
+			playerTeleportPlat = GameObject.Find ("PlayerTeleport[end](Clone)");
+		}
+		else if(Input.GetKeyDown(KeyCode.E))
+		{
 			Teleport();
-						}
+		}
 
     }
 

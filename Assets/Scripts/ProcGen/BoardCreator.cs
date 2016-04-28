@@ -73,11 +73,13 @@ public class BoardCreator : MonoBehaviour
 
 	public GameObject AudioTrigger1;
 	public GameObject AudioTrigger2;
-	public GameObject LastRoomGate;
+	public GameObject Gate1;
+	public GameObject Gate2;
 	bool needRoomsAndCorridorsCreation;
-
+	private Camera mainCamera;
     private void Start()
     {
+		mainCamera = Camera.main;
         LoadingScreenCanvas.SetActive(true);
 		needRoomsAndCorridorsCreation = true;
         //Set to false when starting the generation
@@ -114,8 +116,15 @@ public class BoardCreator : MonoBehaviour
             spawnAudioTrigger(corridors[2], AudioTrigger1);
         if (corridors[3] != null)
             spawnAudioTrigger(corridors[3], AudioTrigger2);
-		if (aCorridors [aCorridors.Length - 1] != null)
-			spawnGate (aCorridors [aCorridors.Length - 1], LastRoomGate);
+		
+		//The last gate
+		if (corridors [corridors.Length - 1] != null)
+			spawnGate (corridors [corridors.Length - 1], Gate2);
+		//The second to last gate
+		if (corridors [corridors.Length - 2] != null)
+			spawnGate (corridors [corridors.Length - 2], Gate1);
+		
+
 		
 		SpawnPuzzles ();
 
@@ -133,8 +142,20 @@ public class BoardCreator : MonoBehaviour
 
    	void FixedUpdate()
 	{	
-		
+		if (mainCamera.GetComponent<OpenGate> ().doneCounter == 3) 
+		{
+			//spawn the teleporter
+			Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
+			ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
+			Vector3 playerTeleportPlatPos = new Vector3 (rooms [0].xPos-38f, rooms [0].yPos, 0);//Puts the teleporter in the hub
+			ChildOfBoardHolder =  Instantiate (playerTeleportPlat, playerTeleportPlatPos, Quaternion.identity) as GameObject;
+			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
+
+			//set counter to 0
+			mainCamera.GetComponent<OpenGate> ().doneCounter = 0;
+		}
 		if (LoadingScreenCanvas.activeSelf == true)
 		{
 			LoadingScreenCanvas.SetActive(false);
@@ -668,6 +689,7 @@ public class BoardCreator : MonoBehaviour
 
 					//Instantiates player in the i-th/2 room created
 					//Cast as int so condition is always reachable
+					/*
 					if (i == (int)(rooms.Length * .5f)) {
 
 
@@ -676,14 +698,14 @@ public class BoardCreator : MonoBehaviour
 						ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 
 					}
-
+					/*
 					if (i == (int)(rooms.Length - 1)) {
 						if (rooms [rooms.Length - 1] != null) {
 							Vector3 teleporterPos = new Vector3 (rooms [rooms.Length - 1].xPos, rooms [rooms.Length - 1].yPos, 0);
 							ChildOfBoardHolder =  Instantiate (teleporter, teleporterPos, Quaternion.identity) as GameObject;
 							ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 						}
-					}
+					}*/
 				}
 			}
 
@@ -1343,19 +1365,19 @@ public class BoardCreator : MonoBehaviour
 		switch(corridor.direction)
 		{
 		case Direction.North:
-			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+3,corridor.startYPos+corridor.corridorLength-2,0), Quaternion.identity) as GameObject;
+			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+3,corridor.startYPos+corridor.corridorLength-2,0), Quaternion.Euler(0,0,90)) as GameObject;
 			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.East:
-			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+3,corridor.startYPos+3,0), Quaternion.Euler(0,0,90)) as GameObject;
+			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+corridor.corridorLength-7,corridor.startYPos+3,0), Quaternion.identity) as GameObject;
 			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.South:
-			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+3,corridor.startYPos-4,0), Quaternion.identity) as GameObject;
+			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos+3,corridor.startYPos-corridor.corridorLength+4,0), Quaternion.Euler(0,0,90)) as GameObject;
 			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		case Direction.West:
-			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos-4,corridor.startYPos+3,0), Quaternion.Euler(0,0,90)) as GameObject;
+			ChildOfBoardHolder = Instantiate(gate, new Vector3(corridor.startXPos-corridor.corridorLength+3,corridor.startYPos+3,0), Quaternion.identity) as GameObject;
 			ChildOfBoardHolder.transform.SetParent (boardHolder.transform);
 			break;
 		}

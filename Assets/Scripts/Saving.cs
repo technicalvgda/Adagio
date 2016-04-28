@@ -11,7 +11,7 @@ public class Saving : MonoBehaviour {
 		sr = GetComponent<SpriteRenderer> ();
 	}
 	void Start () {
-		Debug.Log (PlayerPrefs.GetInt ("Save"));
+		//Debug.Log (PlayerPrefs.GetInt ("Save"));
 		//Gets the value of "Save" 
 		if (PlayerPrefs.GetInt ("Save") == 1){
 			isSaved = true;
