@@ -107,7 +107,7 @@ public class AdagioTitleCtrl : MonoBehaviour
 
         for (int i = 0; i < 1380; i++) // +1380
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) )
+            if (Input.anyKeyDown)
             {
                 yield return SkipIntro();
                 yield return LogoSequence();

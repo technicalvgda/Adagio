@@ -3,7 +3,8 @@ using System.Collections;
 
 public class AdagioAudio : MonoBehaviour
 {
-    public AudioSource audioBgm, audioSe;
+    public AudioSource audioBgm;
+    public AudioSource[] audioSe;
     public AudioClip[] clipBgm;
     public AudioClip[] clipSe;
 
@@ -14,7 +15,10 @@ public class AdagioAudio : MonoBehaviour
 
     public void SetSeVolume(float value)
     {
-        audioSe.volume = value;
+        for (int i = 0; i < audioSe.Length; i++)
+        {
+            audioSe[i].volume = value;
+        }
     }
 
     public void PlayBgm(int index, bool loop)
@@ -32,12 +36,24 @@ public class AdagioAudio : MonoBehaviour
     public void PlaySe(int index)
     {
         if (index < 0 || clipSe.Length == 0 || index >= clipSe.Length) return;
-        if (audioSe.isPlaying)
+        for (int i = 0; i < audioSe.Length; i++)
         {
-            audioSe.Stop();
+            if (!audioSe[i].isPlaying)
+            {
+                //audioSe[i].Stop();
+                audioSe[i].clip = clipSe[index];
+                audioSe[i].Play();
+                break;
+            }
         }
-        audioSe.clip = clipSe[index];
-        audioSe.Play();
+    }
+
+    public void PlaySe(int index, int source)
+    {
+        if (index < 0 || clipSe.Length == 0 || index >= clipSe.Length) return;
+        audioSe[source].Stop();
+        audioSe[source].clip = clipSe[index];
+        audioSe[source].Play();
     }
 
     public void StopBgm()
@@ -47,6 +63,9 @@ public class AdagioAudio : MonoBehaviour
 
     public void StopSe()
     {
-        audioSe.Stop();
+        for (int i = 0; i < audioSe.Length; i++)
+        {
+            audioSe[i].Stop();
+        }
     }
 }
