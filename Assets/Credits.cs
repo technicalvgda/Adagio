@@ -5,8 +5,8 @@ public class Credits : MonoBehaviour {
 
     
     public GameObject FinalCredit;
-    float timer = 136;
-    public float speed = 5;
+    float timer = 300; //136
+    public float speed = 3;
 
     void Start()
     {
