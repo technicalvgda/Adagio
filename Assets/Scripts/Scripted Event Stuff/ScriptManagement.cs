@@ -349,7 +349,7 @@ public class ScriptManagement : MonoBehaviour
 		{
 			yield return new WaitForSeconds (1);
 		}
-		SceneManager.LoadScene (1);
+		SceneManager.LoadScene (4);
 		yield return null;
 	}
 
@@ -364,13 +364,13 @@ public class ScriptManagement : MonoBehaviour
 			yield return null;
 		}
 		//Deactivate tiles
-		for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
+		for (int i = 0; i < tilesToDeactivate.Length; i++) {
 			tilesToDeactivate [i].SetActive (false);
 		}
 		//Player falls down
 		yield return new WaitForSeconds(5);
 		//Activate Tiles
-		for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
+		for (int i = 0; i < tilesToDeactivate.Length; i++) {
 			tilesToDeactivate [i].SetActive (true);
 		}
 		playerAnimator.enabled = true;
