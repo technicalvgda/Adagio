@@ -15,7 +15,7 @@ public class AdagioSettings : MonoBehaviour
 
     Setting settingImage, settingBgm, settingSe;
 
-    public void Awake()
+    void Awake()
     {
         //Nuke();
 

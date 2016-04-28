@@ -22,7 +22,10 @@ public class AdagioTitleCtrl : MonoBehaviour
     AdagioMenu menuCurrent;
 
     [Space]
+    [Tooltip("Build index of the game scene")]
     public int startIndex = 0;
+    [Tooltip("Build index of the loading screen")]
+    public int loaderIndex = -1;
 
     WaitForSeconds delay05s = new WaitForSeconds(0.5f);
     WaitForSeconds delay1s = new WaitForSeconds(1);
@@ -161,7 +164,7 @@ public class AdagioTitleCtrl : MonoBehaviour
         menuCurrent = menu;
     }
 
-    public void StartGame() { StartCoroutine(_StartGame() ); }
+    public void StartGame() { if (loaderIndex > 0) StartCoroutine(_StartGame() ); }
     IEnumerator _StartGame()
     {
         // a method called StartGame is not supposed to do this but
@@ -188,7 +191,7 @@ public class AdagioTitleCtrl : MonoBehaviour
         // Set this to the desired scene's build index; invalid values will default to title
         AdagioLoad.destination = startIndex;
         // Loading the load scene after this will bring you to the destination scene
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(loaderIndex);
     }
 
     public void QuitGame()

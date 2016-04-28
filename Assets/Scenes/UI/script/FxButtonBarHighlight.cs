@@ -5,6 +5,7 @@ public class FxButtonBarHighlight : MonoBehaviour
 {
     Transform t;
     SpriteRenderer sr;
+
     void Awake()
     {
         t = this.transform;
