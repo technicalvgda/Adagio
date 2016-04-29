@@ -3,15 +3,18 @@ using System.Collections;
 
 public class ScriptedEventTrigger : MonoBehaviour {
 	public bool startedScriptedEvent = false;
+	public int levelActivated = 0;
+	public int currentLevel = 1;
 	// Use this for initialization
 	void Start () 
 	{
 		startedScriptedEvent = false;
+		currentLevel = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 	/*
 	void OnTriggerStay2D(Collider2D col)
@@ -26,8 +29,24 @@ public class ScriptedEventTrigger : MonoBehaviour {
 	{
 		if (col.tag == "Player")
 		{
-			startedScriptedEvent = true;
+			if (levelActivated == currentLevel) 
+			{
+				startedScriptedEvent = true;
+			}
+
 		}
+	}
+	void OnDisable()
+	{
+		Teleporter.OnTeleport -= IncreaseLevels;
+	}
+	void OnEnable()
+	{
+		Teleporter.OnTeleport += IncreaseLevels;
+	}
+	void IncreaseLevels()
+	{
+		currentLevel++;
 	}
 
 	//void OnTriggerExit2D(Collider2D col)

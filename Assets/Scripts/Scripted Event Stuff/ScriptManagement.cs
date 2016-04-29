@@ -44,6 +44,7 @@ public class ScriptManagement : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		
 		switch (currentLevel) 
 		{
 		case 1:
@@ -87,6 +88,7 @@ public class ScriptManagement : MonoBehaviour
 							puzzleZoomAreaObjects [i].SetActive (false);
 						
 						StartCoroutine (_StartTalkNoMovementCameraPan (level1TextFiles [currentEventNumber]));
+						currentEventNumber++;
 						currentEventNumber++;
 					}
 					break;
