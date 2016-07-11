@@ -4,20 +4,22 @@ using UnityEngine.UI;
 
 public class CodexHandler : MonoBehaviour {
 
-
+    /*
     //EVENTS
     public delegate void LoadCodex(string message);
 
     // Event declaration
     public event LoadCodex OnLoad;
+    */
 
     //PlayerPref data stored in string
     string codeciesObtained;
 
     //Objects for text display
     public GameObject textPanel;
-    Text codexText;
+    public Text codexText;
 
+    public GameObject scrollContent;
     public GameObject buttonTemplate;
 
     int numberOfCodecies;
@@ -25,7 +27,7 @@ public class CodexHandler : MonoBehaviour {
 	void Start ()
     {
         //get text component on codex text panel
-        codexText = textPanel.GetComponent<Text>();
+        //codexText = textPanel.GetComponent<Text>();
         //make sure text panel is inactive
         textPanel.SetActive(false);
        
@@ -36,8 +38,22 @@ public class CodexHandler : MonoBehaviour {
         {
             //count number of codecies created
             numberOfCodecies++;
-            //print name of file
-            Debug.Log(file);
+
+            //instantiate a new button for this codex
+            GameObject button = Instantiate(buttonTemplate) as GameObject;
+
+
+            //store the button's script
+            CodexButton codexScript = button.GetComponent<CodexButton>();
+            //set handler in codex script to this object
+            codexScript.SetHandler(this);
+            //store the name of the file and the codex title in the codeex button
+            codexScript.InitializeName(file);
+           
+            //set parent to scroll view
+            //second argument is worldPositionStays
+            //setting to false retain local orientation and scale rather than world orientation and scale
+            button.transform.SetParent(scrollContent.transform, false);
         }
 
         //Check playerprefs
@@ -56,15 +72,11 @@ public class CodexHandler : MonoBehaviour {
         //Create all buttons by iterating through string
         for(int j = 0; j < codeciesObtained.Length; j++)
         {
-            //instantiate button
-            GameObject button = (GameObject)Instantiate(buttonTemplate);
-            //set parent of button to scrollview
+            
 
 
-            //set handler in codex script to this object
-            button.GetComponent<CodexButton>().SetHandler(this);
             //check if button should be activated
-            if(codeciesObtained[j] == 1)
+            if (codeciesObtained[j] == 1)
             {
                 //activate codex
             }
@@ -72,24 +84,36 @@ public class CodexHandler : MonoBehaviour {
             {
                 //deactivate codex
             }
+            //set parent of button to scrollview
+
+
+         
+           
         }
     }
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+    {
+       
 	}
 
     public void LoadContents(string codexTextFileName)
     {
-        //Load Text file named codexTextFileName
-        TextAsset textFile = Resources.Load(codexTextFileName) as TextAsset;
-       
-      
         //set text panel to true
         textPanel.SetActive(true);
+
+        Debug.Log("Retrieving Text from: " + codexTextFileName);
+        //Load Text file named codexTextFileName
+        //TextAsset textFile = Resources.Load(codexTextFileName) as TextAsset;
+
+        //get text from file specified
+        string text = System.IO.File.ReadAllText(codexTextFileName);
+      
+       
+        Debug.Log(text);
         //set codexText to the text contained in text file
-        codexText.text = textFile.text;
+        codexText.text = text;
         
     }
 

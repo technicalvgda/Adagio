@@ -12,6 +12,16 @@ public class CodexButton : MonoBehaviour {
     {
         codexHandler = handler;
     }
+    public void InitializeName(string fileName)
+    {
+        //store full filename for retrieval
+        nameOfFile = fileName;
+        //split filename into 2 parts (number, title, extension)
+        string[] splitFileName = fileName.Split('.');
+        //store title as name to display
+        nameToDisplay = splitFileName[1];
+        Debug.Log(fileName + ", "+ nameToDisplay);
+    }
     public void SendContents()
     {
         //check if anyone is subscribed to the event, if not, skip this
