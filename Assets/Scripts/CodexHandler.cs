@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CodexHandler : MonoBehaviour {
 
@@ -95,9 +96,22 @@ public class CodexHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-       
+       //temp code
+       if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            ReturnToTitle();
+        }
 	}
+    public void CloseText()
+    {
+        textPanel.SetActive(false);
+    }
 
+    public void ReturnToTitle()
+    {
+        // Load the title screen
+        SceneManager.LoadScene(0);
+    }
     public void LoadContents(string codexTextFileName)
     {
         //set text panel to true
