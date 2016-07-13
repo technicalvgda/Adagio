@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CodexButton : MonoBehaviour {
 
@@ -8,6 +9,12 @@ public class CodexButton : MonoBehaviour {
 	private string nameToDisplay;
     private string nameOfFile;
 
+    Text nameText;
+
+    public void Awake()
+    {
+        nameText = GetComponentInChildren<Text>();
+    }
     public void SetHandler(CodexHandler handler)
     {
         codexHandler = handler;
@@ -21,6 +28,10 @@ public class CodexButton : MonoBehaviour {
         //store title as name to display
         nameToDisplay = splitFileName[1];
         Debug.Log(fileName + ", "+ nameToDisplay);
+        //set the text label for this codex to its title
+        nameText.text = nameToDisplay;
+
+
     }
     public void SendContents()
     {

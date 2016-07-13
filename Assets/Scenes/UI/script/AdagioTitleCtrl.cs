@@ -28,6 +28,8 @@ public class AdagioTitleCtrl : MonoBehaviour
     public int loaderIndex = -1;
     [Tooltip("Build index of the credits screen")]
     public int creditsIndex = 0;
+    [Tooltip("Build index of the codecies screen")]
+    public int codeciesIndex = 4;
 
     WaitForSeconds delay05s = new WaitForSeconds(0.5f);
     WaitForSeconds delay1s = new WaitForSeconds(1);
@@ -168,6 +170,7 @@ public class AdagioTitleCtrl : MonoBehaviour
 
     public void ToGame() { if (loaderIndex > 0) StartCoroutine(_LoadIndex(startIndex) ); }
     public void ToCredits() { if (loaderIndex > 0) StartCoroutine(_LoadIndex(creditsIndex) ); }
+    public void ToCodecies() { if (loaderIndex > 0) StartCoroutine(_LoadIndex(codeciesIndex)); }
 
     IEnumerator _LoadIndex(int index)
     {
