@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour {
 	private float cameraCatchup;
 	public float playerCameraOffset;
 
-    float minXDist = -71.5f;
+	float minXDist = -83f;
 	void Awake() {
 
 #if UNITY_IPHONE
@@ -27,6 +27,7 @@ public class CameraController : MonoBehaviour {
 	void Start() {
 		        //Calculates offset by subtracting player position from camera object position
 		offset = transform.position;
+		transform.position = new Vector3 (minXDist, transform.position.y, transform.position.z);
 	}
 
 	    // Update is called once per frame
