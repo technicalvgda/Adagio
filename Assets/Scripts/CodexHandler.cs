@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class CodexHandler : MonoBehaviour {
 
+    //store text for each codex
+    Dictionary<string, string> textDictionary = new Dictionary<string, string>();
+    private List<TextAsset> codexList;
     /*
     //EVENTS
     public delegate void LoadCodex(string message);
@@ -24,19 +30,20 @@ public class CodexHandler : MonoBehaviour {
     public GameObject buttonTemplate;
 
     int numberOfCodecies;
-	// Use this for initialization
-	void Start ()
+
+    // Use this for initialization
+    void Start ()
     {
         //get text component on codex text panel
         //codexText = textPanel.GetComponent<Text>();
         //make sure text panel is inactive
         textPanel.SetActive(false);
        
-
         //get names of all files in codex folder
         //finds only .txt files, skips all meta files
-        foreach (string file in System.IO.Directory.GetFiles("Assets/Resources/Codecies/","*.txt"))
+        foreach (TextAsset codex in Resources.LoadAll("Codecies"))//foreach (string file in System.IO.Directory.GetFiles("Assets/Resources/Codecies/","*.txt"))
         {
+            Debug.Log(codex.name);
             //count number of codecies created
             numberOfCodecies++;
 
@@ -49,8 +56,9 @@ public class CodexHandler : MonoBehaviour {
             //set handler in codex script to this object
             codexScript.SetHandler(this);
             //store the name of the file and the codex title in the codeex button
-            codexScript.InitializeName(file);
-           
+            codexScript.InitializeName(codex.name);//file);
+            //create new entry
+            textDictionary.Add(codex.name, codex.text);
             //set parent to scroll view
             //second argument is worldPositionStays
             //setting to false retain local orientation and scale rather than world orientation and scale
@@ -122,7 +130,8 @@ public class CodexHandler : MonoBehaviour {
         //TextAsset textFile = Resources.Load(codexTextFileName) as TextAsset;
 
         //get text from file specified
-        string text = System.IO.File.ReadAllText(codexTextFileName);
+        string text = textDictionary[codexTextFileName];
+       // string text = System.IO.File.ReadAllText(codexTextFileName);
       
        
         Debug.Log(text);
@@ -130,7 +139,8 @@ public class CodexHandler : MonoBehaviour {
         codexText.text = text;
         
     }
-
+ 
+   
 
 
 
