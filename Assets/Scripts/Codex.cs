@@ -20,8 +20,9 @@ public class Codex : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () 
-	{		
-		if (onCodex == true && Input.GetKeyDown (KeyCode.E)) 
+	{	
+        //if player is touching codex and if they press E or click the mouse (or tap)
+		if (onCodex == true && (Input.GetKeyDown (KeyCode.E) || Input.GetMouseButtonDown(0))) 
 		{
 			Destroy (this.gameObject);
 		}

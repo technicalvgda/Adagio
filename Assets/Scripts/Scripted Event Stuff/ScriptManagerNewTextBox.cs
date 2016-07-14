@@ -125,9 +125,9 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if ((playerContact == true && Input.GetKey (KeyCode.E)) || (startText == true))
+		if ((playerContact == true && (Input.GetKey (KeyCode.E) || Input.GetMouseButtonDown(0))) || (startText == true))
 		{			Debug.Log ("HERE");
-			if (startInitialText == true || Input.GetKey (KeyCode.E)) 
+			if (startInitialText == true || (Input.GetKey (KeyCode.E) || Input.GetMouseButtonDown(0))) 
 			{
 				Debug.Log ("HERE2");
 				if (!isTyping) {
