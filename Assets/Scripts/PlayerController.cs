@@ -27,7 +27,14 @@ public class PlayerController : MonoBehaviour {
 	public bool downButton;
     bool leftGround = false;
     bool slowFall = true;
-  
+
+    //sound effects
+    public AudioSource jumpSound;
+    public AudioSource walkSound;
+    public AudioSource fallSound;
+    bool switchFoot = false;
+    public AudioClip leftFoot;
+    public AudioClip rightFoot;
 
 	private float swipeValue;
     //stores the specific block the player touches at an instance in time
@@ -105,6 +112,7 @@ public class PlayerController : MonoBehaviour {
 				if(!raycast.collisionDown){
 					jumpRand = Random.Range(0, blockArray.Count);
 					Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+                    jumpSound.Play();
 				}
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
@@ -126,7 +134,7 @@ public class PlayerController : MonoBehaviour {
         }
         else if(raycast.collisionDown)
         {
-            
+           
             slowFall = true;
             anim.SetBool("Airborne", false);
         }
@@ -234,6 +242,7 @@ public class PlayerController : MonoBehaviour {
 				                    if(!raycast.collisionDown){
 					                    jumpRand = Random.Range(0, blockArray.Count);
 					                    Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+                                         jumpSound.Play();
                                     }
 								}
 								//If player tries to jump before apex, they cannot jump for a set time
@@ -335,6 +344,26 @@ public class PlayerController : MonoBehaviour {
     			thisObject.GetComponent<AudioSource>().Stop();
     		}
     	}
+    }
+
+
+    public void PlayWalkSound()
+    {
+        if(switchFoot == false)
+        {
+            walkSound.clip = leftFoot;
+        }
+        else
+        {
+            walkSound.clip = rightFoot;
+        }
+        walkSound.Play();
+        switchFoot = !switchFoot;
+    }
+
+    public void PlayFallSound()
+    {
+        fallSound.Play();
     }
    
  }
