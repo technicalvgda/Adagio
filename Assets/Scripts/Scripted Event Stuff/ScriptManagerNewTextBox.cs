@@ -126,10 +126,10 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 	void Update()
 	{
 		if ((playerContact == true && (Input.GetKey (KeyCode.E) || Input.GetMouseButtonDown(0))) || (startText == true))
-		{			Debug.Log ("HERE");
+		{			//Debug.Log ("HERE");
 			if (startInitialText == true || (Input.GetKey (KeyCode.E) || Input.GetMouseButtonDown(0))) 
 			{
-				Debug.Log ("HERE2");
+				//Debug.Log ("HERE2");
 				if (!isTyping) {
 					Debug.Log ("ISTYPING");
 					//			filespeaker = speakerLines[currentLine].Split(':');

@@ -25,16 +25,19 @@ public class CodexHandler : MonoBehaviour {
     //Objects for text display
     public GameObject textPanel;
     public Text codexText;
+    public Text collectionText;
 
     public GameObject scrollContent;
     public GameObject buttonTemplate;
 
     //the total number of codecies available in game (the number in resources folder)
     private int maxCodecies;
-    
 
     //the number counted
     int numberOfCodecies;
+
+    //the number collected
+    int numberCollected = 0;
 
     // Use this for initialization
     void Start ()
@@ -85,8 +88,14 @@ public class CodexHandler : MonoBehaviour {
             {
                 //set button to inactive
                 codexScript.Uncollected();
-            }         
-        }       
+            }  
+            else
+            {
+                numberCollected++;
+            }       
+        }
+        //set text of collection count to reflect number of codecies unlocked
+        collectionText.text = numberCollected.ToString() + "/" + maxCodecies.ToString();      
     }
 	
 	// Update is called once per frame

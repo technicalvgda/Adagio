@@ -26,7 +26,15 @@ public class Codex : MonoBehaviour {
         //set this codex to a random codex index
         codexNumber = Random.Range(1, CodexPrep.maxCodecies);
         //find the codex text associated with that number
-        codexText = CodexPrep.codexTextDict[codexNumber];
+        if(CodexPrep.codexTextDict.ContainsKey(codexNumber))
+        {
+            codexText = CodexPrep.codexTextDict[codexNumber];
+        }
+        else //if the number doesnt exist
+        {
+            Debug.Log("Codex text is not assigned.");
+        }
+        
             
 
 	}
