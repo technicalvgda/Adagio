@@ -10,12 +10,25 @@ public class Codex : MonoBehaviour {
 
 	private Vector3 newPosition;
 	private bool goingUp;
+
+    //variable of all codecies unlocked
+    private string codexPref;
+    private int codexNumber;
+    private string codexText;
 	// Use this for initialization
 	void Start () 
 	{
 		goingUp = true;
 		onCodex = false;	
 		startingPosition = this.gameObject.transform.position;
+        //get list of all unlocked codecies
+        codexPref = PlayerPrefs.GetString("Codecies");
+        //set this codex to a random codex index
+        codexNumber = Random.Range(1, CodexPrep.maxCodecies);
+        //find the codex text associated with that number
+        codexText = CodexPrep.codexTextDict[codexNumber];
+            
+
 	}
 	
 	// Update is called once per frame
@@ -24,7 +37,12 @@ public class Codex : MonoBehaviour {
         //if player is touching codex and if they press E or click the mouse (or tap)
 		if (onCodex == true && (Input.GetKeyDown (KeyCode.E) || Input.GetMouseButtonDown(0))) 
 		{
-			Destroy (this.gameObject);
+            //unlock respective codex
+            UnlockCodex();
+            //display text
+            Debug.Log(codexText);
+            Destroy (this.gameObject);
+            
 		}
 		transform.position = new Vector3 (transform.position.x, Mathf.PingPong (Time.time*speed, travelDistance)+startingPosition.y, transform.position.z);
 
@@ -44,4 +62,13 @@ public class Codex : MonoBehaviour {
 			onCodex = false;
 		}
 	}
+    void UnlockCodex()
+    {
+        //remove the value at this codex's index
+        codexPref = codexPref.Remove(codexNumber-1, 1);
+        //insert the new value
+        codexPref = codexPref.Insert(codexNumber-1, "1");
+        //assign this to codecies playerpref
+        PlayerPrefs.SetString("Codecies", codexPref);
+    }
 }

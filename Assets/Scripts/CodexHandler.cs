@@ -30,15 +30,16 @@ public class CodexHandler : MonoBehaviour {
     public GameObject buttonTemplate;
 
     //the total number of codecies available in game (the number in resources folder)
-    public static int maxCodecies = 37;
+    private int maxCodecies;
+    
+
     //the number counted
     int numberOfCodecies;
 
     // Use this for initialization
     void Start ()
     {
-        //TEST CODE TO CLEAR PLAYERPREF
-        PlayerPrefs.DeleteAll();
+        maxCodecies = CodexPrep.maxCodecies;
 
 
         //get text component on codex text panel
@@ -47,15 +48,7 @@ public class CodexHandler : MonoBehaviour {
         textPanel.SetActive(false);
 
 
-        //Check playerprefs
-        if (!PlayerPrefs.HasKey("Codecies"))
-        {
-            //create a string of all 0's that is the same size as the number of codecies
-            string codexString = new string('0', maxCodecies);
-            //set the playerpref to have the same data
-            PlayerPrefs.SetString("Codecies", codexString);
-
-        }
+        
         //retrieve the playerpref data, each index is a 0 if unobtained and 1 if obtained
         codeciesObtained = PlayerPrefs.GetString("Codecies");
         Debug.Log(codeciesObtained);
