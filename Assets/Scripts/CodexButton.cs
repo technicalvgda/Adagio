@@ -40,4 +40,14 @@ public class CodexButton : MonoBehaviour {
         //load filename stored on this button to text handler
         codexHandler.LoadContents(nameOfFile);
     }
+
+    public void Uncollected()
+    {
+        //set button component inactive
+        gameObject.GetComponent<Selectable>().enabled = false;
+
+        //set graphic to semi-transparent 
+        gameObject.GetComponent<CanvasRenderer>().SetAlpha(0.5f);
+        
+    }
 }
