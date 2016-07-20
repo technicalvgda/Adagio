@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Codex : MonoBehaviour {
+
+    private CodexEventHandler codexHandler;
+
 	public bool onCodex;
 	public float travelDistance = 1f;
 	public float speed = 1;
@@ -18,6 +21,9 @@ public class Codex : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+        //store a reference to the codex handler
+        codexHandler = GameObject.Find("CodexEventHandler").GetComponent<CodexEventHandler>();
+
 		goingUp = true;
 		onCodex = false;	
 		startingPosition = this.gameObject.transform.position;
@@ -48,6 +54,7 @@ public class Codex : MonoBehaviour {
             //unlock respective codex
             UnlockCodex();
             //display text
+            DisplayCodex();
             Debug.Log(codexText);
             Destroy (this.gameObject);
             
@@ -70,6 +77,10 @@ public class Codex : MonoBehaviour {
 			onCodex = false;
 		}
 	}
+    void DisplayCodex()
+    {
+        codexHandler.ActivateCodexCanvax(codexText);
+    }
     void UnlockCodex()
     {
         //remove the value at this codex's index

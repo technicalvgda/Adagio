@@ -9,7 +9,7 @@ public class Pause : MonoBehaviour
     public GameObject objButtons;
     public GameObject OptionsCanvas;
     Image imgFade;
-    bool busy;
+    public bool busy;
     bool paused;
 
     // Use this for initialization
