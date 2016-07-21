@@ -5,36 +5,69 @@ using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
+	//Assets for the different loading bar objects
+	public GameObject LoadingBarFilling,Symbols, SymbolsBackground,textBox;
+	//the text
+	private TextAsset text;
+	//The actual image of the bar, used to manipulate the alpha
+	private Image barImage;
+	/*private*/public bool loadScene = false;
+	//the object used to get the progress of the loading
+	private AsyncOperation async = null;
+	//set true/false to either increase or decrease the alpha of the loading bar
+	private bool increaseAlpha;
+	//[SerializeField]
+	private int scene;
+	//[SerializeField]
+	private Text loadingText;
+	void Start()
+	{
+		//get the image component
+		barImage = LoadingBarFilling.GetComponent<Image> ();
+		//set the X scale of the bar to 0
+		barImage.rectTransform.localScale = new Vector3 (0, barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
+		textBox.SetActive (false);
+		increaseAlpha = false;
 
-    /*private*/public bool loadScene = false;
+	}
 
-    //[SerializeField]
-    private int scene;
-    //[SerializeField]
-    private Text loadingText;
+	// Updates once per frame
+	void Update()
+	{
+		if (loadScene == false)
+		{
+			loadScene = true;
+			//start the loading
+			StartCoroutine(LoadNewScene());
+		}
+		if (loadScene == true)
+		{
+		}
+	}
+	IEnumerator LoadNewScene()
+	{
+		//load the level
+		async = SceneManager.LoadSceneAsync(2);
+		//make it so when the data is loaded the scene does not activate(meaning it will stay in the loading scene)
+		async.allowSceneActivation = false;
+		//while loading is not done
+		while (!async.isDone) {
 
-
-    // Updates once per frame
-    void Update()
-    {
-        if (loadScene == false)
-        {
-            loadScene = true;
-            StartCoroutine(LoadNewScene());
-        }
-        if (loadScene == true)
-        {
-        }
-    }
-    IEnumerator LoadNewScene()
-    {
-        //yield return new WaitForSeconds(3);
-        AsyncOperation async = SceneManager.LoadSceneAsync(3);
-        while (!async.isDone)
-        {
-            yield return null;
-        }
-
-    }
-
+			//Debug.Log(async.progress);
+			//make the bar longer as loading progresses
+			barImage.rectTransform.localScale = new Vector3 (0.5293753f * (async.progress+0.1f), barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
+			// Loading completed
+			if (async.progress == 0.9f) 
+			{
+				//begin fading in/out of the bar for a more dynamic look
+				LoadingBarFilling.GetComponent<LoadingBarFadeInOut> ().beginFading ();
+				//set it so when the player presses any button the level will load
+				if (Input.anyKeyDown)
+					async.allowSceneActivation = true;
+				//activate the text box so tell the player to press any button to continue
+				textBox.SetActive (true);
+			}
+			yield return null;
+		}
+	}
 }
