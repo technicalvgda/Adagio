@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour {
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
                                     ySpeed = jumpSpeed*jumpMod;    //original float ySpeed                     
                                     moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
-                                    //rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
+                                    rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
                                     //only on midair jumps
                                     if (!raycast.collisionDown)
                                     {
@@ -286,7 +286,24 @@ public class PlayerController : MonoBehaviour {
                 moveHorizontal = 0;
             }
         }
-        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
+
+        //cause player to fall slowly
+        float vertVelocity = rb2d.velocity.y;
+
+        if (vertVelocity < 0 && slowFall == true)
+        {
+            vertVelocity = fallSpeed;
+        }
+        else if (vertVelocity < 0 && slowFall == false)
+        {
+            if (vertVelocity == fallSpeed)
+            {
+                vertVelocity = 0;
+            }
+        }
+        //set player velocity
+        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+
         rb2d.velocity = currentVelocity;
 #endif
 
