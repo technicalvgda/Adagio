@@ -286,7 +286,7 @@ public class PlayerController : MonoBehaviour {
                 moveHorizontal = 0;
             }
         }
-        currentVelocity = new Vector2(moveHorizontal * speed, ySpeed);
+        currentVelocity = new Vector2(moveHorizontal * speed, rb2d.velocity.y);
         rb2d.velocity = currentVelocity;
 #endif
 
