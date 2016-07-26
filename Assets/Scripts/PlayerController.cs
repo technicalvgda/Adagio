@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			downButton = false;
 		}
-        #if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.S) ) 
 				{
 				downButton = true;
@@ -151,9 +151,29 @@ public class PlayerController : MonoBehaviour {
 			moveHorizontal = Input.GetAxis ("Horizontal");
 		}
 
+        //cause player to fall slowly
+        float vertVelocity = rb2d.velocity.y;
+
+        if (vertVelocity < 0 && slowFall == true)
+        {
+            vertVelocity = fallSpeed;
+        }
+        else if (vertVelocity < 0 && slowFall == false)
+        {
+            if (vertVelocity == fallSpeed)
+            {
+                vertVelocity = 0;
+            }
+        }
+        //set player velocity
+        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+
+
+        rb2d.velocity = currentVelocity;
+
 #else
 
-
+        float ySpeed = fallSpeed;
 		if(swipeValue < 0)
 		{
 			downButton = true;
@@ -164,7 +184,8 @@ public class PlayerController : MonoBehaviour {
 			downButton = false;
 		}
         
-		if (Input.touchCount > 0 ) {
+		if (Input.touchCount > 0 )
+        {
         
 			if (leftside.Contains (Input.GetTouch(0).position)) {
 				moveHorizontal = (raycast.collisionLeft && !raycast.collisionDown) ? 0 : -1;
@@ -198,98 +219,78 @@ public class PlayerController : MonoBehaviour {
         //to double jump, finger has to go past the minimum distance and swipe again.
 
 		if(raycast.collisionUp)
-				{
-					blockJumpTimer = blockJumpTimerDuration;
-				}
-				if (blockJumpTimer > 0) 
-				{
-					blockJumpTimer -= Time.deltaTime;
-				}
-				else if (Input.touchCount > 0)
-				{
-					Touch touch = Input.touches[0];
-					switch (touch.phase)
-					{
+		{
+			blockJumpTimer = blockJumpTimerDuration;
+		}
+
+		if (blockJumpTimer > 0) 
+		{
+			blockJumpTimer -= Time.deltaTime;
+		}
+        else if (Input.touchCount > 0)
+        {
+
+            Touch touch = Input.touches[0];
+            switch (touch.phase)
+            {
 					case TouchPhase.Began:
 						startPos = touch.position;
 						break;
 					case TouchPhase.Ended:
-                        
                         Vector2 endPos = touch.position;
                         Vector2 swipeVec = endPos-startPos;
-                       
+                        float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
 
+                        if (swipeDistVertical > minSwipeDistY)
+                        {
 
-						float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
-						if (swipeDistVertical > minSwipeDistY)
-						{
-							swipeValue = Mathf.Sign(touch.position.y - startPos.y);
-							if (swipeValue > 0)
-						    {
-								if (rb2d.velocity.y <= 0)
-								{
-         
+                            swipeValue = Mathf.Sign(touch.position.y - startPos.y);
+
+                            if (swipeValue > 0)
+                            {
+                                if (rb2d.velocity.y <= 0)
+                                {
                                     slowFall = true;
-                                   
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
-                                    float ySpeed = jumpSpeed*jumpMod;
+                                    ySpeed = jumpSpeed*jumpMod;    //original float ySpeed                     
                                     moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
-									rb2d.velocity = new Vector2(rb2d.velocity.x, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
-                                    
+                                    //rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
                                     //only on midair jumps
-				                    if(!raycast.collisionDown){
-					                    jumpRand = Random.Range(0, blockArray.Count);
-					                    Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
-                                         jumpSound.Play();
+                                    if (!raycast.collisionDown)
+                                    {
+                                        jumpRand = Random.Range(0, blockArray.Count);
+                                        Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
+                                        jumpSound.Play();
                                     }
-								}
-								//If player tries to jump before apex, they cannot jump for a set time
-								else 
-								{
-									blockJumpTimer = blockJumpTimerDuration;
-								} 
-							}
+                                }
+                                //If player tries to jump before apex, they cannot jump for a set time
+                                else
+                                {
+                                    blockJumpTimer = blockJumpTimerDuration;
+                                }
+                            }                   
                             else if (swipeValue<0)
                             {
                                 slowFall = false;
                             }
-						}
-						break;
-					}
-				}
-                else {
-                    if(leftGround == false)
-                    {
-			            moveHorizontal = 0;
-                    }
-		        }
-#endif
-        //cause player to fall slowly
-        float vertVelocity = rb2d.velocity.y;
-        
-
-        
-        if (vertVelocity < 0 && slowFall == true)
-        {
-            vertVelocity= fallSpeed;
+                        }
+                        break;
+            } //end switch
         }
-        else if(vertVelocity < 0 && slowFall == false)
+        else
         {
-            if(vertVelocity == fallSpeed)
+            if (leftGround == false)
             {
-                vertVelocity = 0;
+                moveHorizontal = 0;
             }
-            
-
         }
-        //set player velocity
-        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
-        
-       
-		rb2d.velocity = currentVelocity;
-        //debugText.text = (" Rigidbody velocity=" + rb2d.velocity);
+        currentVelocity = new Vector2(moveHorizontal * speed, ySpeed);
+        rb2d.velocity = currentVelocity;
+#endif
+
+
 
 
         //set the walking animation variable to the axis, 
