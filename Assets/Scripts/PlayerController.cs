@@ -276,6 +276,7 @@ public class PlayerController : MonoBehaviour {
                                 slowFall = false;
                             }
                         }
+                       
                         break;
             } //end switch
         }
@@ -301,10 +302,26 @@ public class PlayerController : MonoBehaviour {
                 vertVelocity = 0;
             }
         }
-        //set player velocity
-        currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+        //if the player is falling or grounded
+        if(vertVelocity <= 0)
+        {
+            //if the player is grounded
+            if(raycast.collisionDown)
+            {
+                 //set player velocity
+                currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+            }
+            //if the player is in midair
+            else
+            {
+                //set player velocity
+                currentVelocity = new Vector2(rb2d.velocity.x, vertVelocity);
+            }
+           
+           //assign the velocity value to the player
+            rb2d.velocity = currentVelocity;
+        }
 
-        rb2d.velocity = currentVelocity;
 #endif
 
 
