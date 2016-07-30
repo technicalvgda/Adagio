@@ -29,16 +29,35 @@ public class Codex : MonoBehaviour {
 		startingPosition = this.gameObject.transform.position;
         //get list of all unlocked codecies
         codexPref = PlayerPrefs.GetString("Codecies");
-        //set this codex to a random codex index
-        codexNumber = Random.Range(1, CodexPrep.maxCodecies);
-        //find the codex text associated with that number
-        if(CodexPrep.codexTextDict.ContainsKey(codexNumber))
+        //if this is the tutorial codex
+        if (gameObject.name == "IntroCodex")
         {
-            codexText = CodexPrep.codexTextDict[codexNumber];
+            //set this codex to number 7 (An adventurers journal I)
+            codexNumber = 7;
+            //find the codex text associated with that number
+            if (CodexPrep.codexTextDict.ContainsKey(codexNumber))
+            {
+                codexText = CodexPrep.codexTextDict[codexNumber];
+            }
+            else //if the number doesnt exist
+            {
+                Debug.Log("Codex text is not assigned.");
+            }
         }
-        else //if the number doesnt exist
+        //if this is a spawned codex
+        else
         {
-            Debug.Log("Codex text is not assigned.");
+            //set this codex to a random codex index
+            codexNumber = Random.Range(1, CodexPrep.maxCodecies);
+            //find the codex text associated with that number
+            if (CodexPrep.codexTextDict.ContainsKey(codexNumber))
+            {
+                codexText = CodexPrep.codexTextDict[codexNumber];
+            }
+            else //if the number doesnt exist
+            {
+                Debug.Log("Codex text is not assigned.");
+            }
         }
         
             

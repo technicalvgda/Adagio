@@ -254,6 +254,11 @@ public class PlayerController : MonoBehaviour {
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
+                                    //prevent jumping horizontally for large distances
+                                    if(jumpMod < 0.25f)
+                                    {
+                                        jumpMod = 0.25f;
+                                    }
                                     ySpeed = jumpSpeed*jumpMod;    //original float ySpeed                     
                                     moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
                                     rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
@@ -315,7 +320,7 @@ public class PlayerController : MonoBehaviour {
             else
             {
                 //set player velocity
-                currentVelocity = new Vector2(rb2d.velocity.x, vertVelocity);
+                currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity); //was rb2d.velocity.x
             }
            
            //assign the velocity value to the player
