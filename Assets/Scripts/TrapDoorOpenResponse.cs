@@ -5,12 +5,19 @@ using System.Collections;
  */
 
 public class TrapDoorOpenResponse : MonoBehaviour {
+
+    AudioSource audioSource;
+
 	public bool goUp;
     float initialYPos;
     float endingYPos;
     float movmentValue = 3f;
     void Start()
     {
+        if(GetComponent<AudioSource>() != null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
         initialYPos = transform.position.y;
 
 		if(goUp)
@@ -20,11 +27,20 @@ public class TrapDoorOpenResponse : MonoBehaviour {
     }
 	public void Deactivate()
     {
+        if(audioSource != null)
+        {
+            audioSource.Play();
+        }
+        
         StartCoroutine(LowerDoor());
 		//gameObject.SetActive (false);
 	}
     public void Activate()
     {
+        if (audioSource != null)
+        {
+            audioSource.Play();
+        }
         StartCoroutine(RaiseDoor());
     }
 

@@ -8,7 +8,7 @@ public class InscriptionSwitch : MonoBehaviour {
     SpriteRenderer spriteRender;
 
     float playerDistance;
-    float triggerDistance = 3f;
+    float triggerDistance = 4.5f;
     Transform player;
 
     bool fadeIn = false;

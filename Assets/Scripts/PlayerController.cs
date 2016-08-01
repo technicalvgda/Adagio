@@ -27,9 +27,11 @@ public class PlayerController : MonoBehaviour {
 	public bool downButton;
     bool leftGround = false;
     bool slowFall = true;
+    bool airborne = false;
 
     //sound effects
-    public AudioSource jumpSound;
+    public AudioSource doubleJumpSound;
+    public AudioSource  jumpSound;
     public AudioSource walkSound;
     public AudioSource fallSound;
     bool switchFoot = false;
@@ -101,7 +103,7 @@ public class PlayerController : MonoBehaviour {
 		{
             anim.SetTrigger("Jump");
             anim.SetBool("Airborne", true);
-
+            airborne = true;
             slowFall = true;
             //Player can jump if they are falling or reached max height
             if (rb2d.velocity.y <= 0) {
@@ -109,11 +111,16 @@ public class PlayerController : MonoBehaviour {
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 				//only on midair jumps
-				if(!raycast.collisionDown){
+				if(!raycast.collisionDown)
+                {
 					jumpRand = Random.Range(0, blockArray.Count);
 					Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
-                    jumpSound.Play();
+                    doubleJumpSound.Play();
 				}
+                else
+                {
+                   jumpSound.Play();
+                }
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
 			else {
@@ -130,13 +137,19 @@ public class PlayerController : MonoBehaviour {
         if(!raycast.collisionDown)
         {
             anim.SetBool("Airborne", true);
+            airborne = true;
             
         }
         else if(raycast.collisionDown)
         {
-           
+            //if the player is in midair, collides with ground, and is moving downwards
+            if(airborne == true && rb2d.velocity.y <= 0)
+            {
+                fallSound.Play();
+            }
             slowFall = true;
             anim.SetBool("Airborne", false);
+            airborne = false;
         }
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -207,13 +220,19 @@ public class PlayerController : MonoBehaviour {
         if(!raycast.collisionDown)
         {
             anim.SetBool("Airborne", true);
+            airborne = true;
             
         }
         else if(raycast.collisionDown )
         {
-            
+            //if the player is in midair, collides with ground, and is moving downwards
+            if(airborne == true && rb2d.velocity.y <= 0)
+            {
+                fallSound.Play();
+            }
             slowFall = true;
             anim.SetBool("Airborne", false);
+            airborne = false;
         }
         //swipe up to move up
         //to double jump, finger has to go past the minimum distance and swipe again.
@@ -250,6 +269,8 @@ public class PlayerController : MonoBehaviour {
                             {
                                 if (rb2d.velocity.y <= 0)
                                 {
+                                    anim.SetBool("Airborne", true);
+                                    airborne = true;
                                     slowFall = true;
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
@@ -267,7 +288,11 @@ public class PlayerController : MonoBehaviour {
                                     {
                                         jumpRand = Random.Range(0, blockArray.Count);
                                         Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
-                                        jumpSound.Play();
+                                         doubleJumpSound.Play();
+                                    }
+                                     else
+                                    {
+                                       jumpSound.Play();
                                     }
                                 }
                                 //If player tries to jump before apex, they cannot jump for a set time
