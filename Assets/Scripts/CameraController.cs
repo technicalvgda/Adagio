@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour {
 	void Start() {
 		        //Calculates offset by subtracting player position from camera object position
 		offset = transform.position;
-		transform.position = new Vector3 (minXDist, transform.position.y, transform.position.z);
+		//transform.position = new Vector3 (minXDist, transform.position.y, transform.position.z);
 	}
 
 	    // Update is called once per frame
@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour {
             //Follow the player code 
             transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + playerCameraOffset, transform.position.z), Time.deltaTime * (damping + cameraCatchup));
 
-            
+            /*
             if (player.transform.position.x >= minXDist)
             {
                 transform.position = Vector3.Lerp(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + playerCameraOffset, transform.position.z), Time.deltaTime * (damping + cameraCatchup));
@@ -56,6 +56,7 @@ public class CameraController : MonoBehaviour {
             {
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, player.transform.position.y + playerCameraOffset, transform.position.z), Time.deltaTime * (damping + cameraCatchup));
             }
+            */
             
 		}
 

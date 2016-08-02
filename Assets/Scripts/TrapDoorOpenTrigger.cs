@@ -5,13 +5,21 @@ using System.Collections;
  * Decided to not use tags as this is a much simpler and quicker way to handmake puzzle rooms.
  */
 public class TrapDoorOpenTrigger : MonoBehaviour {
-	private Rigidbody2D test;
+
+    AudioSource audioSource;
+
+    private Rigidbody2D test;
 	GameObject player;
 	public TrapDoorOpenResponse receiver,receiver2,receiver3; //can be set to activate multiple objects at once
 	bool playerContact = false;
 	// Use this for initialization
-	void Start (){
-	}
+	void Start ()
+    {
+        if (GetComponent<AudioSource>() != null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,8 +44,13 @@ public class TrapDoorOpenTrigger : MonoBehaviour {
 	}
 
 	void Activate(){
-		if(playerContact == true){
-			receiver.Deactivate ();
+		if(playerContact == true)
+        {
+            if (audioSource != null)
+            {
+                audioSource.Play();
+            }
+            receiver.Deactivate ();
 			receiver2.Deactivate ();
 			receiver3.Deactivate ();
 			gameObject.SetActive (false);

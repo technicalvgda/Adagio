@@ -27,9 +27,11 @@ public class PlayerController : MonoBehaviour {
 	public bool downButton;
     bool leftGround = false;
     bool slowFall = true;
+    bool airborne = false;
 
     //sound effects
-    public AudioSource jumpSound;
+    public AudioSource doubleJumpSound;
+    public AudioSource  jumpSound;
     public AudioSource walkSound;
     public AudioSource fallSound;
     bool switchFoot = false;
@@ -101,7 +103,7 @@ public class PlayerController : MonoBehaviour {
 		{
             anim.SetTrigger("Jump");
             anim.SetBool("Airborne", true);
-
+            airborne = true;
             slowFall = true;
             //Player can jump if they are falling or reached max height
             if (rb2d.velocity.y <= 0) {
@@ -109,11 +111,16 @@ public class PlayerController : MonoBehaviour {
 				//as not super powerful.
 				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 				//only on midair jumps
-				if(!raycast.collisionDown){
+				if(!raycast.collisionDown)
+                {
 					jumpRand = Random.Range(0, blockArray.Count);
 					Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
-                    jumpSound.Play();
+                    doubleJumpSound.Play();
 				}
+                else
+                {
+                   jumpSound.Play();
+                }
 			} 
 			//If player tries to jump before apex, they cannot jump for a set time
 			else {
@@ -130,13 +137,19 @@ public class PlayerController : MonoBehaviour {
         if(!raycast.collisionDown)
         {
             anim.SetBool("Airborne", true);
+            airborne = true;
             
         }
         else if(raycast.collisionDown)
         {
-           
+            //if the player is in midair, collides with ground, and is moving downwards
+            if(airborne == true && rb2d.velocity.y <= 0)
+            {
+                fallSound.Play();
+            }
             slowFall = true;
             anim.SetBool("Airborne", false);
+            airborne = false;
         }
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -207,13 +220,19 @@ public class PlayerController : MonoBehaviour {
         if(!raycast.collisionDown)
         {
             anim.SetBool("Airborne", true);
+            airborne = true;
             
         }
         else if(raycast.collisionDown )
         {
-            
+            //if the player is in midair, collides with ground, and is moving downwards
+            if(airborne == true && rb2d.velocity.y <= 0)
+            {
+                fallSound.Play();
+            }
             slowFall = true;
             anim.SetBool("Airborne", false);
+            airborne = false;
         }
         //swipe up to move up
         //to double jump, finger has to go past the minimum distance and swipe again.
@@ -250,19 +269,30 @@ public class PlayerController : MonoBehaviour {
                             {
                                 if (rb2d.velocity.y <= 0)
                                 {
+                                    anim.SetBool("Airborne", true);
+                                    airborne = true;
                                     slowFall = true;
                                     //calculate jump force
                                     //this returns 1 if player swipes up, 0 if the swipe to the side, and negative if they swipe downward
                                     float jumpMod = Vector2.Dot(Vector2.up, swipeVec.normalized);
+                                    //prevent jumping horizontally for large distances
+                                    if(jumpMod < 0.25f)
+                                    {
+                                        jumpMod = 0.25f;
+                                    }
                                     ySpeed = jumpSpeed*jumpMod;    //original float ySpeed                     
                                     moveHorizontal = (1-jumpMod) *(jumpSpeed/2)* Mathf.Sign(swipeVec.x);//float xSpeed = jumpSpeed-(jumpSpeed*jumpMod);
-                                    //rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
+                                    rb2d.velocity = new Vector2(moveHorizontal * speed, ySpeed); /////////////////////rb2d.velocity.x,jumpspeed
                                     //only on midair jumps
                                     if (!raycast.collisionDown)
                                     {
                                         jumpRand = Random.Range(0, blockArray.Count);
                                         Instantiate(blockArray[jumpRand], feetPos, Quaternion.identity);
-                                        jumpSound.Play();
+                                         doubleJumpSound.Play();
+                                    }
+                                     else
+                                    {
+                                       jumpSound.Play();
                                     }
                                 }
                                 //If player tries to jump before apex, they cannot jump for a set time
@@ -276,6 +306,7 @@ public class PlayerController : MonoBehaviour {
                                 slowFall = false;
                             }
                         }
+                       
                         break;
             } //end switch
         }
@@ -286,8 +317,41 @@ public class PlayerController : MonoBehaviour {
                 moveHorizontal = 0;
             }
         }
-        currentVelocity = new Vector2(moveHorizontal * speed, ySpeed);
-        rb2d.velocity = currentVelocity;
+
+        //cause player to fall slowly
+        float vertVelocity = rb2d.velocity.y;
+
+        if (vertVelocity < 0 && slowFall == true)
+        {
+            vertVelocity = fallSpeed;
+        }
+        else if (vertVelocity < 0 && slowFall == false)
+        {
+            if (vertVelocity == fallSpeed)
+            {
+                vertVelocity = 0;
+            }
+        }
+        //if the player is falling or grounded
+        if(vertVelocity <= 0)
+        {
+            //if the player is grounded
+            if(raycast.collisionDown)
+            {
+                 //set player velocity
+                currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity);
+            }
+            //if the player is in midair
+            else
+            {
+                //set player velocity
+                currentVelocity = new Vector2(moveHorizontal * speed, vertVelocity); //was rb2d.velocity.x
+            }
+           
+           //assign the velocity value to the player
+            rb2d.velocity = currentVelocity;
+        }
+
 #endif
 
 
