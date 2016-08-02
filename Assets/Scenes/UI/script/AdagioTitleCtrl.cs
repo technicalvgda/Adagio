@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -7,13 +8,15 @@ using System.Collections;
 public class AdagioTitleCtrl : MonoBehaviour
 {
     [Header("Graphics")]
-    public SpriteRenderer spriteFade;
+    public Image imgFade;
+    //public SpriteRenderer spriteFade;
 
     [Header("Audio")]
     public AdagioAudio audioCtrl;
 
     [Header("Sequence")]
-    public GameObject objIntro;
+    public Image movIntro;
+    //public GameObject objIntro;
     public GameObject objLogo;
     public GameObject objButtonBar;
 
@@ -67,20 +70,20 @@ public class AdagioTitleCtrl : MonoBehaviour
         // probably not necessary in the final build
 
         // Put a curtain up so that nobody sees what's happening
-        spriteFade.color = Color.black;
+        imgFade.color = Color.black;
         
         yield return null;
 
         // Enable everything
         // Disable everything
-        objIntro.SetActive(true);
+        //objIntro.SetActive(true);
         objLogo.SetActive(true);
         objButtonBar.SetActive(true);
         menuTitle.Enter();
 
         yield return delay05s;
 
-        objIntro.SetActive(false);
+        //objIntro.SetActive(false);
         objLogo.SetActive(false);
         objButtonBar.SetActive(false);
         menuTitle.Exit();
@@ -88,7 +91,7 @@ public class AdagioTitleCtrl : MonoBehaviour
         yield return delay05s;
 
         // Remove curtain
-        spriteFade.color = Color.clear;
+        imgFade.color = Color.clear;
 
         yield return delay1s;
     }
@@ -100,7 +103,8 @@ public class AdagioTitleCtrl : MonoBehaviour
         //yield return delay05s;
         //yield return delay1s;
 
-        objIntro.SetActive(true);
+        ((MovieTexture)movIntro.material.mainTexture).Play();
+        yield return new WaitForSeconds(1.025f);
         audioCtrl.PlayBgm(0, true);
 
         // Intro finishes after [1643 frames], the logo should be enabled around here
@@ -124,21 +128,22 @@ public class AdagioTitleCtrl : MonoBehaviour
 
     IEnumerator SkipIntro()
     {
-        while (spriteFade.color.a < 1)
+        while (imgFade.color.a < 1)
         {
-            spriteFade.color += new Color(0, 0, 0, 0.03f);
+            imgFade.color += new Color(0, 0, 0, 0.03f);
             yield return null;
         }
-        spriteFade.color = Color.black;
+        imgFade.color = Color.black;
 
-        objIntro.SetActive(false);
+        ((MovieTexture)movIntro.material.mainTexture).Stop();
+        movIntro.gameObject.SetActive(false);
 
-        while (spriteFade.color.a > 0)
+        while (imgFade.color.a > 0)
         {
-            spriteFade.color -= new Color(0, 0, 0, 0.1f);
+            imgFade.color -= new Color(0, 0, 0, 0.1f);
             yield return null;
         }
-        spriteFade.color = Color.clear;
+        imgFade.color = Color.clear;
     }
 
     IEnumerator LogoSequence()
@@ -149,7 +154,8 @@ public class AdagioTitleCtrl : MonoBehaviour
         //deactivating Intro object while thin symbol on logo is fading out causes it to flicker?????????????????????
         //the fade out is between 2.5s to 3.1s. yield outside of this range
 
-        objIntro.SetActive(false);
+        ((MovieTexture)movIntro.material.mainTexture).Stop();
+        movIntro.gameObject.SetActive(false);
 
         yield return delay1s;
 
@@ -177,13 +183,13 @@ public class AdagioTitleCtrl : MonoBehaviour
         // a method called StartGame is not supposed to do this but
         // it isn't like there's a black fade/audio fade anywhere else (lol
 
-        while (spriteFade.color.a < 1)
+        while (imgFade.color.a < 1)
         {
-            spriteFade.color += new Color(0, 0, 0, 0.05f);
+            imgFade.color += new Color(0, 0, 0, 0.05f);
             AudioListener.volume -= 0.05f;
             yield return null;
         }
-        spriteFade.color = Color.black;
+        imgFade.color = Color.black;
 
         // Audio listener is global, so reenable it to avoid fucking up other scenes
         AudioListener.volume = 1;
