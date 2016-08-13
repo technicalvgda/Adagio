@@ -3,15 +3,9 @@ using System.Collections;
 
 public class AdagioMenu : AdagioUIElement
 {
-    public float initialDelay;
+    public float waitDelay;
+    protected float waitOffset = 0.2f;
     public AdagioSelectable[] selectables;
-    protected WaitForSeconds waitDelay;
-    protected WaitForSeconds waitOffset = new WaitForSeconds(0.2f);
-    
-    void Awake()
-    {
-        waitDelay = new WaitForSeconds(initialDelay);
-    }
 
     public override void Enter()
     {
@@ -28,12 +22,14 @@ public class AdagioMenu : AdagioUIElement
 
     protected virtual IEnumerator _SelectablesFadeIn()
     {
-        yield return waitDelay;
+        //yield return waitDelay;
+        yield return AdagioHelper.WaitForRealSeconds(waitDelay);
 
         for (int i = 0; i < selectables.Length; i++)
         {
             selectables[i].Enter();
-            yield return waitOffset;
+            //yield return waitOffset;
+            yield return AdagioHelper.WaitForRealSeconds(waitOffset);
         }
 
         // This is supposed to enable the button after it has completely settled,

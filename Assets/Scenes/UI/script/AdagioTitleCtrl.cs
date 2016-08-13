@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -7,17 +8,19 @@ using System.Collections;
 public class AdagioTitleCtrl : MonoBehaviour
 {
     [Header("Graphics")]
-    public SpriteRenderer spriteFade;
+    public Image imgFade;
+    //public SpriteRenderer spriteFade;
 
     [Header("Audio")]
     public AdagioAudio audioCtrl;
 
     [Header("Sequence")]
-    public GameObject objIntro;
+    public Image movIntro;
+    //public GameObject objIntro;
     public GameObject objLogo;
     public GameObject objButtonBar;
 
-    [Header("First menu")]
+    [Space]
     public AdagioMenu menuTitle;
     AdagioMenu menuCurrent;
 
@@ -31,8 +34,8 @@ public class AdagioTitleCtrl : MonoBehaviour
     [Tooltip("Build index of the codecies screen")]
     public int codeciesIndex = 4;
 
-    WaitForSeconds delay05s = new WaitForSeconds(0.5f);
-    WaitForSeconds delay1s = new WaitForSeconds(1);
+    //WaitForSeconds delay05s = new WaitForSeconds(0.5f);
+    //WaitForSeconds delay1s = new WaitForSeconds(1);
 
     void Start()
     {
@@ -44,6 +47,7 @@ public class AdagioTitleCtrl : MonoBehaviour
     {
         // Unfreezes time
         Time.timeScale = 1f;
+        //Time.timeScale = 0f;
 
         // Sets the camera's size to match that of the canvas
         // This makes the sprites appear correctly
@@ -60,102 +64,122 @@ public class AdagioTitleCtrl : MonoBehaviour
     //    routine = StartCoroutine(arg);
     //}
 
-    IEnumerator _ForceLoad()
-    {
-        // fixes some fuckery in the editor where a GIANT object would
-        // cause the game to flinch and desync when it's first enabled,
-        // probably not necessary in the final build
+    //IEnumerator _ForceLoad()
+    //{
+    //    // fixes some fuckery in the editor where a GIANT object would
+    //    // cause the game to flinch and desync when it's first enabled,
+    //    // probably not necessary in the final build
 
-        // Put a curtain up so that nobody sees what's happening
-        spriteFade.color = Color.black;
+    //    // Put a curtain up so that nobody sees what's happening
+    //    imgFade.color = Color.black;
         
-        yield return null;
+    //    yield return null;
 
-        // Enable everything
-        // Disable everything
-        objIntro.SetActive(true);
-        objLogo.SetActive(true);
-        objButtonBar.SetActive(true);
-        menuTitle.Enter();
+    //    // Enable everything
+    //    // Disable everything
+    //    //objIntro.SetActive(true);
+    //    objLogo.SetActive(true);
+    //    objButtonBar.SetActive(true);
+    //    menuTitle.Enter();
 
-        yield return delay05s;
+    //    yield return delay05s;
 
-        objIntro.SetActive(false);
-        objLogo.SetActive(false);
-        objButtonBar.SetActive(false);
-        menuTitle.Exit();
+    //    //objIntro.SetActive(false);
+    //    objLogo.SetActive(false);
+    //    //objButtonBar.SetActive(false);
+    //    menuTitle.Exit();
 
-        yield return delay05s;
+    //    yield return delay05s;
 
-        // Remove curtain
-        spriteFade.color = Color.clear;
+    //    // Remove curtain
+    //    imgFade.color = Color.clear;
 
-        yield return delay1s;
-    }
+    //    yield return delay1s;
+    //}
 
     IEnumerator _Run()
     {
         // Enable only one
-        yield return _ForceLoad();
+        //yield return _ForceLoad();
         //yield return delay05s;
         //yield return delay1s;
 
-        objIntro.SetActive(true);
+        ((MovieTexture)movIntro.material.mainTexture).Play();
+        yield return AdagioHelper.WaitForRealSeconds(1.1f);
         audioCtrl.PlayBgm(0, true);
 
         // Intro finishes after [1643 frames], the logo should be enabled around here
 
-        yield return new WaitForSeconds(2.5f); // +150
+        yield return AdagioHelper.WaitForRealSeconds(2.5f); // +150
 
         for (int i = 0; i < 1380; i++) // +1380
         {
             if (Input.anyKeyDown)
             {
-                yield return SkipIntro();
-                yield return LogoSequence();
+                yield return _SkipIntro();
+                yield return _LogoSequence();
                 yield break;
             }
             yield return null;
         }
 
-        yield return new WaitForSeconds(2.1f); // +~120
-        yield return LogoSequence();
+        yield return AdagioHelper.WaitForRealSeconds(2.3f); // +~120
+
+        ((MovieTexture)movIntro.material.mainTexture).Stop();
+        movIntro.gameObject.SetActive(false);
+        yield return _LogoSequence();
     }
 
-    IEnumerator SkipIntro()
+    IEnumerator _SkipIntro()
     {
-        while (spriteFade.color.a < 1)
+        while (imgFade.color.a < 1)
         {
-            spriteFade.color += new Color(0, 0, 0, 0.03f);
+            imgFade.color += new Color(0, 0, 0, 0.03f);
             yield return null;
         }
-        spriteFade.color = Color.black;
+        imgFade.color = Color.black;
 
-        objIntro.SetActive(false);
+        ((MovieTexture)movIntro.material.mainTexture).Stop();
+        movIntro.gameObject.SetActive(false);
 
-        while (spriteFade.color.a > 0)
+        while (imgFade.color.a > 0)
         {
-            spriteFade.color -= new Color(0, 0, 0, 0.1f);
+            imgFade.color -= new Color(0, 0, 0, 0.1f);
             yield return null;
         }
-        spriteFade.color = Color.clear;
+        imgFade.color = Color.clear;
     }
 
-    IEnumerator LogoSequence()
+    //IEnumerator _LogoSequence()
+    //{
+    //    objLogo.SetActive(true);
+
+    //    yield return delay1s;
+    //    //deactivating Intro object while thin symbol on logo is fading out causes it to flicker?????????????????????
+    //    //the fade out is between 2.5s to 3.1s. yield outside of this range
+
+    //    ((MovieTexture)movIntro.material.mainTexture).Stop();
+    //    movIntro.gameObject.SetActive(false);
+
+    //    yield return delay1s;
+
+    //    objButtonBar.SetActive(true);
+
+    //    yield return delay05s;
+
+    //    menuTitle.Enter();
+    //    menuCurrent = menuTitle;
+    //}
+
+    IEnumerator _LogoSequence()
     {
         objLogo.SetActive(true);
 
-        yield return delay1s;
-        //deactivating Intro object while thin symbol on logo is fading out causes it to flicker?????????????????????
-        //the fade out is between 2.5s to 3.1s. yield outside of this range
-
-        objIntro.SetActive(false);
-
-        yield return delay1s;
+        yield return AdagioHelper.WaitForRealSeconds(1f);
 
         objButtonBar.SetActive(true);
 
-        yield return delay05s;
+        yield return AdagioHelper.WaitForRealSeconds(0.5f);
 
         menuTitle.Enter();
         menuCurrent = menuTitle;
@@ -177,13 +201,13 @@ public class AdagioTitleCtrl : MonoBehaviour
         // a method called StartGame is not supposed to do this but
         // it isn't like there's a black fade/audio fade anywhere else (lol
 
-        while (spriteFade.color.a < 1)
+        while (imgFade.color.a < 1)
         {
-            spriteFade.color += new Color(0, 0, 0, 0.05f);
+            imgFade.color += new Color(0, 0, 0, 0.05f);
             AudioListener.volume -= 0.05f;
             yield return null;
         }
-        spriteFade.color = Color.black;
+        imgFade.color = Color.black;
 
         // Audio listener is global, so reenable it to avoid fucking up other scenes
         AudioListener.volume = 1;
