@@ -1,14 +1,15 @@
-ORDER:Someone comes. After all these countless ages…@
-ZIMR...?? ...A talking statue??@
+ORDER:Someone comes. After all these countless ages...@
+ZIMRI:...?? ...A talking statue??@
 ORDER:It has been... so long since I last used my voice.
 The cave, temple...instrument. Crumbled, broken.
-We are lost. I linger...
-Why have you come? Why has it taken so long?@
+We are lost. I linger...@
+ORDER:Why have you come? Why has it taken so long?@
 ZIMRI:I...My name is Zimri. I am...or was, a monk of the Arafel Monastery.
 Our library is vast, and old, with many corners untouched. One day I found
-this scroll. It looked so nondescript, just lying there among the piles, I picked it 
-up just by whim. What it contains...I've never heard anything like it. 
-It tells of a temple within a cave, a place of music and creation, where the gods 
+this scroll.@
+ZIMRI:It looked so nondescript, just lying there among the piles, I picked it 
+up just by whim. What it contains...I've never heard anything like it.@
+ZIMRI:It tells of a temple within a cave, a place of music and creation, where the gods 
 were worshipped in person. There is an old map that is difficult to read, but I tried 
 to follow it...is this...is this it?@
 ORDER:Ah! Yes. But we are broken. We are not what we were. I linger, I am weary...
@@ -22,9 +23,11 @@ ZIMRI:...We sang songs, as children, of the creators. They were supposed to be j
 lullabies. There were three sisters:  Order, Splendor and Grace. Three statues here...
 can it...is that you? @
 ORDER:Just stories? ...You really do not know? ...Yes. We are the Samara.
-I am called Order. The cycles of the earth...are in their appointed place, 
+I am called Order.@
+ORDER:The cycles of the earth...are in their appointed place, 
 their appointed time...because I willed it. These statues you made are our 
-last connection to this world. I hold on. The other songs...silence. 
+last connection to this world.@
+ORDER:I hold on. The other songs...silence. 
 The instrument is in shambles, disrepair.@
 ZIMRI:What instrument?@
 ORDER:This...is the instrument. The cave, the temple, where we stand. 
