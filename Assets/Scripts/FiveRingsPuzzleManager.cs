@@ -24,6 +24,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	private GameObject player;
 	//The array of locations where the rings will travel to
 	public GameObject[] patternLocations;
+	//Blocks that are to be activated when the puzzle starts
+	public GameObject[] additionalBlocksToSpawnOnStart;
 	//the number of rings collected
 	private int numbRingsCollected;
 	//bool for if the puzzle has been reset
@@ -82,7 +84,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 				if (!rayCast.collisionDown) 
 				{
 					jumpCounter++;	
-					Debug.Log (jumpCounter);
+					//Debug.Log (jumpCounter);
 					//set to false so it can execute the next case statement
 					finishedCaseStatement = false;
 					puzzleHasReset = false;
@@ -91,20 +93,20 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 
 			switch (jumpCounter) 
 			{
-			case 1:
+			case 3:
 				{	
 					if (finishedCaseStatement == false) {
 						//surround the ring with blocks, simultaneously spawn them and add them to a list for later deletion
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x + 1, transform.position.y, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x - 1, transform.position.y, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlock, new Vector3 (transform.position.x, transform.position.y - 1, transform.position.z), Quaternion.identity));
+						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x + 1.5f, transform.position.y, transform.position.z), Quaternion.identity));
+						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x+0.5f, transform.position.y + 1, transform.position.z), Quaternion.identity));
+						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x-0.5f, transform.position.y, transform.position.z), Quaternion.identity));
+						surroundingBlocks.Add ((GameObject)Instantiate (theBlock, new Vector3 (transform.position.x+0.5f, transform.position.y - 1, transform.position.z), Quaternion.identity));
 						//set to true to avoid executing this case statement continuously
 						finishedCaseStatement = true;
 					}
 					break;
 				}
-			case 2:
+			case 6:
 				{
 					if (finishedCaseStatement == false) 
 					{
@@ -113,7 +115,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 3:
+			case 9:
 				{
 					if (finishedCaseStatement == false) 
 					{					
@@ -122,7 +124,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 4:
+			case 12:
 				{
 					if (finishedCaseStatement == false)
 					{
@@ -133,7 +135,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 5:
+			case 15:
 				{	if (finishedCaseStatement == false) 
 					{
 						ring3.SetActive(true);
@@ -141,7 +143,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 						ring3.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
 						ring4.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
 						ring4.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
-							finishedCaseStatement = true;
+						finishedCaseStatement = true;
 					}
 					break;
 				}
@@ -152,9 +154,13 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	public void startPuzzle()
 	{
 		puzzleStarted = true;
-		startRing.transform.position = transform.position;
+		startRing.transform.position = transform.position+new Vector3(0.5f,0,0);
 		//reduce radius so that the player won't accidentaly restart the puzzle by touching the collider, NEED TO RESET BACK TO 5 UPON PUZZLE COMPLETION
 		startRing.GetComponent<CircleCollider2D>().radius = 1;
+		for (int i = 0; i < additionalBlocksToSpawnOnStart.Length; i++) 
+		{
+			additionalBlocksToSpawnOnStart [i].SetActive (true);
+		}
 	}
 	//returns the pattern locations
 	public GameObject[] getPatternLocations()

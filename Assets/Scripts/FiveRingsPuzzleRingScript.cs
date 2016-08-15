@@ -37,7 +37,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 		beginningPos = transform.position;
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (!isMoving) 
@@ -89,7 +89,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 		pattern2Init = true;
 		locations = fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().getPatternLocations ();
 	}
-	//HAndles the movement, forward and reversed traversal of the rings
+	//Handles the movement, forward and reversed traversal of the rings
 	IEnumerator Pattern1Traversal()
 	{
 		if (!reverseTraversal) {
@@ -142,7 +142,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 				transform.position = pos + axis * Mathf.Sin (Time.time * frequency) * magnitude;
 				Debug.DrawLine (pos, transform.position, Color.green, 100);
 
-				if (transform.position.x > (locations [locationCounter].transform.position.x - 0.5f) && transform.position.x < (locations [locationCounter].transform.position.x + 0.5f)) 
+				if (transform.position.x > (locations [locationCounter].transform.position.x - 0.25f) && transform.position.x < (locations [locationCounter].transform.position.x + 0.25f)) 
 				{
 					if (transform.position.y > (locations [locationCounter].transform.position.y - 0.25f) && transform.position.y < (locations [locationCounter].transform.position.y + 0.25f)) 
 					{
@@ -160,6 +160,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 		else 
 		{
 			locationCounter = 6;
+
 			while (transform.position != locations [locationCounter].transform.position) 
 			{
 				Vector3 vectorToTarget = locations [locationCounter].transform.position - transform.position;
