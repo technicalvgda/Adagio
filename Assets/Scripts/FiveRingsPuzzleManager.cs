@@ -77,7 +77,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 		if (puzzleStarted && !complete) 
 		{
 			//If the player is standing, then reset the puzzle
-			if (rayCast.collisionDown && !puzzleHasReset && jumpCounter >= 6) 
+			if (rayCast.collisionDown && !puzzleHasReset && jumpCounter >= 4) 
 			{
 				resetPuzzle ();
 				puzzleHasReset = true;
@@ -98,7 +98,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 
 			switch (jumpCounter) 
 			{
-			case 3:
+			case 2:
 				{	
 					if (finishedCaseStatement == false) {
 						//surround the ring with blocks, simultaneously spawn them and add them to a list for later deletion
@@ -111,7 +111,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 6:
+			case 4:
 				{
 					if (finishedCaseStatement == false) 
 					{
@@ -122,7 +122,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 9:
+			case 6:
 				{
 					if (finishedCaseStatement == false) 
 					{					
@@ -131,7 +131,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 12:
+			case 8:
 				{
 					if (finishedCaseStatement == false)
 					{
@@ -144,7 +144,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					}
 					break;
 				}
-			case 15:
+			case 10:
 				{	if (finishedCaseStatement == false) 
 					{
 						ring3.SetActive(true);
@@ -207,7 +207,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 		for (int i = 0; i < surroundingBlocks.Count; i++) {
 			surroundingBlocks [i].SetActive (true);
 		}
-		jumpCounter = 6;
+		jumpCounter = 4;
 		finishedCaseStatement = false;
 		numbRingsCollected = 0;
 	}
