@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FiveStringButton : MonoBehaviour {
+public class RedDrum : MonoBehaviour {
+
     public bool pressed = false;
     public bool collide = false;
-    
-    
+
+
     void OnTriggerEnter2D(Collider2D col)
     {
 
@@ -16,7 +17,6 @@ public class FiveStringButton : MonoBehaviour {
 
 
     }
-
     void OnTriggerExit2D(Collider2D col)
     {
         collide = false;

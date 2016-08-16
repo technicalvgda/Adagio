@@ -66,6 +66,4 @@ public class FIveStringPressurePlate : MonoBehaviour {
 			this.gameObject.SetActive (false);
         }
     }
-
-  
 }

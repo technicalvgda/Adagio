@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FiveStringButton : MonoBehaviour {
+public class Ring : MonoBehaviour {
+    public int drumNum = 1;
     public bool pressed = false;
     public bool collide = false;
-    
-    
+
+
+    void Start() {
+
+    }
+
     void OnTriggerEnter2D(Collider2D col)
     {
-
-        Debug.Log("Enter");
-
         pressed = true;
-        Debug.Log(collide);
-
 
     }
 
