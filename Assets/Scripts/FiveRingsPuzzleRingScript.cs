@@ -96,6 +96,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 			while (transform.position != locations [locationCounter].transform.position) {
 				transform.position = Vector3.MoveTowards (transform.position, locations [locationCounter].transform.position, speed * Time.deltaTime);
 				if (transform.position == locations [locationCounter].transform.position) {
+					fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().ringBounceSoundPlay ();
 					locationCounter++;
 					if (locationCounter == locations.Length)
 						locationCounter = 0;
@@ -110,6 +111,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 			while (transform.position != locations [locationCounter].transform.position) {
 				transform.position = Vector3.MoveTowards (transform.position, locations [locationCounter].transform.position, speed * Time.deltaTime);
 				if (transform.position == locations [locationCounter].transform.position) {
+					fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().ringBounceSoundPlay ();
 					locationCounter--;
 					if (locationCounter < 0) {
 						locationCounter = locations.Length-1;
@@ -147,6 +149,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 					if (transform.position.y > (locations [locationCounter].transform.position.y - 0.25f) && transform.position.y < (locations [locationCounter].transform.position.y + 0.25f)) 
 					{
 						transform.position = locations [locationCounter].transform.position;
+						fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().ringBounceSoundPlay ();
 						locationCounter--;
 						if (locationCounter < 0) {
 							locationCounter = locations.Length - 1;
@@ -178,6 +181,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 					if (transform.position.y > (locations [locationCounter].transform.position.y - 0.25f) && transform.position.y < (locations [locationCounter].transform.position.y + 0.25f)) 
 					{
 						transform.position = locations [locationCounter].transform.position;
+						fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().ringBounceSoundPlay ();
 						locationCounter++;
 						if (locationCounter == locations.Length) {
 							locationCounter = 0;

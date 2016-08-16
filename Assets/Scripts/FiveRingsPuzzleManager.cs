@@ -30,6 +30,10 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	private int numbRingsCollected;
 	//bool for if the puzzle has been reset
 	private bool puzzleHasReset;
+	private AudioSource audioSource;
+	public AudioClip ringAppearClip,ringDisappearClip;
+	public AudioClip[] ringBounceClips;
+	private int randIndex;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
@@ -44,6 +48,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 		ring4.SetActive (false);
 		complete = false;
 		puzzleHasReset = false;
+		audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -72,7 +77,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 		if (puzzleStarted && !complete) 
 		{
 			//If the player is standing, then reset the puzzle
-			if (rayCast.collisionDown && !puzzleHasReset) 
+			if (rayCast.collisionDown && !puzzleHasReset && jumpCounter >= 6) 
 			{
 				resetPuzzle ();
 				puzzleHasReset = true;
@@ -112,6 +117,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					{
 						ring1.SetActive (true);
 						finishedCaseStatement = true;
+						audioSource.clip = ringAppearClip;
+						audioSource.Play ();
 					}
 					break;
 				}
@@ -129,6 +136,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					if (finishedCaseStatement == false)
 					{
 						ring2.SetActive (true);
+						audioSource.clip = ringAppearClip;
+						audioSource.Play ();
 						ring2.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
 						ring2.GetComponent<FiveRingsPuzzleRingScript> ().pattern1Begin ();
 						finishedCaseStatement = true;
@@ -140,6 +149,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 					{
 						ring3.SetActive(true);
 						ring4.SetActive(true);
+						audioSource.clip = ringAppearClip;
+						audioSource.Play ();
 						ring3.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
 						ring4.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
 						ring4.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
@@ -170,6 +181,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	public void collectedRing()
 	{
 		numbRingsCollected++;
+		audioSource.clip = ringDisappearClip;
+		audioSource.Play ();
 	}
 	//returns the number of rings collected
 	public int getNumbRingsCollected()
@@ -194,8 +207,14 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 		for (int i = 0; i < surroundingBlocks.Count; i++) {
 			surroundingBlocks [i].SetActive (true);
 		}
-		jumpCounter = 2;
+		jumpCounter = 6;
 		finishedCaseStatement = false;
 		numbRingsCollected = 0;
+	}
+	public void ringBounceSoundPlay()
+	{
+		randIndex = Random.Range (0, ringBounceClips.Length);
+		audioSource.clip = ringBounceClips [randIndex];
+		audioSource.Play ();
 	}
 }
