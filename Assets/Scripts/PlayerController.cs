@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour {
             //if the player is in midair, collides with ground, and is moving downwards
             if(airborne == true && rb2d.velocity.y <= 0)
             {
-                //fallSound.Play();
+                fallSound.Play();
             }
             slowFall = true;
             anim.SetBool("Airborne", false);
