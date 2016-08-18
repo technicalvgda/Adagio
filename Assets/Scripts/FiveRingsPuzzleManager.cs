@@ -34,6 +34,7 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	public AudioClip ringAppearClip,ringDisappearClip;
 	public AudioClip[] ringBounceClips;
 	private int randIndex;
+	public GameObject cameraZoomArea;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
@@ -52,114 +53,110 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void Update ()
 	{
-		
-		//if the player has collected all the moving rings and the ring in the center, then the player has finished the puzzle
-		if (numbRingsCollected == 5 && !complete) 
-		{
-			Debug.Log ("You have finished the 5 Ring Puzzle");
-			complete = true;
-			Camera.main.GetComponent<OpenGate>().doneCounter++;
-		}
-		else if (numbRingsCollected == 4) 
-		{
-			//collected all the rings
-			//deactivate the surrounding blocks
-			for (int i = 0; i < surroundingBlocks.Count; i++) 
-			{
-				surroundingBlocks [i].SetActive (false);
+		//If the camera is zoomed in aka if the player is in the puzzle play area
+		if (cameraZoomArea.GetComponent<ZoomOut> ().isZoomedIn == true) {
+			//if the player has collected all the moving rings and the ring in the center, then the player has finished the puzzle
+			if (numbRingsCollected == 5 && !complete) {
+				Debug.Log ("You have finished the 5 Ring Puzzle");
+				complete = true;
+				Camera.main.GetComponent<OpenGate> ().doneCounter++;
+			} else if (numbRingsCollected == 4) {
+				//collected all the rings
+				//deactivate the surrounding blocks
+				for (int i = 0; i < surroundingBlocks.Count; i++) {
+					surroundingBlocks [i].SetActive (false);
+				}
+				//reset the radius of the ring in the center
+				startRing.GetComponent<CircleCollider2D> ().radius = 5;
 			}
-			//reset the radius of the ring in the center
-			startRing.GetComponent<CircleCollider2D>().radius = 5;
-		}
-		//Puzzle started but not complete
-		if (puzzleStarted && !complete) 
-		{
-			//If the player is standing, then reset the puzzle
-			if (rayCast.collisionDown && !puzzleHasReset && jumpCounter >= 4) 
-			{
-				resetPuzzle ();
-				puzzleHasReset = true;
-			}
+			//Puzzle started but not complete
+			if (puzzleStarted && !complete) {
+				//If the player is standing, then reset the puzzle
+				if (rayCast.collisionDown && !puzzleHasReset && jumpCounter >= 4) {
+					resetPuzzle ();
+					puzzleHasReset = true;
+				}
 
-			if (Input.GetKeyDown (KeyCode.Space)) 
-			{
-				//if the player does a jump midair
-				if (!rayCast.collisionDown) 
-				{
-					jumpCounter++;	
-					//Debug.Log (jumpCounter);
-					//set to false so it can execute the next case statement
-					finishedCaseStatement = false;
-					puzzleHasReset = false;
+				if (Input.GetKeyDown (KeyCode.Space)) {
+					//if the player does a jump midair
+					if (!rayCast.collisionDown) {
+						jumpCounter++;	
+						//Debug.Log (jumpCounter);
+						//set to false so it can execute the next case statement
+						finishedCaseStatement = false;
+						puzzleHasReset = false;
+					}
 				}
-			}
 
-			switch (jumpCounter) 
-			{
-			case 2:
-				{	
-					if (finishedCaseStatement == false) {
-						//surround the ring with blocks, simultaneously spawn them and add them to a list for later deletion
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x + 1.5f, transform.position.y, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x+0.5f, transform.position.y + 1, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x-0.5f, transform.position.y, transform.position.z), Quaternion.identity));
-						surroundingBlocks.Add ((GameObject)Instantiate (theBlock, new Vector3 (transform.position.x+0.5f, transform.position.y - 1, transform.position.z), Quaternion.identity));
-						//set to true to avoid executing this case statement continuously
-						finishedCaseStatement = true;
+				switch (jumpCounter) {
+				case 2:
+					{	
+						if (finishedCaseStatement == false) {
+							//surround the ring with blocks, simultaneously spawn them and add them to a list for later deletion
+							surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x + 1.5f, transform.position.y, transform.position.z), Quaternion.identity));
+							surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x + 0.5f, transform.position.y + 1, transform.position.z), Quaternion.identity));
+							surroundingBlocks.Add ((GameObject)Instantiate (theBlockWithBanner, new Vector3 (transform.position.x - 0.5f, transform.position.y, transform.position.z), Quaternion.identity));
+							surroundingBlocks.Add ((GameObject)Instantiate (theBlock, new Vector3 (transform.position.x + 0.5f, transform.position.y - 1, transform.position.z), Quaternion.identity));
+							//set to true to avoid executing this case statement continuously
+							finishedCaseStatement = true;
+						}
+						break;
 					}
-					break;
-				}
-			case 4:
-				{
-					if (finishedCaseStatement == false) 
+				case 4:
 					{
-						ring1.SetActive (true);
-						finishedCaseStatement = true;
-						audioSource.clip = ringAppearClip;
-						audioSource.Play ();
+						if (finishedCaseStatement == false) {
+							ring1.SetActive (true);
+							finishedCaseStatement = true;
+							audioSource.clip = ringAppearClip;
+							audioSource.Play ();
+						}
+						break;
 					}
-					break;
-				}
-			case 6:
-				{
-					if (finishedCaseStatement == false) 
-					{					
-						ring1.GetComponent<FiveRingsPuzzleRingScript> ().pattern1Begin ();
-						finishedCaseStatement = true;
-					}
-					break;
-				}
-			case 8:
-				{
-					if (finishedCaseStatement == false)
+				case 6:
 					{
-						ring2.SetActive (true);
-						audioSource.clip = ringAppearClip;
-						audioSource.Play ();
-						ring2.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
-						ring2.GetComponent<FiveRingsPuzzleRingScript> ().pattern1Begin ();
-						finishedCaseStatement = true;
+						if (finishedCaseStatement == false) {					
+							ring1.GetComponent<FiveRingsPuzzleRingScript> ().pattern1Begin ();
+							finishedCaseStatement = true;
+						}
+						break;
 					}
-					break;
-				}
-			case 10:
-				{	if (finishedCaseStatement == false) 
+				case 8:
 					{
-						ring3.SetActive(true);
-						ring4.SetActive(true);
-						audioSource.clip = ringAppearClip;
-						audioSource.Play ();
-						ring3.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
-						ring4.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
-						ring4.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
-						finishedCaseStatement = true;
+						if (finishedCaseStatement == false) {
+							ring2.SetActive (true);
+							audioSource.clip = ringAppearClip;
+							audioSource.Play ();
+							ring2.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
+							ring2.GetComponent<FiveRingsPuzzleRingScript> ().pattern1Begin ();
+							finishedCaseStatement = true;
+						}
+						break;
 					}
-					break;
-				}
-			}		
-		}	
+				case 10:
+					{
+						if (finishedCaseStatement == false) {
+							ring3.SetActive (true);
+							ring4.SetActive (true);
+							audioSource.clip = ringAppearClip;
+							audioSource.Play ();
+							ring3.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
+							ring4.GetComponent<FiveRingsPuzzleRingScript> ().reverseTraversal = true;
+							ring4.GetComponent<FiveRingsPuzzleRingScript> ().pattern2Begin ();
+							finishedCaseStatement = true;
+						}
+						break;
+					}
+				}		
+			}	
+		} 
+		//else if the player is not in the playable zone area
+		else if(puzzleStarted && !cameraZoomArea.GetComponent<ZoomOut>().isZoomedIn)
+		{
+			//reset the puzzle;
+			resetPuzzle ();
+		}
 	}
 	//function that starts the puzzle
 	public void startPuzzle()

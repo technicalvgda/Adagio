@@ -14,7 +14,7 @@ public class ZoomOut : MonoBehaviour
 
     public GameObject leftXBorder, rightXBorder, topYBorder, bottomYBorder;
     Transform player;
-
+	public bool isZoomedIn;
 
     // Use this for initialization
     void Start ()
@@ -60,6 +60,7 @@ public class ZoomOut : MonoBehaviour
 
     void EnterZone()
     {
+		isZoomedIn = true;
         vol1 = audioHandler.audio1.volume;
         if (audioHandler.audio1.volume > 0.5f)
         {
@@ -90,6 +91,7 @@ public class ZoomOut : MonoBehaviour
 
     void ExitZone()
     {
+		isZoomedIn = false;
         audioHandler.audio1.volume = vol1;
         audioHandler.audio2.volume = vol2;
         audioHandler.audio3.volume = vol3;
