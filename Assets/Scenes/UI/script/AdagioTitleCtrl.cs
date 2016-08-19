@@ -103,8 +103,10 @@ public class AdagioTitleCtrl : MonoBehaviour
         //yield return _ForceLoad();
         //yield return delay05s;
         //yield return delay1s;
-
-        ((MovieTexture)movIntro.material.mainTexture).Play();
+        if (movIntro.material.mainTexture != null)
+        {
+            ((MovieTexture)movIntro.material.mainTexture).Play();
+        }
         yield return AdagioHelper.WaitForRealSeconds(1.1f);
         audioCtrl.PlayBgm(0, true);
 
@@ -114,7 +116,7 @@ public class AdagioTitleCtrl : MonoBehaviour
 
         for (int i = 0; i < 1380; i++) // +1380
         {
-            if (Input.anyKeyDown)
+            if (Input.anyKeyDown || movIntro.material.mainTexture == null)
             {
                 yield return _SkipIntro();
                 yield return _LogoSequence();
@@ -138,8 +140,10 @@ public class AdagioTitleCtrl : MonoBehaviour
             yield return null;
         }
         imgFade.color = Color.black;
-
-        ((MovieTexture)movIntro.material.mainTexture).Stop();
+        if(movIntro.material.mainTexture != null)
+        {
+            ((MovieTexture)movIntro.material.mainTexture).Stop();
+        }      
         movIntro.gameObject.SetActive(false);
 
         while (imgFade.color.a > 0)

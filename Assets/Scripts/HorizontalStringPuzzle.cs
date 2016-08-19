@@ -74,7 +74,11 @@ public class HorizontalStringPuzzle : MonoBehaviour {
         bottomNoteIndex = Random.Range(0, bottomNotches.Length - 1);
         bottomNote.transform.position = bottomNotches[bottomNoteIndex];
         //design solution
-        solution = new int[]{ Random.Range(0, topNotches.Length - 1),Random.Range(0, middleNotches.Length - 1),Random.Range(0, bottomNotches.Length - 1) };
+        //solution = new int[]{ Random.Range(0, topNotches.Length - 1),Random.Range(0, middleNotches.Length - 1),Random.Range(0, bottomNotches.Length - 1) };
+        //TEMP CODE FOR TESTING (HARD CODES SOLUTION)
+        solution = new int[] { 0, 0, 0 };
+
+
         //prevent the game from already being in solution position
         if (solution == new int[]{topNoteIndex,midNoteIndex, bottomNoteIndex})
         {

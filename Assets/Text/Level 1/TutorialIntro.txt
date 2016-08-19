@@ -1,6 +1,2 @@
-ORDER:Who and what approaches?
-There is a creature… in our cave?@
-ORDER:A child? No-no.@
-ORDER:Unexpected variable.@ 
-ORDER:Unforeseen circumstance.@ 
-ORDER:What is it? I am... we are not sure.
+ORDER:Who is there?
+

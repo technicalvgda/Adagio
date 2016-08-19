@@ -13,9 +13,8 @@ public class FiveStringButton : MonoBehaviour {
 
         pressed = true;
         Debug.Log(collide);
-
-
     }
+
     void OnTriggerExit2D(Collider2D col)
     {
         collide = false;

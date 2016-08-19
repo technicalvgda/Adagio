@@ -1,48 +1,35 @@
-ORDER:I did not predict that you would come.
-It has been years since someone? Something?
-Never came.@
-ZIMRI:I... My name is Zimri.@
-ZIMRI:I am a monk, and I read of this place in a scroll and I came to see if it was real.@
-ORDER:The cave, crumbled, broken.@
-ORDER:We were sure the way was sealed. We are lost.
-We could not be discovered... unless...
-It speaks?@
-ZIMRI:I didn't mean to intrude, I didn’t know...@
-ORDER:Sentient. Legs-- two. Sentient... human? Yes, human.
-Our... my creation. The great gamble, that we... lost?@
-ORDER:But you are here.
-Potential. Useful.@
-ZIMRI:I am a human, a monk. Or I was,
-The rest of the order didn't believe this place existed,
-The cave of songs, of creation, from the ancient legends.@
-ZIMRI:But I wanted to know the truth.
-And so I left, and came here.@
-ORDER:But it functions, does it not?@
-ORDER:No? No. No it.. It's not..
-The grace of these stones are not what they used to...
-I.. we.@
-ORDER:We? I cannot. It is just stone.
-This mountain... soundless and lifeless stone.@
-ORDER:...@
-ORDER:But you, humanity. You can help. Yes.@
-ZIMRI:I heard songs, as a child, of the creators
-Three sisters, Order, Grace and Splendor
-Could they be... is that you?@
-ORDER:Who are.. We?
-Am I. Yes.
-We, The Samara. I, Order.@
-ORDER:Order, a name in your words.
-Order, law. This I re-wove. This I created.@
-ORDER:This... you have not yet forgotten, I know, because I linger still. 
-The other songs... silence.
-The instrument in shambles, disrepair.@
-ZIMRI:I... would help you, if I'm able?
-You said humanity could help, perhaps this could be fixed.
-Please, tell me what I can do.@
-ORDER:Courage. Unexpected, unplanned.
-A variable that may change in our favor.@
-ORDER:The instrument is vast, and we are lost within it.
-Restore the song, and we may aid one another.@
-ORDER:Once, we aided each other... but the silence...
-You may venture into the cave. Repair the instrument.@
-ORDER:Very well. Go forth, humanity.
+ORDER:Someone comes. After all these countless ages…@
+ZIMRI:…?? …A talking statue??@
+ORDER:It has been… so long since I last used my voice.
+The cave, temple…instrument. Crumbled, broken.
+We are lost. I linger…
+Why have you come? Why has it taken so long?@
+ZIMRI:I…My name is Zimri. I am…or was, a monk of the Arafel Monastery.
+Our library is vast, and old, with many corners untouched. One day I found
+this scroll. It looked so nondescript, just lying there among the piles, I picked it 
+up just by whim. What it contains…I’ve never heard anything like it. 
+It tells of a temple within a cave, a place of music and creation, where the gods 
+were worshipped in person. There is an old map that is difficult to read, but I tried 
+to follow it…is this…is this it?@
+ORDER:Ah! Yes. But we are broken. We are not what we were. I linger, I am weary…
+But you…yes! After all these ages. You can save us.@
+ZIMRI:I…I don’t understand. The order told me this scroll was ancient propaganda, 
+to forget about it. They forbade me to pursue the matter, I took the scroll and ran…
+What are you? …Who are you?@  	 
+ORDER:The question lies with you. You are our creation...A rebirth. 
+The great gamble, that we…	lost?  But you are here now. Potential. Useful.@
+ZIMRI:…We sang songs, as children, of the creators. They were supposed to be just stories,
+lullabies. There were three sisters:  Order, Splendor and Grace. Three statues here…
+can it…is that you? @
+ORDER:Just stories? …You really do not know? …Yes. We are the Samara.
+I am called Order. The cycles of the earth… are in their appointed place, 
+their appointed time…because I willed it. These statues you made are our 
+last connection to this world. I hold on. The other songs… silence. 
+The instrument is in shambles, disrepair.@
+ZIMRI:What instrument?@
+ORDER:This…is the instrument. The cave, the temple, where we stand. 
+All one. It is vast, and the Samara fade within. 
+It is good that you came when you did.@
+ZIMRI:You said I could help. What can I do?@
+ORDER:Yes. Please. Repair the instrument. Restore the song. 
+The path behind me…go. The way will reveal itself to you.
