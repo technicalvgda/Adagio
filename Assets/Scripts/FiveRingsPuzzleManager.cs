@@ -162,6 +162,8 @@ public class FiveRingsPuzzleManager : MonoBehaviour {
 	public void startPuzzle()
 	{
 		puzzleStarted = true;
+		audioSource.clip = ringDisappearClip;
+		audioSource.Play ();
 		startRing.transform.position = transform.position+new Vector3(0.5f,0,0);
 		//reduce radius so that the player won't accidentaly restart the puzzle by touching the collider, NEED TO RESET BACK TO 5 UPON PUZZLE COMPLETION
 		startRing.GetComponent<CircleCollider2D>().radius = 1;
