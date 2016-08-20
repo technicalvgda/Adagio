@@ -6,11 +6,12 @@ using System;
 // To change what happens when a slider knob moves, modify the Setting's Apply() method
 public class AdagioSettings : MonoBehaviour
 {
-    [Tooltip("-3 .. 3")]
+    [Tooltip("-7 .. 0")]
     public int defaultImage = 0;
     [Tooltip("0 .. 10")]
     public int defaultBgm = 7, defaultSe = 7;
     public Slider sliderImage, sliderBgm, sliderSe;
+    public Image imgPreview;
     public AdagioAudio audioCtrl;
 
     Setting settingImage, settingBgm, settingSe;
@@ -19,7 +20,7 @@ public class AdagioSettings : MonoBehaviour
     {
         //Nuke();
 
-        settingImage = new SettingImage("IMG", defaultImage, sliderImage);
+        settingImage = new SettingImage("IMG", defaultImage, sliderImage, imgPreview);
         settingBgm = new SettingBgm("BGM", defaultBgm, sliderBgm, audioCtrl);
         settingSe = new SettingSe("SE", defaultSe, sliderSe, audioCtrl);
 
@@ -80,14 +81,18 @@ public class AdagioSettings : MonoBehaviour
 
     class SettingImage : Setting
     {
-        public SettingImage(string key, int initial, Slider slider)
+        Image imgPreview;
+        public SettingImage(string key, int initial, Slider slider, Image imgPreview)
             : base(key, initial, slider)
-        { }
+        { this.imgPreview = imgPreview; }
 
         public override void Apply()
         {
-            float gamma = 1 + slider.value * .08f;
-            RenderSettings.ambientLight = new Color(gamma, gamma, gamma, 1);
+            float gamma = 1 + slider.value * .05f;
+            Color color = new Color(gamma, gamma, gamma, 1);
+
+            RenderSettings.ambientLight = color;
+            imgPreview.color = color;
         }
     }
 
