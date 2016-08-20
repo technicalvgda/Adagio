@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FiveRingsPuzzleRingScript : MonoBehaviour {
 	//The manager for the puzzle
-	private GameObject fiveRingsManager;
+	public GameObject fiveRingsManager;
 	//bools for pattern1, pattern 2, and if the ring is moving
 	private bool pattern1Init,pattern2Init, isMoving;
 	public GameObject[] locations;
@@ -26,16 +26,25 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 
 	//the initial location where the ring started
 	private Vector3 beginningPos;
+	//the animation
+	private Animator anim;
+	//the variable numbers set in the inspector, used for proper animation
+	private float beginningSpeed,beginningFreq,beginningMag;
+	//bool for if the ring is collected to prevent multiple executions of the same code
+	private bool isCollected;
 	// Use this for initialization
 	void Start () {
-		fiveRingsManager = GameObject.Find ("5StringManager");
 		pattern1Init = false;
 		pattern2Init = false;
 		locationCounter = 0;
 		reverseTraversal = false;
 		pos = transform.position;
 		beginningPos = transform.position;
-
+		anim = GetComponent<Animator> ();
+		beginningSpeed = speed;
+		beginningFreq = frequency;
+		beginningMag = magnitude;
+		isCollected = false;
 	}
 
 	// Update is called once per frame
@@ -64,17 +73,33 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 				//if the player has collected all the other rings
 				if (fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().getNumbRingsCollected() == 4) 
 				{
-					gameObject.SetActive (false);
-					fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().collectedRing ();
+					
+					anim.SetTrigger ("collect");
+					if (!isCollected) {
+						isCollected = true;
+						fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().collectedRing ();
+					}
 				}
 				else
-					fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().startPuzzle ();
+					fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().startPuzzle ();		
+
+
 			}
 		} 
 		else 
 		{
-			gameObject.SetActive (false);
-			fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().collectedRing ();
+			//stop the ring
+			speed = 0;
+			frequency = 0;
+			magnitude = 0;
+			//trigger the animation
+			anim.SetTrigger ("collect");
+			//prevent the same ring from being registered as collected more than once
+			if (!isCollected) {
+				isCollected = true;
+				fiveRingsManager.GetComponent<FiveRingsPuzzleManager> ().collectedRing ();
+			}
+
 		}
 	}
 
@@ -204,6 +229,14 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 		reverseTraversal = false;
 		isMoving = false;
 		pos = transform.position;
+		speed = beginningSpeed;
+		frequency = beginningFreq;
+		magnitude = beginningMag;
+		isCollected = false;
 		StopAllCoroutines ();
+	}
+	public void setRingUnactive()
+	{
+		gameObject.SetActive (false);
 	}
 }
