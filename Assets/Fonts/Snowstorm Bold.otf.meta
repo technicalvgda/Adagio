@@ -3,13 +3,14 @@ guid: 4933feead172f284dbccd05189c2c463
 timeCreated: 1461712130
 licenseType: Free
 TrueTypeFontImporter:
-  serializedVersion: 3
+  serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
-  characterSpacing: 1
-  characterPadding: 0
+  characterSpacing: 0
+  characterPadding: 1
   includeFontData: 1
-  fontNames: []
+  fontNames:
+  - Snowstorm Bold
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

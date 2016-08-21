@@ -3,14 +3,16 @@ guid: ffd14014ad849ce4dbde477e036e2cc5
 timeCreated: 1461736939
 licenseType: Free
 TrueTypeFontImporter:
-  serializedVersion: 3
+  serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
-  characterSpacing: 1
-  characterPadding: 0
+  characterSpacing: 0
+  characterPadding: 1
   includeFontData: 1
-  fontNames: []
-  fallbackFontReferences: []
+  fontNames:
+  - Sadana Square
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0a72874716336f045ad9d30e29c45c0c, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
