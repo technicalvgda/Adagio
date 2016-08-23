@@ -14,7 +14,7 @@ public class ZoomOut : MonoBehaviour
 
     public GameObject leftXBorder, rightXBorder, topYBorder, bottomYBorder;
     Transform player;
-	public bool isZoomedIn;
+	public bool isZoomedIn= false;
 
     // Use this for initialization
     void Start ()
@@ -35,11 +35,23 @@ public class ZoomOut : MonoBehaviour
         {
             if (ZoneCheck())
             {
-                EnterZone();
+                
+                if(isZoomedIn == false)
+                {
+                    EnterZone();
+                }
+                else
+                {
+                    MoveCam();
+                }
+               
             }
             else
             {
-                ExitZone();
+                if (isZoomedIn == true)
+                {
+                    ExitZone();
+                }
             }
         }
        
@@ -76,17 +88,9 @@ public class ZoomOut : MonoBehaviour
         {
             audioHandler.audio3.volume = 0.2f;
         }
-        StopCoroutine(ReturnZoom());
         playerCamControl.enabled = false;
-        playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, cameraLocation, Time.deltaTime);
-        if (playerCamera.orthographicSize < zoomAmount)
-        {
-            playerCamera.orthographicSize += 0.1f;
-            if (playerCamera.orthographicSize > zoomAmount + 0.01f)
-            {
-                playerCamera.orthographicSize = zoomAmount;
-            }
-        }
+
+
     }
 
     void ExitZone()
@@ -101,6 +105,16 @@ public class ZoomOut : MonoBehaviour
         StartCoroutine(ReturnZoom());
     }
 
+    void MoveCam()
+    {
+        playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, cameraLocation, Time.deltaTime);
+        if (playerCamera.orthographicSize < zoomAmount)
+        {
+
+            playerCamera.orthographicSize += 0.1f;
+        }
+    }
+ 
     IEnumerator ReturnZoom()
     {
 
