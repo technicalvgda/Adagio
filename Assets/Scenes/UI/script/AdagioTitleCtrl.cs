@@ -210,7 +210,7 @@ public class AdagioTitleCtrl : MonoBehaviour
         yield return null;
 
         // Set this to the desired scene's build index; invalid values will default to title
-        AdagioLoad.destination = index;
+        SceneLoader.destination = index;
         // Loading the load scene after this will bring you to the destination scene
         SceneManager.LoadScene(loaderIndex);
     }

@@ -5,8 +5,12 @@ using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
-	//Assets for the different loading bar objects
-	public GameObject LoadingBarFilling,Symbols, SymbolsBackground,textBox;
+
+    // From another scene: MUST set AdagioLoad.destination to a valid scene ID, then load this scene
+    public static int destination = -1;
+
+    //Assets for the different loading bar objects
+    public GameObject LoadingBarFilling,Symbols, SymbolsBackground,textBox;
 	//the text
 	private TextAsset text;
 	//The actual image of the bar, used to manipulate the alpha
@@ -46,10 +50,17 @@ public class SceneLoader : MonoBehaviour
 	}
 	IEnumerator LoadNewScene()
 	{
-		//load the level
-		async = SceneManager.LoadSceneAsync(2);
+		 if (destination < 0 ||
+            destination >= SceneManager.sceneCountInBuildSettings ||
+            destination == SceneManager.GetActiveScene().buildIndex)
+        {
+            destination = 0;
+        }
+
+        async = SceneManager.LoadSceneAsync(destination);
 		//make it so when the data is loaded the scene does not activate(meaning it will stay in the loading scene)
 		async.allowSceneActivation = false;
+        destination = -1;
 		//while loading is not done
 		while (!async.isDone) {
 
