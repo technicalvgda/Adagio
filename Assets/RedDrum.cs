@@ -11,8 +11,8 @@ public class RedDrum : MonoBehaviour {
     Vector3 start;
     Vector3 end;
     public float speed = .05f;
-    bool x = true;
-    int counter = 0;
+    //bool x = true;
+    //int counter = 0;
 
     void OnTriggerEnter2D(Collider2D col)
     {

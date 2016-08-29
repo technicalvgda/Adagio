@@ -10,10 +10,10 @@ public class ChimePuzzle : MonoBehaviour {
     List<int> sequence = new List<int>();
     List<int> bpressed = new List<int>();
     public GameObject door;
-    bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false, b6 = false, b7 = false, b8 = false, b9 = false, b10 = false;
+    bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false, b6 = false; //b7 = false, b8 = false, b9 = false, b10 = false;
 
-    int state = 0;
-    int rnd = 0;
+    //int state = 0;
+    //int rnd = 0;
 
 
     void Start()

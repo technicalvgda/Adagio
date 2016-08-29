@@ -18,7 +18,7 @@ public class FiveRingsPuzzleRingScript : MonoBehaviour {
 
 	//some variables to make the ring move in a sine wave
 	private Vector3 axis, pos;
-	float fTime = 0;
+	//float fTime = 0;
 	private Transform target;
 	public float rotationSpeed;
 	private Quaternion lookRotation;

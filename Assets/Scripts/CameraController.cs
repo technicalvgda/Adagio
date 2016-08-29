@@ -6,11 +6,11 @@ public class CameraController : MonoBehaviour {
 	private Rigidbody2D playerRB2D;
 	public float damping = 5; //higher values for more snapping normally
 	public float catchupDivisor = 2f; //Lower values for more snapping when falling
-	private Vector3 offset; //Set relative position to player object
+	//private Vector3 offset; //Set relative position to player object
 	private float cameraCatchup;
 	public float playerCameraOffset;
 
-	float minXDist = -90f;
+	// minXDist = -90f;
 	void Awake() {
 
 #if UNITY_IPHONE
@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour {
 	    // Use this for initialization
 	void Start() {
 		        //Calculates offset by subtracting player position from camera object position
-		offset = transform.position;
+		//offset = transform.position;
 		//transform.position = new Vector3 (minXDist, transform.position.y, transform.position.z);
 	}
 

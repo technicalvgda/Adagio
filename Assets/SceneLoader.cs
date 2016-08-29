@@ -19,7 +19,8 @@ public class SceneLoader : MonoBehaviour
 	//the object used to get the progress of the loading
 	private AsyncOperation async = null;
 	//set true/false to either increase or decrease the alpha of the loading bar
-	private bool increaseAlpha;
+	//private bool increaseAlpha;
+
 	//[SerializeField]
 	private int scene;
 	//[SerializeField]
@@ -31,7 +32,7 @@ public class SceneLoader : MonoBehaviour
 		//set the X scale of the bar to 0
 		barImage.rectTransform.localScale = new Vector3 (0, barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
 		textBox.SetActive (false);
-		increaseAlpha = false;
+		//increaseAlpha = false;
 
 	}
 

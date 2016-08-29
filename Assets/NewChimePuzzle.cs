@@ -9,14 +9,14 @@ public class NewChimePuzzle : MonoBehaviour
 
     SpriteRenderer sr, ss;
     public GameObject sb1, sb2, sb3;
-    public AudioSource audio;
+    public AudioSource audioSource;
     List<int> sequence = new List<int>();
     List<int> bpressed = new List<int>();
     public GameObject door;
-    bool b1 = false, b2 = false, b3 = false, sequence1 = false, sequence2 = false, sequence3 = false;
+    bool b1 = false, b2 = false, b3 = false;//sequence1 = false, sequence2 = false, sequence3 = false;
 
-    int state = 0;
-    int rnd = 0;
+    //int state = 0;
+    //int rnd = 0;
 
 
     void Start()
@@ -68,17 +68,17 @@ public class NewChimePuzzle : MonoBehaviour
             if (sequence[0] == bpressed[0])
             {
                 b1 = true;
-                sequence1 = true;
+                //sequence1 = true;
             }
             if (sequence[1] == bpressed[1])
             {
                 b2 = true;
-                sequence2 = true;
+                //sequence2 = true;
             }
             if (sequence[2] == bpressed[2])
             {
                 b3 = true;
-                sequence3 = true;
+                //sequence3 = true;
             }
 
             if (b1 == true && b2 == true && b3 == true)
@@ -92,7 +92,7 @@ public class NewChimePuzzle : MonoBehaviour
                 b2 = false;
                 b3 = false;
                 bpressed.Clear();
-                audio.Play();
+                audioSource.Play();
             }
             
 

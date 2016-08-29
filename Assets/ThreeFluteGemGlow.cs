@@ -4,7 +4,7 @@ using System.Collections;
 public class ThreeFluteGemGlow : MonoBehaviour
 {
     Behaviour halo;         //Access the halo effect, AKA Glowing effect
-    bool stepped = false;   //A boolean to know if we are in contact with the object
+    //bool stepped = false;   //A boolean to know if we are in contact with the object
     public GameObject button;
     public int value = 0;
 

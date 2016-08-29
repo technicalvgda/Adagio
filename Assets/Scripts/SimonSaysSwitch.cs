@@ -7,7 +7,7 @@ public class SimonSaysSwitch : MonoBehaviour
 {
    
     public bool stepped;
-    int state = 0;
+    //int state = 0;
     public bool pressed;
 
     void Start()

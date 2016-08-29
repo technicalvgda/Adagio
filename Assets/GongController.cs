@@ -5,8 +5,8 @@ using System;
 
 public class GongController : MonoBehaviour {
 
-	private GameObject gong;
-	private AudioSource gongAudio;
+	//private GameObject gong;
+	//private AudioSource gongAudio;
     SpriteRenderer sr, ss;
     public GameObject SimonSaysSwitch;
     public GameObject sb1, sb2, sb3, sb4, sb5, sb6, sb7, sb8, sb9;
@@ -15,14 +15,14 @@ public class GongController : MonoBehaviour {
     public GameObject door;
     bool b1 = false, b2 = false, b3 = false, b4 = false;
 
-    int state = 0;
-    int rnd = 0;
+    //int state = 0;
+    //int rnd = 0;
 
     void Start()
     {
         // Get a reference to the SpriteRenderer so that we can change the button's color.
-		gong = GameObject.Find("Gong");
-		gongAudio = gong.GetComponent<AudioSource> ();
+		//gong = GameObject.Find("Gong");
+		//gongAudio = gong.GetComponent<AudioSource> ();
         gameObject.SetActive(true);
         sequence.Add(3);
         sequence.Add(2);

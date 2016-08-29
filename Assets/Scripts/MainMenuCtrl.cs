@@ -11,7 +11,7 @@ public class MainMenuCtrl : MonoBehaviour
 
     public Slider BrightnessSlider;
 
-    public AudioControl audio;
+    public AudioControl audioControl;
 
     // Use this for initialization
     void Start () 
@@ -25,8 +25,8 @@ public class MainMenuCtrl : MonoBehaviour
 		OptionsCanvas.SetActive(false);
 
 
-        audio.LoopMusic(true);
-        audio.PlayMusic(0);
+        audioControl.LoopMusic(true);
+        audioControl.PlayMusic(0);
     }
 	
 	// Update is called once per frame

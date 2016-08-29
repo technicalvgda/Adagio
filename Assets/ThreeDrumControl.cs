@@ -8,8 +8,8 @@ public class ThreeDrumControl : MonoBehaviour {
     
     Vector3 start, end;
     public float speed = 0.05f;
-    bool x = true, drum1, drum2, drum3;
-    int counter = 0;
+    bool drum1, drum2, drum3;// x = true, 
+    //int counter = 0;
 
 
     // Use this for initialization

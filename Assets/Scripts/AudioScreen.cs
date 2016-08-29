@@ -9,10 +9,10 @@ public class ScreenAudio
     public Button btnBack;
     //public FxStreak streak;
 
-    RectTransform rtMusic, rtSfx;
+    //RectTransform rtMusic, rtSfx;
 
-    WaitForSeconds waitShort = new WaitForSeconds(.03f);
-    WaitForSeconds wait = new WaitForSeconds(.1f);
+    //WaitForSeconds waitShort = new WaitForSeconds(.03f);
+    //WaitForSeconds wait = new WaitForSeconds(.1f);
 
     public void InitSettings()
     {
@@ -28,8 +28,8 @@ public class ScreenAudio
         audioHandler.music.volume = slrMusic.value * .1f;
         audioHandler.sfx.volume = slrSfx.value * .1f;
 
-        rtMusic = slrMusic.GetComponent<RectTransform>();
-        rtSfx = slrSfx.GetComponent<RectTransform>();
+        //rtMusic = slrMusic.GetComponent<RectTransform>();
+        //rtSfx = slrSfx.GetComponent<RectTransform>();
     }
 
     void SaveSettings()

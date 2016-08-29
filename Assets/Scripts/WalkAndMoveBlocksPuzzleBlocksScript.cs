@@ -6,12 +6,12 @@ public class WalkAndMoveBlocksPuzzleBlocksScript : MonoBehaviour {
 	public GameObject blocksToMove;
 	public bool isTouchingBlocks,touchedWall,blocksTouchingRing,blocksTouchingBlocks;
 	private GameObject player;
-	private DirectionRaycasting2DCollider playerRaycast,blocksToMoveRayCast,thisRayCast;
+    private DirectionRaycasting2DCollider playerRaycast, blocksToMoveRayCast;//thisRayCast;
 	public float speed;
 	private float moveHorizontal;
-	private Rigidbody2D blocksToMoveRB2D,rb2D;
+    private Rigidbody2D blocksToMoveRB2D;//rb2D;
 	private Vector2 currentVelocity;
-	private bool didCoroutineOnce;
+	//private bool didCoroutineOnce;
 	public GameObject theRing,otherBlocks;
 	// Use this for initialization
 
@@ -21,9 +21,9 @@ public class WalkAndMoveBlocksPuzzleBlocksScript : MonoBehaviour {
 		playerRaycast = player.GetComponent<DirectionRaycasting2DCollider> ();
 		blocksToMoveRB2D = blocksToMove.GetComponent<Rigidbody2D> ();
 		blocksToMoveRayCast = blocksToMove.GetComponent<DirectionRaycasting2DCollider> ();
-		thisRayCast = GetComponent<DirectionRaycasting2DCollider> ();
-		rb2D = GetComponent<Rigidbody2D> ();
-		didCoroutineOnce = false;
+		//thisRayCast = GetComponent<DirectionRaycasting2DCollider> ();
+		//rb2D = GetComponent<Rigidbody2D> ();
+		//didCoroutineOnce = false;
 	}
 	
 	// Update is called once per frame

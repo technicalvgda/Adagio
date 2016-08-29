@@ -5,7 +5,7 @@ using System;
 
 public class SimonSays : MonoBehaviour
 {
-    SpriteRenderer sr, ss;
+    //SpriteRenderer sr, ss;
     public GameObject SimonSaysSwitch;
     public GameObject sb1, sb2, sb3, sb4;
     List<int> sequence = new List<int>();
@@ -13,16 +13,16 @@ public class SimonSays : MonoBehaviour
     public GameObject door;
     bool b1 = false, b2 = false, b3 = false, b4 = false;
     
-    int state = 0;
-    int rnd = 0;
+    //int state = 0;
+    //int rnd = 0;
 
 
     void Awake()
     {
         // Get a reference to the SpriteRenderer so that we can change the button's color.
-        sr = this.GetComponent<SpriteRenderer>();
+        //sr = this.GetComponent<SpriteRenderer>();
         gameObject.SetActive(true);
-        ss = SimonSaysSwitch.GetComponent<SpriteRenderer>();
+        //ss = SimonSaysSwitch.GetComponent<SpriteRenderer>();
 
     }
 

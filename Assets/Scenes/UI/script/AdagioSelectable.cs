@@ -7,7 +7,7 @@ using System.Collections;
 
 public class AdagioSelectable : AdagioUIElement
 {
-    Transform t;
+    //Transform t;
     Selectable selectable;
     
     public bool interactable { set { selectable.interactable = value; } }
@@ -17,7 +17,7 @@ public class AdagioSelectable : AdagioUIElement
 
     void Awake()
     {
-        t = this.transform;
+        //t = this.transform;
         selectable = this.GetComponent<Selectable>();
     }
 

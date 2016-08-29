@@ -12,7 +12,7 @@ public class Codex : MonoBehaviour {
 	private Vector3 startingPosition;
 
 	private Vector3 newPosition;
-	private bool goingUp;
+	//private bool goingUp;
 
     //variable of all codecies unlocked
     private string codexPref;
@@ -24,7 +24,7 @@ public class Codex : MonoBehaviour {
         //store a reference to the codex handler
         codexHandler = GameObject.Find("CodexEventHandler").GetComponent<CodexEventHandler>();
 
-		goingUp = true;
+		//goingUp = true;
 		onCodex = false;	
 		startingPosition = this.gameObject.transform.position;
         //get list of all unlocked codecies

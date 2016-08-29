@@ -5,7 +5,7 @@ public class GongSwitch : MonoBehaviour {
 
     // Use this for initialization
     public bool stepped;
-    int state = 0;
+    //int state = 0;
     public bool pressed;
 
     void Start()

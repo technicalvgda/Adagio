@@ -4,7 +4,7 @@ using System.Collections;
 
 public class NewChimePuzzleButton : MonoBehaviour {
     public GameObject button;
-    public AudioSource audio;
+    public AudioSource audioSource;
     public bool pressed = false;
     public bool collide = false;
     int count = 0;
@@ -36,10 +36,10 @@ public class NewChimePuzzleButton : MonoBehaviour {
         Debug.Log("Enter");
         collide = true;
         Debug.Log(collide);
-        audio.Play();
+        audioSource.Play();
         if (col.gameObject.tag == "Button")
         {
-            audio.Play();
+            audioSource.Play();
         }
 
     }

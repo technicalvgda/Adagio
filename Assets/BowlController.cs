@@ -11,10 +11,10 @@ public class BowlController : MonoBehaviour {
     List<int> sequence = new List<int>();
     List<int> bpressed = new List<int>();
     public GameObject door;
-    bool b1 = false, b2 = false, b3 = false, b4 = false;
+    bool b1 = false, b2 = false, b3 = false; //b4 = false;
 
-    int state = 0;
-    int rnd = 0;
+   //int state = 0;
+    //int rnd = 0;
 
     void Start()
     {

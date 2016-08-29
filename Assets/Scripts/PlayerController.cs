@@ -12,11 +12,15 @@ public class PlayerController : MonoBehaviour {
 	public delegate void TapAction ();
 	public static event TapAction OnTap;
 
-	private Rect leftside = new Rect(0, 0, Screen.width * 0.3f, Screen.height);
+//for mobile build
+    private Rect leftside = new Rect(0, 0, Screen.width * 0.3f, Screen.height);
 	private Rect rightside = new Rect(Screen.width * 0.7f, 0, Screen.width * 0.3f, Screen.height);
 	private Rect center = new Rect (Screen.width * 0.3f, 0, Screen.width * 0.4f, Screen.height);
+    bool leftGround = false;
+//end mobile build variables
 
-	private float blockJumpTimer = 0f;
+
+    private float blockJumpTimer = 0f;
 	private Vector2 currentVelocity;
 	private Rigidbody2D rb2d;
 	private DirectionRaycasting2DCollider raycast;
@@ -25,7 +29,8 @@ public class PlayerController : MonoBehaviour {
 	public float minSwipeDistY;
     private Vector2 startPos;
 	public bool downButton;
-    bool leftGround = false;
+
+    
     bool slowFall = true;
     bool airborne = false;
 
