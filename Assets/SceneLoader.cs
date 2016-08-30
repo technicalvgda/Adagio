@@ -46,10 +46,18 @@ public class SceneLoader : MonoBehaviour
 			//start the loading
 			StartCoroutine(LoadNewScene());
 		}
+        /*
 		if (loadScene == true)
 		{
 		}
-	}
+        */
+        if (async.progress == 0.9f)
+        {
+            //set it so when the player presses any button the level will load
+            if (Input.anyKeyDown)
+                async.allowSceneActivation = true;
+        }
+    }
 	IEnumerator LoadNewScene()
 	{
         Debug.Log("Begin scene load");
@@ -65,24 +73,25 @@ public class SceneLoader : MonoBehaviour
 		async.allowSceneActivation = false;
         destination = -1;
 		//while loading is not done
-		while (!async.isDone) {
+		while (async.progress < 0.9f) {
 
 			Debug.Log("Async progress = "+async.progress);
+           
 			//make the bar longer as loading progresses
 			barImage.rectTransform.localScale = new Vector3 (0.5293753f * (async.progress+0.1f), barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
-			// Loading completed
-			if (async.progress == 0.9f) 
-			{
-                Debug.Log("Scene Loaded");
-				//begin fading in/out of the bar for a more dynamic look
-				LoadingBarFilling.GetComponent<LoadingBarFadeInOut> ().beginFading ();
-				//set it so when the player presses any button the level will load
-				if (Input.anyKeyDown)
-					async.allowSceneActivation = true;
-				//activate the text box so tell the player to press any button to continue
-				textBox.SetActive (true);
-			}
+			
 			yield return null;
 		}
-	}
+        barImage.rectTransform.localScale = new Vector3(0.5293753f * (async.progress + 0.1f), barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
+        // Loading completed
+        //if (async.progress == 0.9f)
+        //{
+        Debug.Log("Scene Loaded");
+            //begin fading in/out of the bar for a more dynamic look
+            LoadingBarFilling.GetComponent<LoadingBarFadeInOut>().beginFading();
+           
+            //activate the text box so tell the player to press any button to continue
+            textBox.SetActive(true);
+        //}
+    }
 }
