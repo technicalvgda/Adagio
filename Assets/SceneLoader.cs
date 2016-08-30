@@ -27,6 +27,7 @@ public class SceneLoader : MonoBehaviour
 	private Text loadingText;
 	void Start()
 	{
+        Debug.Log("Reached loading screen.");
 		//get the image component
 		barImage = LoadingBarFilling.GetComponent<Image> ();
 		//set the X scale of the bar to 0
@@ -51,13 +52,14 @@ public class SceneLoader : MonoBehaviour
 	}
 	IEnumerator LoadNewScene()
 	{
-		 if (destination < 0 ||
+        Debug.Log("Begin scene load");
+        if (destination < 0 ||
             destination >= SceneManager.sceneCountInBuildSettings ||
             destination == SceneManager.GetActiveScene().buildIndex)
         {
             destination = 0;
         }
-
+        Debug.Log("Destination = :" + destination);
         async = SceneManager.LoadSceneAsync(destination);
 		//make it so when the data is loaded the scene does not activate(meaning it will stay in the loading scene)
 		async.allowSceneActivation = false;
@@ -65,12 +67,13 @@ public class SceneLoader : MonoBehaviour
 		//while loading is not done
 		while (!async.isDone) {
 
-			//Debug.Log(async.progress);
+			Debug.Log("Async progress = "+async.progress);
 			//make the bar longer as loading progresses
 			barImage.rectTransform.localScale = new Vector3 (0.5293753f * (async.progress+0.1f), barImage.rectTransform.localScale.y, barImage.rectTransform.localScale.z);
 			// Loading completed
 			if (async.progress == 0.9f) 
 			{
+                Debug.Log("Scene Loaded");
 				//begin fading in/out of the bar for a more dynamic look
 				LoadingBarFilling.GetComponent<LoadingBarFadeInOut> ().beginFading ();
 				//set it so when the player presses any button the level will load
