@@ -25,6 +25,8 @@ public class ScriptManagement : MonoBehaviour
 	public GameObject hubDoor;
 	public GameObject FinalPuzzleButton;
 	private FinalPuzzleController FinalPuzzleCont;
+
+	public GameObject[] CameraZoomAreas;
 	// Use this for initialization
 	void Start () 
 	{
@@ -37,6 +39,7 @@ public class ScriptManagement : MonoBehaviour
 		currentEventNumber = 0;
 		textBox = gameObject.GetComponent<ScriptManagerNewTextBox> ();
 		puzzleZoomAreaObjects = GameObject.FindGameObjectsWithTag ("PuzzleZoomArea");
+		StartCoroutine ("LateGetZoomAreas");
 
 		//textBox.enabled = false;
 	}
@@ -264,6 +267,11 @@ public class ScriptManagement : MonoBehaviour
 	}
 	IEnumerator _StartTalkNoMovementCameraPan(TextAsset theTextFile)
 	{
+		CameraZoomAreas = GameObject.FindGameObjectsWithTag ("CameraZoomArea");
+		for (int i = 0; i < CameraZoomAreas.Length; i++) 
+		{
+			CameraZoomAreas [i].GetComponent<ZoomOut> ().enabled = false;
+		}
 		mainCamera.GetComponent<CameraController> ().enabled = false;
 		playerCont.enabled = false;
 		playerAnimator.enabled = false;
@@ -298,10 +306,19 @@ public class ScriptManagement : MonoBehaviour
 		playerAnimator.enabled = true;
 		playerCont.enabled = true;
 		mainCamera.GetComponent<CameraController> ().enabled = true;
+		for (int i = 0; i < CameraZoomAreas.Length; i++) 
+		{
+			CameraZoomAreas [i].GetComponent<ZoomOut> ().enabled = true;
+		}
 		yield return null;
 	}
 	IEnumerator _StartTalkNoMovementCameraPanNoTextAfterCameraMovement(TextAsset theTextFile)
 	{
+		CameraZoomAreas = GameObject.FindGameObjectsWithTag ("CameraZoomArea");
+		for (int i = 0; i < CameraZoomAreas.Length; i++) 
+		{
+			CameraZoomAreas [i].GetComponent<ZoomOut> ().enabled = false;
+		}
 		mainCamera.GetComponent<CameraController> ().enabled = false;
 		playerCont.enabled = false;
 		playerAnimator.enabled = false;
@@ -329,29 +346,33 @@ public class ScriptManagement : MonoBehaviour
 		playerAnimator.enabled = true;
 		playerCont.enabled = true;
 		mainCamera.GetComponent<CameraController> ().enabled = true;
+		for (int i = 0; i < CameraZoomAreas.Length; i++) 
+		{
+			CameraZoomAreas [i].GetComponent<ZoomOut> ().enabled = true;
+		}
 		yield return null;
 	}
 	IEnumerator _StartFinalCutscene()
 	{
-		//playerCont.enabled = false;
-		//playerAnimator.enabled = false;
+		playerCont.enabled = false;
+		playerAnimator.enabled = false;
 		//Tiles open up
-		//for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
-		//	tilesToDeactivate [i].SetActive (false);
-		//}
+		for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
+			tilesToDeactivate [i].SetActive (false);
+		}
 		//Player falls down
-		//yield return new WaitForSeconds(5);
-		//playerCont.enabled = true;
-		//playerAnimator.enabled = true;
+		yield return new WaitForSeconds(5);
+		playerCont.enabled = true;
+		playerAnimator.enabled = true;
 
-		//for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
-		//	tilesToDeactivate [i].SetActive (true);
-		//}
+		for (int i = 0; i < tilesToDeactivate.Length - 1; i++) {
+			tilesToDeactivate [i].SetActive (true);
+		}
 		while (FinalPuzzleCont.FinalPuzzleDone == false) 
 		{
 			yield return new WaitForSeconds (1);
 		}
-		SceneManager.LoadScene (4);
+		SceneManager.LoadScene (3);
 		yield return null;
 	}
 
@@ -370,7 +391,7 @@ public class ScriptManagement : MonoBehaviour
 			tilesToDeactivate [i].SetActive (false);
 		}
 		//Player falls down
-		yield return new WaitForSeconds(5);
+		yield return new WaitForSeconds(0.5f);
 		//Activate Tiles
 		for (int i = 0; i < tilesToDeactivate.Length; i++) {
 			tilesToDeactivate [i].SetActive (true);
@@ -378,6 +399,12 @@ public class ScriptManagement : MonoBehaviour
 		playerAnimator.enabled = true;
 		playerCont.enabled = true;
 		FinalPuzzleCont.FinalPuzzleReady = true;
+		yield return null;
+	}
+	private IEnumerator LateGetZoomAreas()
+	{
+		yield return new WaitForSeconds (5.0f);
+		CameraZoomAreas = GameObject.FindGameObjectsWithTag ("CameraZoomArea");
 		yield return null;
 	}
 

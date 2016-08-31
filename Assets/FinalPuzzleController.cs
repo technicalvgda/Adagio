@@ -5,7 +5,7 @@ public class FinalPuzzleController : MonoBehaviour
 {
 	public bool FinalPuzzleDone;
 	public bool FinalPuzzleReady;
-    bool phase1 = true, phase2 = false, phase3 = false, start = true;
+    bool phase1 = true, phase2 = false, phase3 = false, start;
     public GameObject[] buttons = new GameObject[9];
     int[] sequence = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     int[] pressed = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -18,6 +18,7 @@ public class FinalPuzzleController : MonoBehaviour
 		FinalPuzzleDone = false;
 		FinalPuzzleReady = false;
 		player = GameObject.FindGameObjectWithTag ("Player");
+		startpoint = Vector3.zero;
     }
 	
 	// Update is called once per frame
@@ -25,6 +26,8 @@ public class FinalPuzzleController : MonoBehaviour
     {
         if(collide == true && Input.GetKeyDown(KeyCode.E))
         {
+
+			start = true;
             if (phase1)
             {
                 

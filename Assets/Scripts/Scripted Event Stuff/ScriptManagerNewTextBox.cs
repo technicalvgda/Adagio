@@ -131,7 +131,7 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 			{
 				//Debug.Log ("HERE2");
 				if (!isTyping) {
-					Debug.Log ("ISTYPING");
+					//Debug.Log ("ISTYPING");
 					//			filespeaker = speakerLines[currentLine].Split(':');
 					//Clears the other textboxes
 					boxArray [0].text = "";
@@ -139,25 +139,25 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 					boxArray [2].text = "";
 					boxArray [3].text = "";
 					if (currentLine < endAtLine) {
-						Debug.Log ("HERE3");
+						//Debug.Log ("HERE3");
 						filespeaker = speakerLines [currentLine].Split (':');
 						if (speakerLines [currentLine].Contains (speaker1 + ":")) {
-							Debug.Log ("HERE ZIMRI");
+							//Debug.Log ("HERE ZIMRI");
 							theTextPlayer.color = ZimriColor;
 							speaker = 0;
 							currentLine++;
 						} else if (speakerLines [currentLine].Contains (speaker2 + ":")) {
-							Debug.Log ("HERE GRACE");
+							//Debug.Log ("HERE GRACE");
 							theTextNPC1.color = GraceColor;
 							speaker = 1;
 							currentLine++;
 						} else if (speakerLines [currentLine].Contains (speaker3 + ":")) {
-							Debug.Log ("HERE ORDER");
+							//Debug.Log ("HERE ORDER");
 							theTextNPC2.color = OrderColor;
 							speaker = 2;
 							currentLine++;
 						} else if (speakerLines [currentLine].Contains (speaker4 + ":")) {
-							Debug.Log ("HERE SPLENDOR");
+							//Debug.Log ("HERE SPLENDOR");
 							theTextNPC3.color = SplendorColor;
 							speaker = 3;
 							currentLine++;
@@ -167,7 +167,7 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 					} 
 					else 
 					{
-						Debug.Log ("CLEANUP");
+						//Debug.Log ("CLEANUP");
 						startText = false;
 						textFile = null;
 						currentLine = 0;
@@ -203,4 +203,5 @@ public class ScriptManagerNewTextBox : MonoBehaviour
 		isTyping = false;
 		cancelTyping = false;
 	}
+
 }
