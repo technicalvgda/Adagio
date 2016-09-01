@@ -1,4 +1,3 @@
-ORDER:Find what you seek in the cave, if you wish.
-I will return you to me, once you are ready.@
-ORDER:There is much I must discuss with humanity.@
-ORDER:Come, Determined one.
+ORDER:Wander the halls if it satisfies you, curious one. 
+Reclaim your memory. Come back to me when you are ready, 
+but don't take too long. There is still more to be done.@

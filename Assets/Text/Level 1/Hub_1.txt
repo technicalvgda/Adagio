@@ -31,7 +31,7 @@ ORDER:I hold on. The other songs...silence.
 The instrument is in shambles, disrepair.@
 ZIMRI:What instrument?@
 ORDER:This...is the instrument. The cave, the temple, where we stand. 
-All one. It is vast, and the Samara fade within. 
+All one. It is vast, and the Samara fade within.
 It is good that you came when you did.@
 ZIMRI:You said I could help. What can I do?@
 ORDER:Yes. Please. Repair the instrument. Restore the song. 
