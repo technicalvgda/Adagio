@@ -10,6 +10,7 @@ public class NewChimePuzzle : MonoBehaviour
     SpriteRenderer sr, ss;
     public GameObject sb1, sb2, sb3;
     public AudioSource audioSource;
+	public AudioClip badSequenceSound, doorMovingSound;
     List<int> sequence = new List<int>();
     List<int> bpressed = new List<int>();
     public GameObject door;
@@ -82,8 +83,11 @@ public class NewChimePuzzle : MonoBehaviour
             }
 
             if (b1 == true && b2 == true && b3 == true)
-            {
-                GameObject.Destroy(door);
+			{
+				audioSource.clip = doorMovingSound;
+				audioSource.Play ();
+				door.GetComponent<TrapDoorOpenResponse> ().Deactivate ();
+                //GameObject.Destroy(door);
             }
             else
             {
@@ -92,6 +96,7 @@ public class NewChimePuzzle : MonoBehaviour
                 b2 = false;
                 b3 = false;
                 bpressed.Clear();
+				audioSource.clip = badSequenceSound;
                 audioSource.Play();
             }
             

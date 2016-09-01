@@ -6,12 +6,13 @@ using System.Collections;
 
 public class TrapDoorOpenResponse : MonoBehaviour {
 
-    AudioSource audioSource;
+    public AudioSource audioSource;
 
 	public bool goUp;
     float initialYPos;
     float endingYPos;
-    float movmentValue = 3f;
+    public float movementValue;
+	public float deltaY;
     void Start()
     {
         if(GetComponent<AudioSource>() != null)
@@ -21,9 +22,10 @@ public class TrapDoorOpenResponse : MonoBehaviour {
         initialYPos = transform.position.y;
 
 		if(goUp)
-			endingYPos = initialYPos + movmentValue;
+			endingYPos = initialYPos + movementValue;
 		else
-        	endingYPos = initialYPos - movmentValue;
+			endingYPos = initialYPos - movementValue;
+		Debug.Log ("START: " + initialYPos + "/ENDING: " + endingYPos);
     }
 	public void Deactivate()
     {
@@ -37,6 +39,7 @@ public class TrapDoorOpenResponse : MonoBehaviour {
 	}
     public void Activate()
     {
+		Debug.Log ("ACTIVATE");
         if (audioSource != null)
         {
             audioSource.Play();
@@ -48,14 +51,14 @@ public class TrapDoorOpenResponse : MonoBehaviour {
     {
 		if (goUp) {
 			while (transform.position.y < endingYPos) {
-				transform.position = new Vector2 (transform.position.x, transform.position.y + 0.02f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y + deltaY);
 				yield return new WaitForSeconds (0.02f);
 			}
 		} 
 		else 
 		{
 			while (transform.position.y > endingYPos) {
-				transform.position = new Vector2 (transform.position.x, transform.position.y - 0.02f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y - deltaY);
 				yield return new WaitForSeconds (0.02f);
 			}
 		}
@@ -65,14 +68,14 @@ public class TrapDoorOpenResponse : MonoBehaviour {
     {
 		if (goUp) {
 			while (transform.position.y < initialYPos) {
-				transform.position = new Vector2 (transform.position.x, transform.position.y + 0.02f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y + deltaY);
 				yield return new WaitForSeconds (0.02f);
 			}
 		} 
 		else 
 		{
 			while (transform.position.y > initialYPos) {
-				transform.position = new Vector2 (transform.position.x, transform.position.y - 0.02f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y - deltaY);
 				yield return new WaitForSeconds (0.02f);
 			}
 		}
